@@ -22,17 +22,6 @@ if (isset($_GET["view"]) && $_GET["view"] == 3)
 				margin: 0px;
 				padding: 0px
 			}
-			.labels {
-				color: red;
-				background-color: white;
-				font-family: "Lucida Grande", "Arial", sans-serif;
-				font-size: 10px;
-				font-weight: bold;
-				text-align: center;
-				width: 40px;
-				border: 2px solid black;
-				white-space: nowrap;
-			}
 		</style>
 
 		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
@@ -56,111 +45,42 @@ map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
 <?php
 
-if ($result) {//If neighborhood information is available
-	$i = 0;
-	$lastNeigh = "";
-	while ($neigh = $result -> fetch_object()) {
-		if ($lastNeigh != $neigh -> name) {//change of polygon
-			if ($i) {//unless first loop
-				renderNeighborhood($i);
-			
-				
-			}
-			$lastNeigh = $neigh -> name;
-			$i = $i + 1;
-			echo "var neighborhood" . $i . "; ";
-			echo "var neighborhoodCoords" . $i . " = [";
-			$first = 1;
-		}
-		if (!$first)
-			echo ", ";
-		else
-			$first = 0;
-		echo "new google.maps.LatLng(" . $neigh -> latitude . " , " . $neigh -> longitude . ")";
-	}
+echo "var zoneArray1 = new Array(); ";
+echo "var zoneArray2 = new Array(); ";
+echo "var zoneArray3 = new Array(); ";
+echo "var zoneArray4 = new Array(); ";
+echo "var zoneArray5 = new Array(); ";
 
-	renderNeighborhood($i);
+if ($result) {//If neighborhood information is available
+	displayNeighborhoods($result);
 }
 
 if (isset($_GET["view"]) && $_GET["view"] == 1) {
 	if ($callResult) {//If Calldata available
-		$i = 1;
-		while ($call = $callResult -> fetch_object()) {
-			echo "var marker" . $i . " = new google.maps.Marker({ ";
-			echo "position: new google.maps.LatLng(" . $call -> locationLat . " , " . $call -> locationLon . "), ";
-			echo "title:'Hello World!' ";
-			echo "}); ";
-			echo "marker" . $i . ".setMap(map); ";
-
-			echo "var contentString" . $i . " = '<p>Número orígen: " . $call -> sourceNumber . "</p><p>Operador: " . $call -> operatorName . "</p><p>Nivel de Batería: " . $call -> batteryLevel . "</p><p>Nivel de Señal: " . $call -> currentSignal . "</p>'; ";
-			echo "var infowindow" . $i . " = new google.maps.InfoWindow({ ";
-			echo "content: contentString" . $i . " ";
-			echo "}); ";
-			echo " google.maps.event.addListener(marker" . $i . ", 'click', function() { ";
-			echo "infowindow" . $i . ".open(map,marker" . $i . "); ";
-			echo " }); ";
-
-			$i = $i + 1;
-
-		}
-
+		displayMarkers($_GET["view"], $callResult);
 	}
 }
 
 if (isset($_GET["view"]) && $_GET["view"] == 2) {
 	if ($internetResult) {//If Calldata available
-		$i = 1;
-		while ($internet = $internetResult -> fetch_object()) {
-			echo "var marker" . $i . " = new google.maps.Marker({ ";
-			echo "position: new google.maps.LatLng(" . $internet -> locationLat . " , " . $internet -> locationLon . "), ";
-			echo "title:'Hello World!' ";
-			echo "}); ";
-			echo "marker" . $i . ".setMap(map); ";
-
-			echo "var contentString" . $i . " = '<p>Número orígen: " . $internet -> sourceNumber . "</p><p>Operador: " . $internet -> operatorName . "</p><p>Nivel de Batería: " . $internet -> batteryLevel . "</p><p>Nivel de Señal: " . $internet -> currentSignal . "</p><p>Tiempo de Descarga: " . $internet -> downloadTime . " ms</p>'; ";
-			echo "var infowindow" . $i . " = new google.maps.InfoWindow({ ";
-			echo "content: contentString" . $i . " ";
-			echo "}); ";
-			echo " google.maps.event.addListener(marker" . $i . ", 'click', function() { ";
-			echo "infowindow" . $i . ".open(map,marker" . $i . "); ";
-			echo " }); ";
-
-			$i = $i + 1;
-
-		}
-
+		displayMarkers($_GET["view"], $internetResult);
 	}
 }
 
 if (isset($_GET["view"]) && $_GET["view"] == 3) {
 	if ($smsResult) {//If Calldata available
-		$i = 1;
-		while ($sms = $smsResult -> fetch_object()) {
-			echo "var marker" . $i . " = new google.maps.Marker({ ";
-			echo "position: new google.maps.LatLng(" . $sms -> locationLat . " , " . $sms -> locationLon . "), ";
-			echo "title:'Hello World!' ";
-			echo "}); ";
-			echo "marker" . $i . ".setMap(map); ";
-
-			echo "var contentString" . $i . " = '<p>Número orígen: " . $sms -> sourceNumber . "</p><p>Operador: " . $sms -> operatorName . "</p><p>Nivel de Batería: " . $sms -> batteryLevel . "</p><p>Nivel de Señal: " . $sms -> currentSignal . "</p><p>Tiempo de Envío: " . $sms -> sendingTime . " ms</p>'; ";
-			echo "var infowindow" . $i . " = new google.maps.InfoWindow({ ";
-			echo "content: contentString" . $i . " ";
-			echo "}); ";
-			echo " google.maps.event.addListener(marker" . $i . ", 'click', function() { ";
-			echo "infowindow" . $i . ".open(map,marker" . $i . "); ";
-			echo " }); ";
-
-			$i = $i + 1;
-
-		}
-
+		displayMarkers($_GET["view"], $smsResult);
 	}
 }
 ?>
+
+ document.getElementById('lenght').innerHTML= zoneArray1.length +" "+ zoneArray2.length +" "+ zoneArray3.length +" "+ zoneArray4.length +" "+ zoneArray5.length; 
+
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);
-
+	
+ 
 		</script>
 	</head>
 	<body>
@@ -170,6 +90,7 @@ if (isset($_GET["view"]) && $_GET["view"] == 3) {
 			<a href="index.php?view=3">Ver SMS</a>
 		</div>
 		<div id="map-canvas"></div>
+		<div id="lenght"></div>
 
 	</body>
 </html>
