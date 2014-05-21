@@ -1,0 +1,548 @@
+﻿
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.90333708050163,-57.547245025634766,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.91566191801781,-57.52449989318848,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.923177700916135,-57.52647399902344,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.93008341884822,-57.529048919677734,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.93238518069604,-57.530250549316406,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.93793619218118,-57.53145217895508,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94077923084092,-57.5328254699707,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94429903109217,-57.53445625305176,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9428099054067,-57.53814697265625,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.944095970275626,-57.539777755737305,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.93732695530299,-57.5493049621582,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9325036517822,-57.54415512084961,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.92248370810522,-57.557029724121094,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.932740593381766,-57.56865978240967,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.942319164194984,-57.556257247924805,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.943875987091126,-57.55814552307129,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.942928359690946,-57.55981922149658,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94126998233598,-57.56883144378662,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.93148817913414,-57.57303714752197,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.91126042734188,-57.5669002532959,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.904894728880606,-57.569732666015625,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.89839302160657,-57.559261322021484,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.90482700572363,-57.55179405212402,(select id from neighborhood where name='Parque Camet'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.937174645294405,-57.54939079284668,(select id from neighborhood where name='Alto Camét'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.944519013010215,-57.53986358642578,(select id from neighborhood where name='Alto Camét'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94793710896344,-57.542266845703125,(select id from neighborhood where name='Alto Camét'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9480047924263,-57.5438117980957,(select id from neighborhood where name='Alto Camét'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94756484880312,-57.54720211029053,(select id from neighborhood where name='Alto Camét'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94431595280156,-57.55733013153076,(select id from neighborhood where name='Alto Camét'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94380829982495,-57.55814552307129,(select id from neighborhood where name='Alto Camét'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.946989533936424,-57.549734115600586,(select id from neighborhood where name='Zacagnini'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95220104535265,-57.553982734680176,(select id from neighborhood where name='Zacagnini'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95907020009857,-57.53964900970459,(select id from neighborhood where name='Zacagnini'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95020447102749,-57.535743713378906,(select id from neighborhood where name='Zacagnini'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94445132633634,-57.53458499908447,(select id from neighborhood where name='Zacagnini'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.942826827458994,-57.53767490386963,(select id from neighborhood where name='Zacagnini'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94580504796749,-57.539992332458496,(select id from neighborhood where name='Zacagnini'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94797095070267,-57.54213809967041,(select id from neighborhood where name='Zacagnini'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94814015916501,-57.54359722137451,(select id from neighborhood where name='Zacagnini'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94770021635237,-57.547030448913574,(select id from neighborhood where name='Zacagnini'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94695569174515,-57.54964828491211,(select id from neighborhood where name='El Grosellar'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95226872488737,-57.55385398864746,(select id from neighborhood where name='El Grosellar'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94394367429496,-57.569990158081055,(select id from neighborhood where name='El Grosellar'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94147305096157,-57.568016052246094,(select id from neighborhood where name='El Grosellar'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.942928359690946,-57.559733390808105,(select id from neighborhood where name='El Grosellar'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94441748297603,-57.557244300842285,(select id from neighborhood where name='El Grosellar'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94150689567795,-57.56810188293457,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.953486945850074,-57.577757835388184,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.951964166490086,-57.580976486206055,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.944789759082205,-57.58307933807373,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.944552856323774,-57.581706047058105,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94316526768664,-57.57956027984619,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.941405361482055,-57.5787878036499,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94032232133067,-57.57535457611084,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94069461818297,-57.57355213165283,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94005155879897,-57.57213592529297,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.93981464076544,-57.570762634277344,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94059308286483,-57.569260597229004,(select id from neighborhood where name='Aeroparque'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94130382714588,-57.56878852844238,(select id from neighborhood where name='Aeroparque'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9439775178735,-57.57003307342529,(select id from neighborhood where name='Estrada'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.954299081934934,-57.5498628616333,(select id from neighborhood where name='Estrada'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.96370567052888,-57.557501792907715,(select id from neighborhood where name='Estrada'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.953486945850074,-57.57762908935547,(select id from neighborhood where name='Estrada'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95416372654432,-57.5498628616333,(select id from neighborhood where name='Constitucion'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.963638001532296,-57.55754470825195,(select id from neighborhood where name='Constitucion'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97101355510727,-57.54261016845703,(select id from neighborhood where name='Constitucion'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9647883659934,-57.54020690917969,(select id from neighborhood where name='Constitucion'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95930705604582,-57.53939151763916,(select id from neighborhood where name='Constitucion'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95379149793411,-57.549991607666016,(select id from neighborhood where name='Constitucion'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95125352531948,-57.58187770843506,(select id from neighborhood where name='La Florida'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94803863413436,-57.58835792541504,(select id from neighborhood where name='La Florida'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.93619308433471,-57.591447830200195,(select id from neighborhood where name='La Florida'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.93494072890739,-57.58651256561279,(select id from neighborhood where name='La Florida'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.970979723984264,-57.54256725311279,(select id from neighborhood where name='Parque Luro'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.981669582878304,-57.543983459472656,(select id from neighborhood where name='Parque Luro'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97158868181296,-57.56411075592041,(select id from neighborhood where name='Parque Luro'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.96370567052888,-57.55754470825195,(select id from neighborhood where name='Parque Luro'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.96367183603839,-57.55754470825195,(select id from neighborhood where name='Los Pinares'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97169017429329,-57.563982009887695,(select id from neighborhood where name='Los Pinares'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.964889867874724,-57.577457427978516,(select id from neighborhood where name='Los Pinares'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95193032659022,-57.58106231689453,(select id from neighborhood where name='Los Pinares'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.96475453200178,-57.57762908935547,(select id from neighborhood where name='Villa Primera'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97371999443323,-57.56003379821777,(select id from neighborhood where name='Villa Primera'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.981500451663926,-57.5663423538208,(select id from neighborhood where name='Villa Primera'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97578358736982,-57.578186988830566,(select id from neighborhood where name='Villa Primera'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.972231465151964,-57.575955390930176,(select id from neighborhood where name='Villa Primera'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.975817416278886,-57.57835865020752,(select id from neighborhood where name='Sarmiento'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98065478974497,-57.56853103637695,(select id from neighborhood where name='Sarmiento'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98542419545395,-57.57260799407959,(select id from neighborhood where name='Sarmiento'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.980722443057104,-57.58204936981201,(select id from neighborhood where name='Sarmiento'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.980722443057104,-57.56853103637695,(select id from neighborhood where name='Estación Norte'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.985762439405654,-57.558488845825195,(select id from neighborhood where name='Estación Norte'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.990565335240596,-57.56235122680664,(select id from neighborhood where name='Estación Norte'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98539037097303,-57.57260799407959,(select id from neighborhood where name='Estación Norte'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99046386886146,-57.56243705749512,(select id from neighborhood where name='Nueva Pompeya'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99367690272368,-57.55630016326904,(select id from neighborhood where name='Nueva Pompeya'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98089157606458,-57.54595756530762,(select id from neighborhood where name='Nueva Pompeya'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97784712229081,-57.55196571350098,(select id from neighborhood where name='Nueva Pompeya'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98085774949426,-57.54591464996338,(select id from neighborhood where name='La Perla'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.981737235254904,-57.54385471343994,(select id from neighborhood where name='La Perla'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.991918206885366,-57.54497051239014,(select id from neighborhood where name='La Perla'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.993440157662995,-57.544498443603516,(select id from neighborhood where name='La Perla'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99465769554935,-57.543511390686035,(select id from neighborhood where name='La Perla'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99739708190134,-57.541279792785645,(select id from neighborhood where name='La Perla'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99885128246447,-57.54222393035889,(select id from neighborhood where name='La Perla'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99685597665683,-57.54737377166748,(select id from neighborhood where name='La Perla'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99776908944117,-57.54814624786377,(select id from neighborhood where name='La Perla'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9935669854691,-57.556214332580566,(select id from neighborhood where name='La Perla'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.980519482933595,-57.58256435394287,(select id from neighborhood where name='Los Andes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98251523310312,-57.57853031158447,(select id from neighborhood where name='Los Andes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98728451789219,-57.58234977722168,(select id from neighborhood where name='Los Andes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98931390675636,-57.57840156555176,(select id from neighborhood where name='Los Andes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.992628454511205,-57.58114814758301,(select id from neighborhood where name='Los Andes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98856980402408,-57.5888729095459,(select id from neighborhood where name='Los Andes'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98863745003889,-57.58882999420166,(select id from neighborhood where name='Rivadavia'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99672069972194,-57.57286548614502,(select id from neighborhood where name='Rivadavia'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00987521385973,-57.58342266082764,(select id from neighborhood where name='Rivadavia'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99939237298782,-57.59737014770508,(select id from neighborhood where name='Rivadavia'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.009773774194336,-57.583465576171875,(select id from neighborhood where name='Santa Mónica'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00615566768023,-57.58063316345215,(select id from neighborhood where name='Santa Mónica'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.008150720458545,-57.576470375061035,(select id from neighborhood where name='Santa Mónica'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01251259589184,-57.579946517944336,(select id from neighborhood where name='Santa Mónica'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01322264407275,-57.579216957092285,(select id from neighborhood where name='Santa Mónica'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01579228476234,-57.58402347564697,(select id from neighborhood where name='Santa Mónica'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01055147470862,-57.591447830200195,(select id from neighborhood where name='Santa Mónica'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.007136293626566,-57.587242126464844,(select id from neighborhood where name='Santa Mónica'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01244497189685,-57.58007526397705,(select id from neighborhood where name='San José'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02309498222232,-57.56587028503418,(select id from neighborhood where name='San José'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00997665338476,-57.555227279663086,(select id from neighborhood where name='San José'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00186104784129,-57.571449279785156,(select id from neighborhood where name='San José'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00196249845471,-57.571449279785156,(select id from neighborhood where name='Plaza Peralta Ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00700103565512,-57.561235427856445,(select id from neighborhood where name='Plaza Peralta Ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.0006098120688,-57.55608558654785,(select id from neighborhood where name='Plaza Peralta Ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99543555639625,-57.56638526916504,(select id from neighborhood where name='Plaza Peralta Ramos'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02708411143002,-57.560720443725586,(select id from neighborhood where name='San Carlos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03881359733049,-57.54484176635742,(select id from neighborhood where name='San Carlos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03005891386285,-57.537546157836914,(select id from neighborhood where name='San Carlos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02093129587766,-57.55544185638428,(select id from neighborhood where name='San Carlos'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02350066629937,-57.55059242248535,(select id from neighborhood where name='PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.028934926005384,-57.53958463668823,(select id from neighborhood where name='PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02421060802955,-57.53565788269043,(select id from neighborhood where name='PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.018699927421366,-57.54681587219238,(select id from neighborhood where name='PLaya Grande'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02895182820614,-57.53958463668823,(select id from neighborhood where name='Alem de PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.030422304744214,-57.53662347793579,(select id from neighborhood where name='Alem de PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.029678619149685,-57.53591537475586,(select id from neighborhood where name='Alem de PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.0303208935168,-57.53482103347778,(select id from neighborhood where name='Alem de PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.029509598643465,-57.534306049346924,(select id from neighborhood where name='Alem de PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02810671339114,-57.53370523452759,(select id from neighborhood where name='Alem de PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02616291231909,-57.532010078430176,(select id from neighborhood where name='Alem de PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02383873464781,-57.52784729003906,(select id from neighborhood where name='Alem de PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.015082261473616,-57.54514217376709,(select id from neighborhood where name='Alem de PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01822659810524,-57.547760009765625,(select id from neighborhood where name='Alem de PLaya Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02431202771519,-57.535743713378906,(select id from neighborhood where name='Alem de PLaya Grande'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.014541286732246,-57.546257972717285,(select id from neighborhood where name='Lomas de Stella Maris'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02387254139688,-57.527804374694824,(select id from neighborhood where name='Lomas de Stella Maris'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.020457980973475,-57.527503967285156,(select id from neighborhood where name='Lomas de Stella Maris'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01934229803209,-57.52540111541748,(select id from neighborhood where name='Lomas de Stella Maris'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.017144691046035,-57.52510070800781,(select id from neighborhood where name='Lomas de Stella Maris'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.016569921424654,-57.53007888793945,(select id from neighborhood where name='Lomas de Stella Maris'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00872555609949,-57.532997131347656,(select id from neighborhood where name='Lomas de Stella Maris'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00825216236975,-57.53806114196777,(select id from neighborhood where name='Lomas de Stella Maris'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.007271551348474,-57.540292739868164,(select id from neighborhood where name='Lomas de Stella Maris'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99942619101298,-57.59749889373779,(select id from neighborhood where name='EL Gaucho'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00179341402103,-57.59410858154297,(select id from neighborhood where name='EL Gaucho'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.004667796370455,-57.597455978393555,(select id from neighborhood where name='EL Gaucho'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00595277791587,-57.59573936462402,(select id from neighborhood where name='EL Gaucho'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01139679199691,-57.60226249694824,(select id from neighborhood where name='EL Gaucho'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.006831962839925,-57.6082706451416,(select id from neighborhood where name='EL Gaucho'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.003044629598065,-57.60140419006348,(select id from neighborhood where name='EL Gaucho'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00463398076252,-57.597413063049316,(select id from neighborhood where name='Bosque Alegre'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.009909027050334,-57.590460777282715,(select id from neighborhood where name='Bosque Alegre'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.007136293626566,-57.587199211120605,(select id from neighborhood where name='Bosque Alegre'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.0017595970875,-57.59415149688721,(select id from neighborhood where name='Bosque Alegre'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00987521385973,-57.59041786193848,(select id from neighborhood where name='San Antonio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.015251315261466,-57.59724140167236,(select id from neighborhood where name='San Antonio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01136297949253,-57.60234832763672,(select id from neighborhood where name='San Antonio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.005885147869655,-57.59578227996826,(select id from neighborhood where name='San Antonio'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01055147470862,-57.59136199951172,(select id from neighborhood where name='Santa Rita'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01602895766343,-57.58385181427002,(select id from neighborhood where name='Santa Rita'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01995085446941,-57.590932846069336,(select id from neighborhood where name='Santa Rita'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01528512597225,-57.59715557098389,(select id from neighborhood where name='Santa Rita'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01318883241057,-57.57925987243652,(select id from neighborhood where name='Peralta Ramos Oeste'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.023128789314526,-57.56582736968994,(select id from neighborhood where name='Peralta Ramos Oeste'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03134345029741,-57.57561206817627,(select id from neighborhood where name='Peralta Ramos Oeste'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01984942874746,-57.59110450744629,(select id from neighborhood where name='Peralta Ramos Oeste'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.023196403452154,-57.56587028503418,(select id from neighborhood where name='Las Avenidas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.031208236996605,-57.55514144897461,(select id from neighborhood where name='Las Avenidas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.039388192467285,-57.56505489349365,(select id from neighborhood where name='Las Avenidas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03144486010923,-57.57578372955322,(select id from neighborhood where name='Las Avenidas'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03932059327343,-57.56484031677246,(select id from neighborhood where name='Villa Lourdes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.033946257692385,-57.55840301513672,(select id from neighborhood where name='Villa Lourdes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.041720326442906,-57.54814624786377,(select id from neighborhood where name='Villa Lourdes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04716168354328,-57.55454063415527,(select id from neighborhood where name='Villa Lourdes'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03391245559172,-57.55840301513672,(select id from neighborhood where name='Puerto'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03110682685721,-57.555227279663086,(select id from neighborhood where name='Puerto'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04090915783202,-57.54209518432617,(select id from neighborhood where name='Puerto'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.044119980971125,-57.5438117980957,(select id from neighborhood where name='Puerto'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.05202814481056,-57.54531383514404,(select id from neighborhood where name='Puerto'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.05408953432618,-57.547030448913574,(select id from neighborhood where name='Puerto'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.052230907009346,-57.5478458404541,(select id from neighborhood where name='Puerto'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.047094091525665,-57.55466938018799,(select id from neighborhood where name='Puerto'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.041720326442906,-57.54806041717529,(select id from neighborhood where name='Puerto'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00750825176137,-57.60758399963379,(select id from neighborhood where name='Bosque Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01518369379312,-57.59711265563965,(select id from neighborhood where name='Bosque Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02076225519139,-57.60359287261963,(select id from neighborhood where name='Bosque Grande'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01288452674917,-57.614192962646484,(select id from neighborhood where name='Bosque Grande'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.015251315261466,-57.59715557098389,(select id from neighborhood where name='Fortunato de la Plaza'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.0271517219177,-57.58101940155029,(select id from neighborhood where name='Fortunato de la Plaza'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03286458273364,-57.58758544921875,(select id from neighborhood where name='Fortunato de la Plaza'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.020897487771606,-57.603678703308105,(select id from neighborhood where name='Fortunato de la Plaza'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02725313753222,-57.58110523223877,(select id from neighborhood where name='El Progreso'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03688698073637,-57.568488121032715,(select id from neighborhood where name='El Progreso'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04249768792972,-57.57513999938965,(select id from neighborhood where name='El Progreso'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03286458273364,-57.587714195251465,(select id from neighborhood where name='El Progreso'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.041314743260685,-57.56243705749512,(select id from neighborhood where name='Cerrito y San Salvador'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04675613050155,-57.56917476654053,(select id from neighborhood where name='Cerrito y San Salvador'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04226110052475,-57.57518291473389,(select id from neighborhood where name='Cerrito y San Salvador'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03688698073637,-57.56861686706543,(select id from neighborhood where name='Cerrito y San Salvador'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04675613050155,-57.56908893585205,(select id from neighborhood where name='Termas Huinco'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.05242522025614,-57.5614070892334,(select id from neighborhood where name='Termas Huinco'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04699270338224,-57.55454063415527,(select id from neighborhood where name='Termas Huinco'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04121334711413,-57.56239414215088,(select id from neighborhood where name='Termas Huinco'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04699270338224,-57.55471229553223,(select id from neighborhood where name='Colinas Peralta Ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.05287298360009,-57.5469446182251,(select id from neighborhood where name='Colinas Peralta Ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.06659180043995,-57.56329536437988,(select id from neighborhood where name='Colinas Peralta Ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.06067883269099,-57.57110595703125,(select id from neighborhood where name='Colinas Peralta Ramos'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.05297436359956,-57.5469446182251,(select id from neighborhood where name='Punta Mogotes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.066693161435246,-57.56338119506836,(select id from neighborhood where name='Punta Mogotes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.07696368080644,-57.54981994628906,(select id from neighborhood where name='Punta Mogotes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.07767310422267,-57.54934787750244,(select id from neighborhood where name='Punta Mogotes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.08449673036391,-57.540249824523926,(select id from neighborhood where name='Punta Mogotes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.08223351900267,-57.53836154937744,(select id from neighborhood where name='Punta Mogotes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.076693422456735,-57.54333972930908,(select id from neighborhood where name='Punta Mogotes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.071220475997,-57.54758834838867,(select id from neighborhood where name='Punta Mogotes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.06581469481052,-57.54711627960205,(select id from neighborhood where name='Punta Mogotes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.05909069709428,-57.544240951538086,(select id from neighborhood where name='Punta Mogotes'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.054461254126046,-57.54707336425781,(select id from neighborhood where name='Punta Mogotes'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.012816903097296,-57.61410713195801,(select id from neighborhood where name='De las Heras Juan Gregorio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02116795218334,-57.62402057647705,(select id from neighborhood where name='De las Heras Juan Gregorio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02890957269693,-57.613420486450195,(select id from neighborhood where name='De las Heras Juan Gregorio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02052559757553,-57.60337829589844,(select id from neighborhood where name='De las Heras Juan Gregorio'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02076225519139,-57.603678703308105,(select id from neighborhood where name='General Pueyrredon'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02748977342015,-57.59479522705078,(select id from neighborhood where name='General Pueyrredon'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03029554068801,-57.59805679321289,(select id from neighborhood where name='General Pueyrredon'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.029180007534706,-57.599687576293945,(select id from neighborhood where name='General Pueyrredon'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.033743444854366,-57.606682777404785,(select id from neighborhood where name='General Pueyrredon'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.0288419638315,-57.61350631713867,(select id from neighborhood where name='General Pueyrredon'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.0273883581332,-57.59475231170654,(select id from neighborhood where name='El Martillo'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03299979297704,-57.5877571105957,(select id from neighborhood where name='El Martillo'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04104435322451,-57.59758472442627,(select id from neighborhood where name='El Martillo'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03391245559172,-57.606682777404785,(select id from neighborhood where name='El Martillo'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.029349028801356,-57.59960174560547,(select id from neighborhood where name='El Martillo'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03029554068801,-57.598185539245605,(select id from neighborhood where name='El Martillo'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03293218788653,-57.5877571105957,(select id from neighborhood where name='Florencio Sánchez'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03688698073637,-57.5822639465332,(select id from neighborhood where name='Florencio Sánchez'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04503250501128,-57.59213447570801,(select id from neighborhood where name='Florencio Sánchez'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.040875358944895,-57.59762763977051,(select id from neighborhood where name='Florencio Sánchez'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.03692078146429,-57.58239269256592,(select id from neighborhood where name='Gral San Martín'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04226110052475,-57.57518291473389,(select id from neighborhood where name='Gral San Martín'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.05047361596026,-57.58505344390869,(select id from neighborhood where name='Gral San Martín'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04493111401288,-57.5923490524292,(select id from neighborhood where name='Gral San Martín'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04232869700417,-57.57518291473389,(select id from neighborhood where name='Cerrito Sur'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.046823722831185,-57.569003105163574,(select id from neighborhood where name='Cerrito Sur'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.054934349322785,-57.579002380371094,(select id from neighborhood where name='Cerrito Sur'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.05033843797833,-57.58505344390869,(select id from neighborhood where name='Cerrito Sur'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.046688538109514,-57.569003105163574,(select id from neighborhood where name='Juramento'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.05245901381162,-57.56132125854492,(select id from neighborhood where name='Juramento'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.0607126224356,-57.57110595703125,(select id from neighborhood where name='Juramento'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.054824523924665,-57.578980922698975,(select id from neighborhood where name='Juramento'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00358568918123,-57.60380744934082,(select id from neighborhood where name='Camino a Necochea'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.004025297152864,-57.6033353805542,(select id from neighborhood where name='Camino a Necochea'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.017584217715076,-57.619686126708984,(select id from neighborhood where name='Camino a Necochea'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01278309124796,-57.64221668243408,(select id from neighborhood where name='Camino a Necochea'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.011599666695645,-57.636122703552246,(select id from neighborhood where name='Camino a Necochea'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00395766532878,-57.63749599456787,(select id from neighborhood where name='Camino a Necochea'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00412674477204,-57.630629539489746,(select id from neighborhood where name='Camino a Necochea'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.005851332823156,-57.62972831726074,(select id from neighborhood where name='Camino a Necochea'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.002097765720954,-57.62470722198486,(select id from neighborhood where name='Camino a Necochea'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00882699721531,-57.61475086212158,(select id from neighborhood where name='Camino a Necochea'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01748278871771,-57.61972904205322,(select id from neighborhood where name='Parque Palermo'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01535274734702,-57.63144493103027,(select id from neighborhood where name='Parque Palermo'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.023230210497566,-57.6403284072876,(select id from neighborhood where name='Parque Palermo'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02870674591347,-57.63333320617676,(select id from neighborhood where name='Parque Palermo'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01234353578739,-57.64770984649658,(select id from neighborhood where name='Parque Hermoso'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.043562321792336,-57.679080963134766,(select id from neighborhood where name='Parque Hermoso'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.080189812733146,-57.63959884643555,(select id from neighborhood where name='Parque Hermoso'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04292016353728,-57.59462356567383,(select id from neighborhood where name='Parque Hermoso'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.0210834321619,-57.623891830444336,(select id from neighborhood where name='Parque Hermoso'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.02872364816686,-57.63350486755371,(select id from neighborhood where name='Parque Hermoso'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.01675587679542,-57.6481819152832,(select id from neighborhood where name='Parque Hermoso'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.060966045022845,-57.57119178771973,(select id from neighborhood where name='Nuevo Golf'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.04508320045782,-57.59239196777344,(select id from neighborhood where name='Nuevo Golf'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.05860073341076,-57.6082706451416,(select id from neighborhood where name='Nuevo Golf'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.071913062842,-57.58458137512207,(select id from neighborhood where name='Nuevo Golf'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.060746412164605,-57.57114887237549,(select id from neighborhood where name='Jardin peralta ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.06794326883047,-57.56132125854492,(select id from neighborhood where name='Jardin peralta ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.07632181559517,-57.57157802581787,(select id from neighborhood where name='Jardin peralta ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.06888928184896,-57.58110523223877,(select id from neighborhood where name='Jardin peralta ramos'));
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.06787569600389,-57.56162166595459,(select id from neighborhood where name='Bosque Peralta Ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.089766025660815,-57.58758544921875,(select id from neighborhood where name='Bosque Peralta Ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.09874997373645,-57.57565498352051,(select id from neighborhood where name='Bosque Peralta Ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.08307800904699,-57.555999755859375,(select id from neighborhood where name='Bosque Peralta Ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.078551428441315,-57.562222480773926,(select id from neighborhood where name='Bosque Peralta Ramos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.07260564312924,-57.5553560256958,(select id from neighborhood where name='Bosque Peralta Ramos'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.07250429032609,-57.5553560256958,(select id from neighborhood where name='Faro Norte'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.07750419450967,-57.549476623535156,(select id from neighborhood where name='Faro Norte'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.08439539403994,-57.54046440124512,(select id from neighborhood where name='Faro Norte'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.085645198885985,-57.54192352294922,(select id from neighborhood where name='Faro Norte'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.0880096360951,-57.543296813964844,(select id from neighborhood where name='Faro Norte'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.09280583095061,-57.54844665527344,(select id from neighborhood where name='Faro Norte'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.08537497262149,-57.558746337890625,(select id from neighborhood where name='Faro Norte'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.08311178844589,-57.55604267120361,(select id from neighborhood where name='Faro Norte'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.078517646935666,-57.56217956542969,(select id from neighborhood where name='Faro Norte'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.08523985911468,-57.55878925323486,(select id from neighborhood where name='Alfar'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.09290715561642,-57.54836082458496,(select id from neighborhood where name='Alfar'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.10165432221408,-57.5628662109375,(select id from neighborhood where name='Alfar'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.10345259639723,-57.56730794906616,(select id from neighborhood where name='Alfar'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.09791410787041,-57.574710845947266,(select id from neighborhood where name='Alfar'));
+
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.103410383895515,-57.56728649139404,(select id from neighborhood where name='San Jacinto'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.09162369947077,-57.58492469787598,(select id from neighborhood where name='San Jacinto'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.09520381036532,-57.58891582489014,(select id from neighborhood where name='San Jacinto'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.1065846959821,-57.5738525390625,(select id from neighborhood where name='San Jacinto'));
+
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.10671977003281,-57.573208808898926,(select id from neighborhood where name='PLaya Serena'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.09517003655362,-57.588958740234375,(select id from neighborhood where name='PLaya Serena'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.10334284384204,-57.59882926940918,(select id from neighborhood where name='PLaya Serena'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.11246018632669,-57.58681297302246,(select id from neighborhood where name='PLaya Serena'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.11262901527085,-57.58651256561279,(select id from neighborhood where name='Acantilados'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.09888506227188,-57.60672569274902,(select id from neighborhood where name='Acantilados'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.11134590550792,-57.62191772460937,(select id from neighborhood where name='Acantilados'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.1265729386095,-57.601661682128906,(select id from neighborhood where name='Acantilados'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.095136262726314,-57.58882999420166,(select id from neighborhood where name='Santa Rosa'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.09216410480526,-57.58513927459717,(select id from neighborhood where name='Santa Rosa'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.06483485420831,-57.62097358703613,(select id from neighborhood where name='Santa Rosa'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.07456510305233,-57.6322603225708,(select id from neighborhood where name='Santa Rosa'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.07497050199968,-57.6328182220459,(select id from neighborhood where name='Santa Rosa'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.09632678071709,-57.60404348373413,(select id from neighborhood where name='Santa Rosa'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.089740693418946,-57.59603977203369,(select id from neighborhood where name='Santa Rosa'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.09632678071709,-57.60408639907837,(select id from neighborhood where name='Antártida'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.111354347093176,-57.62178897857666,(select id from neighborhood where name='Antártida'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.087857638860235,-57.65247344970703,(select id from neighborhood where name='Antártida'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.07488604407096,-57.632646560668945,(select id from neighborhood where name='Antártida'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94122767630169,-57.59054660797119,(select id from neighborhood where name='Los Tilos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94858855970556,-57.59636163711548,(select id from neighborhood where name='Los Tilos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95124506526414,-57.590932846069336,(select id from neighborhood where name='Los Tilos'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94813169875114,-57.58859395980835,(select id from neighborhood where name='Los Tilos'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94529740527842,-57.59389400482178,(select id from neighborhood where name='Virgen de Luján'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.93832542420955,-57.607412338256836,(select id from neighborhood where name='Virgen de Luján'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94962917683007,-57.6203727722168,(select id from neighborhood where name='Virgen de Luján'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.954028370904304,-57.611918449401855,(select id from neighborhood where name='Virgen de Luján'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94780174185064,-57.60685443878174,(select id from neighborhood where name='Virgen de Luján'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9517272868637,-57.598700523376465,(select id from neighborhood where name='Virgen de Luján'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95182880679711,-57.59887218475342,(select id from neighborhood where name='Barrio Feliz'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9558556510001,-57.590932846069336,(select id from neighborhood where name='Barrio Feliz'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95132120572714,-57.58767127990723,(select id from neighborhood where name='Barrio Feliz'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94854625788468,-57.58852958679199,(select id from neighborhood where name='Barrio Feliz'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95132120572714,-57.59080410003662,(select id from neighborhood where name='Barrio Feliz'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94858009934333,-57.596468925476074,(select id from neighborhood where name='Barrio Feliz'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94817400081072,-57.5883150100708,(select id from neighborhood where name='Lopez de Gomara'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.951625766789995,-57.581448554992676,(select id from neighborhood where name='Lopez de Gomara'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97192698953508,-57.576212882995605,(select id from neighborhood where name='Lopez de Gomara'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.968949828073086,-57.582478523254395,(select id from neighborhood where name='Lopez de Gomara'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9558894890917,-57.590932846069336,(select id from neighborhood where name='Libertad'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94776790003347,-57.606940269470215,(select id from neighborhood where name='Libertad'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.96204776216104,-57.61861324310303,(select id from neighborhood where name='Libertad'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97023543533371,-57.60260581970215,(select id from neighborhood where name='Libertad'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97023543533371,-57.60260581970215,(select id from neighborhood where name='Malvinas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.974362759109795,-57.59475231170654,(select id from neighborhood where name='Malvinas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.961912421049945,-57.584452629089355,(select id from neighborhood where name='Malvinas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95209952593365,-57.58737087249756,(select id from neighborhood where name='Malvinas'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.94942613074365,-57.62054443359375,(select id from neighborhood where name='Ameghino'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.95409604875549,-57.611918449401855,(select id from neighborhood where name='Ameghino'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.96712287376556,-57.62251853942871,(select id from neighborhood where name='Ameghino'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.960389816362756,-57.63526439666748,(select id from neighborhood where name='Ameghino'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.96211543262305,-57.61852741241455,(select id from neighborhood where name='Newbery'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97037076110417,-57.60256290435791,(select id from neighborhood where name='Newbery'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.986066857629,-57.6152229309082,(select id from neighborhood where name='Newbery'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97514083513508,-57.629384994506836,(select id from neighborhood where name='Newbery'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.978286884528515,-57.60925769805908,(select id from neighborhood where name='Belisario Roldán'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98234610383778,-57.600975036621094,(select id from neighborhood where name='Belisario Roldán'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99124177418168,-57.608184814453125,(select id from neighborhood where name='Belisario Roldán'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98589773654974,-57.615180015563965,(select id from neighborhood where name='Belisario Roldán'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97835454002351,-57.60930061340332,(select id from neighborhood where name='Coronel Dorrego'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98237992972202,-57.600975036621094,(select id from neighborhood where name='Coronel Dorrego'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9743965886737,-57.59453773498535,(select id from neighborhood where name='Coronel Dorrego'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97023543533371,-57.60256290435791,(select id from neighborhood where name='Coronel Dorrego'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.974362759109795,-57.59458065032959,(select id from neighborhood where name='Nueve de Julio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98031652224877,-57.58277893066406,(select id from neighborhood where name='Nueve de Julio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.97202848154769,-57.576212882995605,(select id from neighborhood where name='Nueve de Julio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.968577674401274,-57.582736015319824,(select id from neighborhood where name='Nueve de Julio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.96214926783067,-57.58458137512207,(select id from neighborhood where name='Nueve de Julio'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.974362759109795,-57.59449481964111,(select id from neighborhood where name='San Cayetano'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98035034906855,-57.58265018463135,(select id from neighborhood where name='San Cayetano'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98522124833448,-57.58638381958008,(select id from neighborhood where name='San Cayetano'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9790987463523,-57.59852886199951,(select id from neighborhood where name='San Cayetano'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9792002284488,-57.59861469268799,(select id from neighborhood where name='Las Illias'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98552566880319,-57.60359287261963,(select id from neighborhood where name='Las Illias'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.991647634552386,-57.591447830200195,(select id from neighborhood where name='Las Illias'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98508594994298,-57.58655548095703,(select id from neighborhood where name='Las Illias'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98566096638387,-57.60354995727539,(select id from neighborhood where name='Regional'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99120795238277,-57.60809898376465,(select id from neighborhood where name='Regional'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.999054191878564,-57.597455978393555,(select id from neighborhood where name='Regional'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.991681456148584,-57.59161949157715,(select id from neighborhood where name='Regional'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99935855494707,-57.59754180908203,(select id from neighborhood where name='Las Américas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00219921600688,-57.600460052490234,(select id from neighborhood where name='Las Américas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00378858549565,-57.60359287261963,(select id from neighborhood where name='Las Américas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99607813087384,-57.61410713195801,(select id from neighborhood where name='Las Américas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99124177418168,-57.60809898376465,(select id from neighborhood where name='Las Américas'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99614576996506,-57.613935470581055,(select id from neighborhood where name='Don Emilio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00372095345322,-57.623291015625,(select id from neighborhood where name='Don Emilio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00879318352563,-57.615437507629395,(select id from neighborhood where name='Don Emilio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00808309243976,-57.611918449401855,(select id from neighborhood where name='Don Emilio'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.00378858549565,-57.60350704193115,(select id from neighborhood where name='Don Emilio'));
+ 
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99384600587062,-57.611188888549805,(select id from neighborhood where name='General Belgrano'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98643892263122,-57.620673179626465,(select id from neighborhood where name='General Belgrano'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99584139356337,-57.633376121520996,(select id from neighborhood where name='General Belgrano'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-38.003653321348416,-57.622947692871094,(select id from neighborhood where name='General Belgrano'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.991681456148584,-57.628440856933594,(select id from neighborhood where name='Autódromo'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.98782569374473,-57.633934020996094,(select id from neighborhood where name='Autódromo'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99083591156552,-57.63947010040283,(select id from neighborhood where name='Autódromo'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.99567229501663,-57.63359069824219,(select id from neighborhood where name='Autódromo'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.917033097849085,-57.59161949157715,(select id from neighborhood where name='Dos de Abril'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.91039702712227,-57.58213520050049,(select id from neighborhood where name='Dos de Abril'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.9078575559856,-57.583937644958496,(select id from neighborhood where name='Dos de Abril'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.91032930902947,-57.59033203125,(select id from neighborhood where name='Dos de Abril'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.909110372700695,-57.59415149688721,(select id from neighborhood where name='Dos de Abril'));
+
+
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.91388442463859,-57.59355068206787,(select id from neighborhood where name='Margaritas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.91462928423514,-57.59775638580322,(select id from neighborhood where name='Margaritas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.90260903788772,-57.60174751281738,(select id from neighborhood where name='Margaritas'));
+insert into coordinate (latitude,longitude, neighborhood_id) values  (-37.90179633064849,-57.59754180908203,(select id from neighborhood where name='Margaritas'));
