@@ -24,6 +24,8 @@ if (isset($_GET["view"]) && $_GET["view"] == 3)
 				padding: 0px
 			}
 		</style>
+		<script type="text/javascript" src="./js/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="./js/index.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry&sensor=false"></script>
 		<script src="js/markerwithlabel.js" type="text/javascript"></script>
 		<script>
@@ -34,13 +36,13 @@ var infoWindow;
 
 
 function initialize() {
-var mapOptions = {
+/*var mapOptions = {
 zoom: 12,
 center: new google.maps.LatLng(-38,-57.55),
 mapTypeId: google.maps.MapTypeId.TERRAIN
-};
+};*/
 
-map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+//map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
 
 
