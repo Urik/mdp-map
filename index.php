@@ -7,10 +7,10 @@ $app = new \Slim\Slim(array(
 	'debug' => true,
 	'templates.path' => './'
 ));
-$app->response->headers->set('Content-Type', 'application/json');
+//$app->response->headers->set('Content-Type', 'application/json');
 
 $app->get('/', function() use($app) {
-	$app->render('/index_template_2.php');
+	$app->render('/index_template.php');
 });
 
 $app->get('/internet', function() use($app) {
