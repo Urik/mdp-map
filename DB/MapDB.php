@@ -9,7 +9,7 @@ function getNeighborhoods(){
   		while ($item = $result->fetch_object()) {
   			$response[] = [
   				'id' => $item->id,
-  				'name' => $item->name,
+  				'name' => utf8_encode($item->name),
   				'lat' => $item->latitude,
   				'lon' => $item->longitude,
   				'zone_id' => $item->zone_id

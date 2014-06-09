@@ -20,7 +20,7 @@ function displayNeighborhoods(neighborhoods) {
 			zones[zone_id] = [];
 			var neighs = groupedNeighborhoodsByZone[zone_id];
 			var groupedNeighborhoodsByName = _.groupBy(neighs, 'name');
-			for(var name in groupedNeighborhoodsByName)
+			for(var name in groupedNeighborhoodsByName) {
 				(function() {
 					var neighborhood = groupedNeighborhoodsByName[name];
 					var coordinates = _.map(neighborhood, function(x) { return new google.maps.LatLng(x.lat, x.lon); });
@@ -37,7 +37,7 @@ function displayNeighborhoods(neighborhoods) {
 					zones[zone_id].push(neighborhoodPolygon);
 				})();
 			}
-		)();
+		})();
 	}
 }
 
