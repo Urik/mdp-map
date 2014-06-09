@@ -20,24 +20,26 @@ function displayNeighborhoods(neighborhoods) {
 			zones[zone_id] = [];
 			var neighs = groupedNeighborhoodsByZone[zone_id];
 			var groupedNeighborhoodsByName = _.groupBy(neighs, 'name');
-			for(var name in groupedNeighborhoodsByName)
-				(function() {
-					var neighborhood = groupedNeighborhoodsByName[name];
-					var coordinates = _.map(neighborhood, function(x) { return new google.maps.LatLng(x.lat, x.lon); });
-					var neighborhoodPolygon = new google.maps.Polygon({
-						paths: coordinates,
-						strokeColor: '#000000',
-						strokeOpacity: 0.8,
-						strokeWeight: 3,
-						fillColor: '#' + (0x1000000 + Math.random() * 0xFFFFFF).toString(16).substr(1,6),
-						fillOpacity: 0.35
-					});
-					neighborhoodPolygon.setMap(map);
-					neighArray.push(neighborhoodPolygon);
-					zones[zone_id].push(neighborhoodPolygon);
-				})();
+			for(var name in groupedNeighborhoodsByName) {
+				if (name !== "null") {
+					(function() {
+						var neighborhood = groupedNeighborhoodsByName[name];
+						var coordinates = _.map(neighborhood, function(x) { return new google.maps.LatLng(x.lat, x.lon); });
+						var neighborhoodPolygon = new google.maps.Polygon({
+							paths: coordinates,
+							strokeColor: '#000000',
+							strokeOpacity: 0.8,
+							strokeWeight: 3,
+							fillColor: '#' + (0x1000000 + Math.random() * 0xFFFFFF).toString(16).substr(1,6),
+							fillOpacity: 0.35
+						});
+						neighborhoodPolygon.setMap(map);
+						neighArray.push(neighborhoodPolygon);
+						zones[zone_id].push(neighborhoodPolygon);
+					})();
+				}
 			}
-		)();
+		})();
 	}
 }
 
