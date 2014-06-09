@@ -86,7 +86,7 @@ function renderNeighborhood($i,$zone){
 function getCalls(){
 	$response = [];
 	$con = connectDB();
-	if ($result = $con->query("SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal FROM matched_calls m"))
+	if ($result = $con->query("SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal, callerTime AS caller_time FROM matched_calls m"))
        while ($item = $result->fetch_assoc()) {
        	$response[] = $item;
        }
@@ -96,10 +96,15 @@ function getCalls(){
 
 
 function getSMS(){
+	$response = [];
 	$con = connectDB();
-  	if ($result = $con->query("SELECT * FROM sms"))
-         return $result;
-    disconnectDB($con);
+	if ($result = $con->query("SELECT * FROM sms")) {
+		while($item = $result->fetch_assoc()) {
+			$response[] = $item;
+		}
+   }	
+  disconnectDB($con);
+  return $response;
 }
 
 function displayMarkers($view, $result){
@@ -187,12 +192,8 @@ function getInternetTests(){
 	$tests = [];
 	$con = connectDB();
   	if ($result = $con->query("SELECT * FROM internet where locationLat<>0 AND locationLon <> 0 ORDER BY id")){
-			while ($item = $result -> fetch_object()) {
-				$tests[] = [
-					'id' => $item->id,
-					'lat' => $item->locationLat,
-					'lon' => $item->locationLon
-				];						
+			while ($item = $result -> fetch_assoc()) {
+				$tests[] = $item;
   		}
   	}
      

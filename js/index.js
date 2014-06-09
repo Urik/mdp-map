@@ -48,6 +48,42 @@ function clearMarkers() {
 	markers = [];
 }
 
+function loadInternetMarkers(markers) {
+	var data = _.map(markers, function(x) {
+		return createMarkerWindowData(
+			x.sourceNumber,
+			x.operatorName,
+			x.batteryLevel,
+			x.currentSignal,
+			x.locationLat,
+			x.locationLon,
+			x.dateCreated,
+			{
+				'Tiempo de descarga [ms]': x.downloadTime
+			});
+	});
+
+	loadMarkers('Test de internet', data);
+}
+
+function loadSmsMarkers(smsData) {
+	var data = _.map(smsData, function(x) {
+		return createMarkerWindowData(
+			x.sourceNumber,
+			x.operatorName,
+			x.batteryLevel,
+			x.currentSignal,
+			x.locationLat,
+			x.locationLon,
+			x.dateCreated,
+			{
+				'Tiempo de envio [ms]': x.sendingTime
+			});
+	});
+
+	loadMarkers('Envio de SMS', data);
+}
+
 function loadCallsMarkers(callsData) {
 	var markerData = _.map(callsData, function(x) {
 		return createMarkerWindowData(
@@ -57,6 +93,7 @@ function loadCallsMarkers(callsData) {
 				x.caller_signal,
 				x.caller_lat,
 				x.caller_lon,
+				x.caller_time,
 				{
 					'Señal del Destinatario': x.receiver_signal,
 					'Tiempo de Conexion': x.connection_time
@@ -66,7 +103,7 @@ function loadCallsMarkers(callsData) {
 	loadMarkers('Llamada', markerData);
 }
 
-function createMarkerWindowData(callerNumber, operatorName, callerBatteryLevel, callerSignal, lat, lon, customData) {
+function createMarkerWindowData(callerNumber, operatorName, callerBatteryLevel, callerSignal, lat, lon, date, customData) {
 	return {
 		callerLat: lat,
 		callerLon: lon,
@@ -74,6 +111,7 @@ function createMarkerWindowData(callerNumber, operatorName, callerBatteryLevel, 
 		operatorName: operatorName,
 		batteryLevel: callerBatteryLevel,
 		sourceSignal: callerSignal,
+		date: date,
 		windowContent: customData
 	};
 }
@@ -89,6 +127,7 @@ function loadMarkers(title, totalData) {
 			marker.setMap(map);
 			markers.push(marker);
 			var contentString = '<p>Numero de origen: '+ data.sourceNumber + '</p>';
+			contentString += '<p>Fecha de evento: ' + data.date + '</p>';
 			contentString += '<p>Operador: ' + data.operatorName + '</p>';
 			contentString += '<p>Nivel de bateria: ' + data.batteryLevel + '</p>';
 			contentString += '<p>Señal del emisor: ' + data.sourceSignal + '</p>';
@@ -117,4 +156,14 @@ $(function () {
 		});
 		return false;
 	});
+	$('#internet_button').click(function() {
+		$.get('index.php/internet', function(data) {
+			loadInternetMarkers(JSON.parse(data));
+		});
+	});
+	$('#sms_button').click(function() {
+		$.get('index.php/sms', function(data) {
+			loadSmsMarkers(JSON.parse(data));
+		});
+	})
 });
