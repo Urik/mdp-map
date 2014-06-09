@@ -48,6 +48,23 @@ function clearMarkers() {
 	markers = [];
 }
 
+function loadInternetMarkers(markers) {
+	var data = _.map(markers, function(x) {
+		return createMarkerWindowData(
+			x.sourceNumber,
+			x.operatorName,
+			x.batteryLevel,
+			x.currentSignal,
+			x.locationLat,
+			x.locationLon,
+			{
+				'Tiempo de descarga [ms]': x.downloadTime
+			});
+	});
+
+	loadMarkers('Test de internet', data);
+}
+
 function loadCallsMarkers(callsData) {
 	var markerData = _.map(callsData, function(x) {
 		return createMarkerWindowData(
@@ -116,5 +133,10 @@ $(function () {
 			loadCallsMarkers(JSON.parse(data));
 		});
 		return false;
+	});
+	$('#internet_button').click(function() {
+		$.get('index.php/internet', function(data) {
+			loadInternetMarkers(JSON.parse(data));
+		});
 	});
 });

@@ -187,12 +187,8 @@ function getInternetTests(){
 	$tests = [];
 	$con = connectDB();
   	if ($result = $con->query("SELECT * FROM internet where locationLat<>0 AND locationLon <> 0 ORDER BY id")){
-			while ($item = $result -> fetch_object()) {
-				$tests[] = [
-					'id' => $item->id,
-					'lat' => $item->locationLat,
-					'lon' => $item->locationLon
-				];						
+			while ($item = $result -> fetch_assoc()) {
+				$tests[] = $item;
   		}
   	}
      
