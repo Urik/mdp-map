@@ -19,13 +19,16 @@ function getNeighborhoods(){
     return $response;
 }
 
-function getZones(){
-    $con = connectDB();
-  	if ($result = $con->query("SELECT z.name, c.latitude, c.longitude FROM zones AS z INNER JOIN zone_coor AS c ON z.id = c.zone_id"))
-         return $result;
-    disconnectDB($con);
-         
-   
+function getZones() {
+  $con = connectDB();
+  $response = [];
+	if ($result = $con->query("SELECT z.name, c.latitude, c.longitude FROM zones AS z INNER JOIN zone_coor AS c ON z.id = c.zone_id")) {
+		while($item = $result->fetch_assoc()) {
+			$response[] = $item;
+		}
+  }
+  disconnectDB($con);
+  return $response;
 }
 
 function getCoordinates($neigh_id){
