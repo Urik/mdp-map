@@ -5,6 +5,7 @@ var mapOptions = {
 	center: new google.maps.LatLng(-38, -57.55),
 	mapTypeId: google.maps.MapTypeId.TERRAIN
 };
+var markers = [];
 
 var zones =[]; //array for map zones polygons
 
@@ -40,13 +41,80 @@ function displayNeighborhoods(neighborhoods) {
 	}
 }
 
+function clearMarkers() {
+	for (var i = 0; i < markers.length; i++) {
+		markers[i].setMap(null);
+	}
+	markers = [];
+}
+
+function loadCallsMarkers(callsData) {
+	var markerData = _.map(callsData, function(x) {
+		return createMarkerWindowData(
+				x.caller_number,
+				x.caller_operator_name,
+				x.caller_battery_level,
+				x.caller_signal,
+				x.caller_lat,
+				x.caller_lon,
+				{
+					'Señal del Destinatario': x.receiver_signal,
+					'Tiempo de Conexion': x.connection_time
+				});
+	});
+
+	loadMarkers('Llamada', markerData);
+}
+
+function createMarkerWindowData(callerNumber, operatorName, callerBatteryLevel, callerSignal, lat, lon, customData) {
+	return {
+		callerLat: lat,
+		callerLon: lon,
+		sourceNumber: callerNumber,
+		operatorName: operatorName,
+		batteryLevel: callerBatteryLevel,
+		sourceSignal: callerSignal,
+		windowContent: customData
+	};
+}
+
+function loadMarkers(title, totalData) {
+	clearMarkers();
+	$.each(totalData, function(i, data){
+		(function() {
+			var marker = new google.maps.Marker({
+				position: new google.maps.LatLng(data.callerLat, data.callerLon),
+				title: title
+			});
+			marker.setMap(map);
+			markers.push(marker);
+			var contentString = '<p>Numero de origen: '+ data.sourceNumber + '</p>';
+			contentString += '<p>Operador: ' + data.operatorName + '</p>';
+			contentString += '<p>Nivel de bateria: ' + data.batteryLevel + '</p>';
+			contentString += '<p>Señal del emisor: ' + data.sourceSignal + '</p>';
+			for(var key in data.windowContent) {
+				contentString += '<p>' + key + ': ' + data.windowContent[key] + '</p>';
+			}
+
+			var infoWindow = new google.maps.InfoWindow({
+				content: contentString
+			});
+			google.maps.event.addListener(marker, 'click', function() {
+				infoWindow.open(map, marker);
+			});
+		})();
+	});
+}
+
 $(function () {
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	$.get('index.php/neighborhoods', function(response) {
 		displayNeighborhoods(JSON.parse(response));
 	});
 	$('#calls_button').click(function() {
-		
+		$.get('index.php/calls', function(data) {
+			loadCallsMarkers(JSON.parse(data));
+		});
 		return false;
 	});
 });
