@@ -4,20 +4,31 @@ include_once 'DB/DBConnection.php';
 
 function getNeighborhoods(){
     $con = connectDB();
-  	if ($result = $con->query("SELECT n.id, n.name, c.latitude, c.longitude, n.zone_id FROM neighborhood AS n INNER JOIN coordinate AS c ON n.id = c.neighborhood_id ORDER BY n.id"))
-         return $result;
-    disconnectDB($con);
-         
-   
+    $response = [];
+  	if ($result = $con->query("SELECT n.id AS id, n.name AS name, c.latitude AS latitude, c.longitude AS longitude, n.zone_id AS zone_id FROM neighborhood AS n INNER JOIN coordinate AS c ON n.id = c.neighborhood_id ORDER BY n.id"))
+  		while ($item = $result->fetch_object()) {
+  			$response[] = [
+  				'id' => $item->id,
+  				'name' => utf8_encode($item->name),
+  				'lat' => $item->latitude,
+  				'lon' => $item->longitude,
+  				'zone_id' => $item->zone_id
+  			];
+  		}
+    disconnectDB($con); 
+    return $response;
 }
 
-function getZones(){
-    $con = connectDB();
-  	if ($result = $con->query("SELECT z.name, c.latitude, c.longitude FROM zones AS z INNER JOIN zone_coor AS c ON z.id = c.zone_id"))
-         return $result;
-    disconnectDB($con);
-         
-   
+function getZones() {
+  $con = connectDB();
+  $response = [];
+	if ($result = $con->query("SELECT z.name, c.latitude, c.longitude FROM zones AS z INNER JOIN zone_coor AS c ON z.id = c.zone_id")) {
+		while($item = $result->fetch_assoc()) {
+			$response[] = $item;
+		}
+  }
+  disconnectDB($con);
+  return $response;
 }
 
 function getCoordinates($neigh_id){
@@ -72,27 +83,28 @@ function renderNeighborhood($i,$zone){
 			
 }
 
-
 function getCalls(){
+	$response = [];
 	$con = connectDB();
-  	if ($result = $con->query("SELECT c.sourceNumber, c.operatorName, c.batteryLevel, c.currentSignal,  c.locationLat, c.locationLon, m.connectionTime, m.ReceiverSignal FROM tesis.call c
-INNER JOIN matched_calls m ON c.id = m.OutgoingCallId"))
-         return $result;
-    disconnectDB($con);
+	if ($result = $con->query("SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal, callerTime AS caller_time FROM matched_calls m"))
+       while ($item = $result->fetch_assoc()) {
+       	$response[] = $item;
+       }
+  disconnectDB($con);
+  return $response;
 }
 
-function getInternet(){
-	$con = connectDB();
-  	if ($result = $con->query("SELECT * FROM internet"))
-         return $result;
-    disconnectDB($con);
-}
 
 function getSMS(){
+	$response = [];
 	$con = connectDB();
-  	if ($result = $con->query("SELECT * FROM sms"))
-         return $result;
-    disconnectDB($con);
+	if ($result = $con->query("SELECT * FROM sms")) {
+		while($item = $result->fetch_assoc()) {
+			$response[] = $item;
+		}
+   }	
+  disconnectDB($con);
+  return $response;
 }
 
 function displayMarkers($view, $result){
@@ -176,23 +188,19 @@ function zoning($table){
 	
 }
 
-function getItemCalls(){
+function getInternetTests(){
+	$tests = [];
 	$con = connectDB();
   	if ($result = $con->query("SELECT * FROM internet where locationLat<>0 AND locationLon <> 0 ORDER BY id")){
-  			$i = 0;
-  			while ($item = $result -> fetch_object()) {
-				echo "var item = { ";
-				echo "latlng: new google.maps.LatLng(" . $item -> locationLat . " , " . $item -> locationLon . "), ";
-				echo "id : ".$item->id;
-				echo "}; ";
-				
-				echo "callArray.push(item); ";
-				$i = $i +1;
-			}
-		
+			while ($item = $result -> fetch_assoc()) {
+				$tests[] = $item;
+  		}
   	}
      
     disconnectDB($con);
+
+    return $tests;
 }
+
 ?>
 
