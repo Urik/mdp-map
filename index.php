@@ -29,5 +29,13 @@ $app->get('/calls', function() use($app) {
 	echo json_encode(getCalls());
 });
 
+$app->get('/sms', function() use($app) {
+	echo json_encode(getSMS());
+});
+
+$app->get('/avgtime', function() use($app) {
+	echo json_encode(getAVGTime());
+});
+
 $app->run();
 ?>

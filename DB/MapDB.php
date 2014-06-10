@@ -4,28 +4,31 @@ include_once 'DB/DBConnection.php';
 
 function getNeighborhoods(){
     $con = connectDB();
-    $response = [];
+    $response = Array();
   	if ($result = $con->query("SELECT n.id AS id, n.name AS name, c.latitude AS latitude, c.longitude AS longitude, n.zone_id AS zone_id FROM neighborhood AS n INNER JOIN coordinate AS c ON n.id = c.neighborhood_id ORDER BY n.id"))
   		while ($item = $result->fetch_object()) {
-  			$response[] = [
+  			$response[] = array(
   				'id' => $item->id,
-  				'name' => $item->name,
+  				'name' => utf8_encode($item->name),
   				'lat' => $item->latitude,
   				'lon' => $item->longitude,
   				'zone_id' => $item->zone_id
-  			];
+  			);
   		}
     disconnectDB($con); 
     return $response;
 }
 
-function getZones(){
-    $con = connectDB();
-  	if ($result = $con->query("SELECT z.name, c.latitude, c.longitude FROM zones AS z INNER JOIN zone_coor AS c ON z.id = c.zone_id"))
-         return $result;
-    disconnectDB($con);
-         
-   
+function getZones() {
+  $con = connectDB();
+  $response = Array();;
+	if ($result = $con->query("SELECT z.name, c.latitude, c.longitude FROM zones AS z INNER JOIN zone_coor AS c ON z.id = c.zone_id")) {
+		while($item = $result->fetch_assoc()) {
+			$response[] = $item;
+		}
+  }
+  disconnectDB($con);
+  return $response;
 }
 
 function getCoordinates($neigh_id){
@@ -81,9 +84,9 @@ function renderNeighborhood($i,$zone){
 }
 
 function getCalls(){
-	$response = [];
+	$response = Array();
 	$con = connectDB();
-	if ($result = $con->query("SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal FROM matched_calls m"))
+	if ($result = $con->query("SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal, callerTime AS caller_time FROM matched_calls m"))
        while ($item = $result->fetch_assoc()) {
        	$response[] = $item;
        }
@@ -93,10 +96,15 @@ function getCalls(){
 
 
 function getSMS(){
+	$response = Array();
 	$con = connectDB();
-  	if ($result = $con->query("SELECT * FROM sms"))
-         return $result;
-    disconnectDB($con);
+	if ($result = $con->query("SELECT * FROM sms")) {
+		while($item = $result->fetch_assoc()) {
+			$response[] = $item;
+		}
+   }	
+  disconnectDB($con);
+  return $response;
 }
 
 function displayMarkers($view, $result){
@@ -171,31 +179,44 @@ function renderZone($i){
 			echo "zones.push(zone".$i."); ";			
 }
 
-function zoning($table){
+/* Creo que no sirve
+ * function zoning($table){
 	if($table == "internet")
 		$result = getInternet();
 	while ($obj = $result -> fetch_object()) {
 		
 	}
 	
-}
+}*/
 
 function getInternetTests(){
-	$tests = [];
+	$tests = Array();
 	$con = connectDB();
   	if ($result = $con->query("SELECT * FROM internet where locationLat<>0 AND locationLon <> 0 ORDER BY id")){
-			while ($item = $result -> fetch_object()) {
-				$tests[] = [
-					'id' => $item->id,
-					'lat' => $item->locationLat,
-					'lon' => $item->locationLon
-				];						
+			while ($item = $result -> fetch_assoc()) {
+				$tests[] = $item;
   		}
   	}
      
     disconnectDB($con);
 
     return $tests;
+}
+
+function getAVGTime(){
+	$response = Array();
+	$con = connectDB();
+  	if ($result = $con->query("SELECT AVG(m.connectionTime) as avg_connection_time, COUNT(c.neighborhood_id) as num_regs, c.neighborhood_id as neighborhood_id , n.name FROM tesis.call c
+		INNER JOIN matched_calls m ON c.id = m.OutgoingCallId
+		INNER JOIN neighborhood n ON c.neighborhood_id = n.id
+		WHERE c.neighborhood_id IS NOT NULL
+		GROUP BY c.neighborhood_id"))
+		while ($item = $result -> fetch_assoc()) {
+				$response[] = $item;
+  		}  		
+    disconnectDB($con);
+    return $response;
+    
 }
 
 ?>
