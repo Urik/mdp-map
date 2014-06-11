@@ -34,7 +34,13 @@ $app->get('/sms', function() use($app) {
 });
 
 $app->get('/avgtime', function() use($app) {
-	echo json_encode(getAVGTime());
+	echo json_encode(getAVGTime('call'));
+});
+$app->get('/avgtimeDown', function() use($app) {
+	echo json_encode(getAVGTime('internet'));
+});
+$app->get('/avgtimeSMS', function() use($app) {
+	echo json_encode(getAVGTime('SMS'));
 });
 
 $app->run();

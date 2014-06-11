@@ -6,7 +6,8 @@ var mapOptions = {
 	mapTypeId : google.maps.MapTypeId.TERRAIN
 };
 var markers = [];
-
+var infos = [];
+var colored = [];
 var zones = [];
 //array for map zones polygons
 
@@ -32,7 +33,8 @@ function displayNeighborhoods(neighborhoods) {
 						strokeColor : '#000000',
 						strokeOpacity : 0.8,
 						strokeWeight : 3,
-						fillColor : '#' + (0x1000000 + Math.random() * 0xFFFFFF).toString(16).substr(1, 6),
+						//fillColor : '#' + (0x1000000 + Math.random() * 0xFFFFFF).toString(16).substr(1, 6),
+						fillColor : 'darkblue',
 						fillOpacity : 0.35
 					});
 					neighborhoodPolygon.setMap(map);
@@ -49,6 +51,23 @@ function clearMarkers() {
 		markers[i].setMap(null);
 	}
 	markers = [];
+}
+
+function clearInfos() {
+	for (var i = 0; i < infos.length; i++) {
+		infos[i].setMap(null);
+	}
+	infos = [];
+}
+
+function colorNeighs(color) {
+	for (var i = 0; i < colored.length; i++) {
+		colored[i].setOptions({
+			fillColor : color
+		});
+	}
+	colored = [];
+
 }
 
 function loadInternetMarkers(markers) {
@@ -84,12 +103,30 @@ function loadCallsMarkers(callsData) {
 
 function loadAVGTimeMarkers(AVGTimeData) {
 	var markerData = _.map(AVGTimeData, function(x) {
-		return {
-			avgConnectionTime : x.avg_connection_time,
-			neighId : x.neighborhood_id,
-			neighName: x.name,
-			numRegs: x.num_regs
-		};
+		if (x.type == 'call')
+			return {
+				type : x.type,
+				avgConnectionTime : x.avg_connection_time,
+				neighId : x.neighborhood_id,
+				neighName : x.name,
+				numRegs : x.num_regs
+			};
+		else if (x.type == 'internet')
+			return {
+				type : x.type,
+				avgDownloadTime : x.avg_download_time,
+				neighId : x.neighborhood_id,
+				neighName : x.name,
+				numRegs : x.num_regs
+			};
+		else if (x.type == 'SMS')
+			return {
+				type : x.type,
+				avgSendingTime : x.avg_sending_time,
+				neighId : x.neighborhood_id,
+				neighName : x.name,
+				numRegs : x.num_regs
+			};
 	});
 
 	loadAVGWindows(markerData);
@@ -157,29 +194,59 @@ function polygonCenter(poly) {
 }
 
 function loadAVGWindows(totalData) {
+
 	clearMarkers();
-	
+	if (infos.length > 0) {
+		colorNeighs('darkblue');
+		clearInfos();
+	}
+
+	//var contentHTML = '<table><tr><th><b>Barrio</b></th><th><b>Promedio</b></th><th><b>Nro de Reg</b></th></tr>';
+
 	$.each(totalData, function(i, data) {
 		(function() {
+
 			var infoWindow = new google.maps.InfoWindow();
-			var contentString = '<p style="color:red"><b>Barrio ' + data.neighName + '</b></p><p>Tiempo Promedio de Conexión: ' + parseFloat(data.avgConnectionTime).toFixed(2) + ' segs</p><p>Cantidad de registros: ' + data.numRegs + '</p>';
-			if(data.avgConnectionTime > 0)
-				neighArray[data.neighId].setOptions({fillColor: 'red'});
+
+			var contentString = '<p style="color:red"><b>Barrio ' + data.neighName + '</b></p>';
+
+			if (data.type == 'calls')
+				contentString += '<p>Tiempo Promedio de Conexión: ' + parseFloat(data.avgConnectionTime).toFixed(2) + ' segs</p>';
+			else if (data.type == 'internet')
+				contentString += '<p>Tiempo Promedio de Descarga: ' + parseFloat(data.avgDownloadTime / 1000).toFixed(2) + ' segs</p>';
+			else
+				contentString += '<p>Tiempo Promedio de Envío: ' + parseFloat(data.avgSendingTime / 1000).toFixed(2) + ' segs</p>';
+
+			contentString += '<p>Cantidad de registros: ' + data.numRegs + '</p>';
+
+			if ((data.type == 'call' && data.avgConnectionTime > 0) || (data.type == 'internet' && data.avgDownloadTime > 0) || (data.type == 'SMS' && data.avgSendingTime > 0)) {
+				neighArray[data.neighId].setOptions({
+					fillColor : 'red'
+				});
+				colored.push(neighArray[data.neighId]);
+			}
+
 			infoWindow.setContent(contentString);
 			infoWindow.setPosition(polygonCenter(neighArray[data.neighId]));
+			infos.push(infoWindow);
+
+
 			var showInfo = function(event) {
-				// Replace the info window's content and position.
 				infoWindow.setPosition(event.latLng);
-			
 				infoWindow.open(map);
-			
-			};			
+				//document.getElementById("neighTable").innerHTML += contentString;
+
+			};
 
 			google.maps.event.addListener(neighArray[data.neighId], 'click', showInfo);
 
+
 		})();
-	}); 
+	});
+
+
 }
+
 
 $(function() {
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -204,6 +271,16 @@ $(function() {
 	});
 	$('#avgTime_button').click(function() {
 		$.get('index.php/avgtime', function(data) {
+			loadAVGTimeMarkers(JSON.parse(data));
+		});
+	});
+	$('#avgDownloadTime_button').click(function() {
+		$.get('index.php/avgtimeDown', function(data) {
+			loadAVGTimeMarkers(JSON.parse(data));
+		});
+	});
+	$('#avgSMSTime_button').click(function() {
+		$.get('index.php/avgtimeSMS', function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
