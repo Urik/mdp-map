@@ -26,11 +26,25 @@ $app->get('/zones', function() use($app) {
 });
 
 $app->get('/calls', function() use($app) {
-	echo json_encode(getCalls());
+	$lat1 = $app->request()->get('lat1');
+	$lon1 = $app->request()->get('lon1');
+	$lat2 = $app->request()->get('lat2');
+	$lon2 = $app->request()->get('lon2');
+	echo json_encode(getCalls($lat1, $lon1, $lat2, $lon2));
 });
 
 $app->get('/sms', function() use($app) {
 	echo json_encode(getSMS());
+});
+
+$app->get('/avgtime', function() use($app) {
+	echo json_encode(getAVGTime('call'));
+});
+$app->get('/avgtimeDown', function() use($app) {
+	echo json_encode(getAVGTime('internet'));
+});
+$app->get('/avgtimeSMS', function() use($app) {
+	echo json_encode(getAVGTime('SMS'));
 });
 
 $app->run();
