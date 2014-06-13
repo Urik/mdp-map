@@ -76,10 +76,18 @@ function renderNeighborhood($i, $zone) {
 
 }
 
-function getCalls() {
+function getCalls($lat1, $lon1, $lat2, $lon2) {
 	$response = Array();
 	$con = connectDB();
-	if ($result = $con -> query("SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal, callerTime AS caller_time FROM matched_calls m"))
+	$sql = "SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal, callerTime AS caller_time FROM matched_calls m ";
+	if (!is_null($lat1) && !is_null($lon1) && !is_null($lat2) && !is_null($lon2)) {
+		$lineString = 'LINESTRING(' . $lat1 . ' ' . $lon1 . ', ' . $lat2 . ' ' . $lon2 . ')';
+		$whereClause = ' WHERE MBRContains(GeomFromText(\'' . $lineString . '\'), m.OutgoingGeom)';
+		
+		$sql .= $whereClause;
+	}
+
+	if ($result = $con -> query($sql))
 		while ($item = $result -> fetch_assoc()) {
 			$response[] = $item;
 		}
