@@ -28,8 +28,8 @@
 			<a id="avgDownloadTime_button" href="#">Tiempo de Descarga por Zonas</a>
 			<a id="avgSMSTime_button" href="#">Tiempo de Env. SMS por Zonas</a>
 
+
 		</div>
-		<div id="calendarWrapper">
 			<div id="dateFrom" class="input-append date">
 				<input id='inputDateFrom' type="text" placeholder="Fecha Desde">
 				</input>
@@ -40,7 +40,6 @@
 				</input>
 				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
 			</div>
-		</div>
 		<div id="map-canvas"></div>
 		<div id="neighTable">
 			<p>

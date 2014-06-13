@@ -76,10 +76,18 @@ function renderNeighborhood($i, $zone) {
 
 }
 
-function getCalls() {
+function getCalls($lat1, $lon1, $lat2, $lon2) {
 	$response = Array();
 	$con = connectDB();
-	if ($result = $con -> query("SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal, callerTime AS caller_time FROM matched_calls m"))
+	$sql = "SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal, callerTime AS caller_time FROM matched_calls m ";
+	if (!is_null($lat1) && !is_null($lon1) && !is_null($lat2) && !is_null($lon2)) {
+		$lineString = 'LINESTRING(' . $lat1 . ' ' . $lon1 . ', ' . $lat2 . ' ' . $lon2 . ')';
+		$whereClause = ' WHERE MBRContains(GeomFromText(\'' . $lineString . '\'), m.OutgoingGeom)';
+		
+		$sql .= $whereClause;
+	}
+
+	if ($result = $con -> query($sql))
 		while ($item = $result -> fetch_assoc()) {
 			$response[] = $item;
 		}
@@ -196,24 +204,25 @@ function getAVGTime($type) {
 	$con = connectDB();
 	
 	if ($type == "call") {
-		$result = $con -> query("SELECT 'call' as type, AVG(m.connectionTime) as avg_connection_time, COUNT(c.neighborhood_id) as num_regs, c.neighborhood_id as neighborhood_id , n.name FROM tesis.call c
+		$result = $con -> query("SELECT 'call' as type, AVG(m.connectionTime) as avg_connection_time, AVG(m.callerSignal) as avg_signal, COUNT(c.neighborhood_id) as num_regs, c.neighborhood_id as neighborhood_id , n.name FROM tesis.call c
 		INNER JOIN matched_calls m ON c.id = m.OutgoingCallId
 		INNER JOIN neighborhood n ON c.neighborhood_id = n.id
 		WHERE c.neighborhood_id IS NOT NULL
 		GROUP BY c.neighborhood_id");
 	} 
 	elseif ($type == "internet") {
-		$result = $con -> query("SELECT 'internet' as type, AVG(i.downloadTime) as avg_download_time, COUNT(i.neighborhood_id) as num_regs, i.neighborhood_id as neighborhood_id , n.name FROM internet i
+		$result = $con -> query("SELECT 'internet' as type, AVG(i.downloadTime) as avg_download_time, AVG(i.currentSignal) as avg_signal, COUNT(i.neighborhood_id) as num_regs, i.neighborhood_id as neighborhood_id , n.name FROM internet i
 		INNER JOIN neighborhood n ON i.neighborhood_id = n.id
 		WHERE i.neighborhood_id IS NOT NULL
 		GROUP BY i.neighborhood_id");
 	}
 	elseif ($type == "SMS") {
-		$result = $con -> query("SELECT 'SMS' as type, AVG(s.sendingTime) as avg_sending_time, COUNT(s.neighborhood_id) as num_regs, s.neighborhood_id as neighborhood_id , n.name FROM sms s
+		$result = $con -> query("SELECT 'SMS' as type, AVG(s.sendingTime) as avg_sending_time, AVG(s.currentSignal) as avg_signal, COUNT(s.neighborhood_id) as num_regs, s.neighborhood_id as neighborhood_id , n.name FROM sms s
 		RIGHT JOIN neighborhood n ON s.neighborhood_id = n.id
 		WHERE s.neighborhood_id IS NOT NULL
 		GROUP BY s.neighborhood_id");
 	}
+
 
 	if ($result)
 		while ($item = $result -> fetch_assoc()) {

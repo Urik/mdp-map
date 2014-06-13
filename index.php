@@ -26,7 +26,11 @@ $app->get('/zones', function() use($app) {
 });
 
 $app->get('/calls', function() use($app) {
-	echo json_encode(getCalls());
+	$lat1 = $app->request()->get('lat1');
+	$lon1 = $app->request()->get('lon1');
+	$lat2 = $app->request()->get('lat2');
+	$lon2 = $app->request()->get('lon2');
+	echo json_encode(getCalls($lat1, $lon1, $lat2, $lon2));
 });
 
 $app->get('/sms', function() use($app) {
