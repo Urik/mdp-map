@@ -165,5 +165,27 @@ $(function () {
 		$.get('index.php/sms', function(data) {
 			loadSmsMarkers(JSON.parse(data));
 		});
-	})
+	});
+
+	var drawingManager = new google.maps.drawing.DrawingManager({
+		drawingMode: google.maps.drawing.OverlayType.RECTANGLE,
+		drawingControl: true,
+		drawingControlOptions: {
+		  position: google.maps.ControlPosition.TOP_CENTER,
+		  drawingModes: [
+		    google.maps.drawing.OverlayType.RECTANGLE
+		  ]
+		}
+	});
+
+  	drawingManager.setMap(map);
+  	google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+		var rectangle = event.overlay;
+		var pos1 = rectangle.getBounds().getNorthEast();
+		var pos2 = rectangle.getBounds().getSouthWest();
+		var queryString = "?lat1=" + pos1.lat() + "&lon1=" + pos1.lng() + "&lat2=" + pos2.lat() + "&lon2=" + pos2.lng();
+		$.get('index.php/calls' + queryString, function(data) {
+			loadCallsMarkers(JSON.parse(data));
+		});
+	});
 });
