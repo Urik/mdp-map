@@ -305,7 +305,6 @@ $(function() {
 	});
 	$('#avgSMSTime_button').click(function() {
 		$.get('index.php/avgtimeSMS' + getDateString(), function(data) {
-			document.getElementById("neighTable").innerHTML = data;
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
@@ -333,6 +332,9 @@ $(function() {
 		var pos1 = rectangle.getBounds().getNorthEast();
 		var pos2 = rectangle.getBounds().getSouthWest();
 		var queryString = "?lat1=" + pos1.lat() + "&lon1=" + pos1.lng() + "&lat2=" + pos2.lat() + "&lon2=" + pos2.lng();
+		if(document.getElementById("inputDateFrom").value != "" && document.getElementById("inputDateTo").value != ""){
+			queryString += "&dateFrom=" + document.getElementById("inputDateFrom").value + "&dateTo=" + document.getElementById("inputDateTo").value;
+		}
 		$.get('index.php/calls' + queryString, function(data) {
 			loadCallsMarkers(JSON.parse(data));
 		});
