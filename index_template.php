@@ -72,6 +72,14 @@
 								</li>
 							</ul>
 						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Señal <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a id="avgSignal_button"  href="#">Ver por zona</a>
+								</li>
+							</ul>
+						</li>
 
 					</ul>
 					<form class="navbar-form navbar-left" role="search">
@@ -97,7 +105,7 @@
 						</div>
 					</form>
 					<button type="button" id="reload" class="btn btn-default navbar-btn">
-						Recargar
+						<span class="glyphicon glyphicon-refresh"></span> Recargar
 					</button>
 					<button type="button" id="clearDates" class="btn btn-default navbar-btn">
 						Limpiar Fechas

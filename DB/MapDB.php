@@ -204,7 +204,7 @@ function getInternetTests($dateFrom, $dateTo) {
 	$con = connectDB();
 
 	$sql = "SELECT * FROM internet ";
-	$whereClause = " WHERE neighborhood_id IS NOT NULL ";
+	$whereClause = " WHERE neighborhood_id IS NOT NULL AND downloadTime <> 0";
 
 	if (!is_null($dateFrom) && !is_null($dateTo))
 		$whereClause .= "AND dateCreated BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
@@ -228,7 +228,7 @@ function getAVGTime($type, $dateFrom, $dateTo) {
 	$sql = "";
 
 	if ($type == "call") {
-		$sql = "SELECT 'call' as type, AVG(m.connectionTime) as avg_connection_time, AVG(m.callerSignal) as avg_signal, COUNT(c.neighborhood_id) as num_regs, c.neighborhood_id as neighborhood_id , n.name FROM tesis.call c
+		$sql = "SELECT 'call' as type, AVG(m.connectionTime) as avg_connection_time, AVG(m.callerSignal) as avg_signal, AVG(m.ReceiverSignal) as avg_rec_signal, COUNT(c.neighborhood_id) as num_regs, c.neighborhood_id as neighborhood_id , n.name FROM tesis.call c
 		INNER JOIN matched_calls m ON c.id = m.OutgoingCallId
 		INNER JOIN neighborhood n ON c.neighborhood_id = n.id
 		WHERE c.neighborhood_id IS NOT NULL ";
@@ -243,6 +243,11 @@ function getAVGTime($type, $dateFrom, $dateTo) {
 		RIGHT JOIN neighborhood n ON s.neighborhood_id = n.id
 		WHERE s.neighborhood_id IS NOT NULL ";
 		$index = "s";
+	} elseif ($type == "signal"){
+		$sql = "SELECT 'signal' as type, AVG(si.currentSignal) as avg_signal, COUNT(si.neighborhood_id) as num_regs, si.neighborhood_id as neighborhood_id , n.name FROM tesis.call si
+		RIGHT JOIN neighborhood n ON si.neighborhood_id = n.id
+		WHERE si.neighborhood_id IS NOT NULL ";
+		$index = "si";		
 	}
 
 	if (!is_null($dateFrom) && !is_null($dateTo))
@@ -255,7 +260,7 @@ function getAVGTime($type, $dateFrom, $dateTo) {
 	if ($result)
 		while ($item = $result -> fetch_assoc()) {
 			$response[] = $item;
-		}
+		}else echo $sql;
 
 	disconnectDB($con);
 	return $response;

@@ -55,6 +55,11 @@ $app -> get('/avgtimeSMS', function() use ($app) {
 	$dateTo = $app -> request() -> get('dateTo');	
 	echo json_encode(getAVGTime('SMS', $dateFrom, $dateTo));
 });
+$app -> get('/avgSignal', function() use ($app) {
+	$dateFrom = $app -> request() -> get('dateFrom');
+	$dateTo = $app -> request() -> get('dateTo');	
+	echo json_encode(getAVGTime('signal', $dateFrom, $dateTo));
+});
 
 $app -> run();
 ?>

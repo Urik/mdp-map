@@ -35,7 +35,7 @@ function displayNeighborhoods(neighborhoods) {
 						strokeWeight : 3,
 						//regex for random colors: fillColor : '#' + (0x1000000 + Math.random() * 0xFFFFFF).toString(16).substr(1, 6),
 						fillColor : 'darkblue',
-						fillOpacity : 0.35
+						fillOpacity : 0.5
 					});
 					neighborhoodPolygon.setMap(map);
 					neighArray[neighborhood[0].id] = neighborhoodPolygon;
@@ -108,6 +108,7 @@ function loadAVGTimeMarkers(AVGTimeData) {
 				type : x.type,
 				avgConnectionTime : x.avg_connection_time,
 				avgSignal : x.avg_signal,
+				avgRecSignal : x.avg_rec_signal,
 				neighId : x.neighborhood_id,
 				neighName : x.name,
 				numRegs : x.num_regs
@@ -125,6 +126,14 @@ function loadAVGTimeMarkers(AVGTimeData) {
 			return {
 				type : x.type,
 				avgSendingTime : x.avg_sending_time,
+				avgSignal : x.avg_signal,
+				neighId : x.neighborhood_id,
+				neighName : x.name,
+				numRegs : x.num_regs
+			};
+		else if (x.type == 'signal')
+			return {
+				type : x.type,
 				avgSignal : x.avg_signal,
 				neighId : x.neighborhood_id,
 				neighName : x.name,
@@ -221,15 +230,19 @@ function loadAVGWindows(totalData) {
 				contentString += '<p>Tiempo Promedio de Conexión: ' + parseFloat(data.avgConnectionTime).toFixed(2) + ' segs</p>';
 			else if (data.type == 'internet')
 				contentString += '<p>Tiempo Promedio de Descarga: ' + parseFloat(data.avgDownloadTime / 1000).toFixed(2) + ' segs</p>';
-			else
+			else if (data.type == 'SMS') 
 				contentString += '<p>Tiempo Promedio de Envío: ' + parseFloat(data.avgSendingTime / 1000).toFixed(2) + ' segs</p>';
 
-			contentString += '<p>Promedio de señal: ' + parseFloat(data.avgSignal).toFixed(2) + '</p>';
-			contentString += '<p>Cantidad de registros: ' + data.numRegs + '</p>';
+			contentString += '<p>Promedio de señal del Emisor: ' + parseFloat(data.avgSignal).toFixed(2) + '</p>';
+			if (data.type == 'call')
+				contentString += '<p>Promedio de señal del Receptor: ' + parseFloat(data.avgRecSignal).toFixed(2) + '</p>';
 
-			if ((data.type == 'call' && data.avgConnectionTime > 0) || (data.type == 'internet' && data.avgDownloadTime > 0) || (data.type == 'SMS' && data.avgSendingTime > 0)) {
+			contentString += '<p>Cantidad de registros: ' + data.numRegs + '</p>';
+			//contentString += '<p>color: ' + getColor(data) + '</p>';
+
+			if ((data.type == 'call' && data.avgConnectionTime > 0) || (data.type == 'internet' && data.avgDownloadTime > 0) || (data.type == 'SMS' && data.avgSendingTime > 0) || (data.type == 'signal' && data.avgSignal > 0)) {
 				neighArray[data.neighId].setOptions({
-					fillColor : 'red'
+					fillColor : getColor(data)
 				});
 				colored.push(neighArray[data.neighId]);
 			}
@@ -253,19 +266,28 @@ function loadAVGWindows(totalData) {
 }
 
 function getColor(data) {
-	var bestValue;
 	var worstValue;
 	var rgb = 'rgb(';
 
 	if (data.type == 'call') {
-		bestValue = 5;
 		worstValue = 15;
-		rgb += parseInt(data.avgConnectionTime * 17) + ',';
-		//red value
-		rgb += parseInt(204 / data.avgConnectionTime) + ',0)';
-		//green value
+		rgb += parseInt(data.avgConnectionTime * (255 / worstValue)) + ',';
+		rgb += parseInt(204 - data.avgConnectionTime * 204 / worstValue) + ',0)';
+	} else if (data.type == 'internet') {
+		worstValue = 5000;
+		rgb += parseInt(data.avgDownloadTime * (255 / worstValue)) + ',';
+		rgb += parseInt(204 - data.avgDownloadTime * 204 / worstValue) + ',0)';
+	} else if (data.type == 'SMS') {
+		worstValue = 50000;
+		rgb += parseInt(data.avgSendingTime * (255 / worstValue)) + ',';
+		rgb += parseInt(204 - data.avgSendingTime * 204 / worstValue) + ',0)';
+	} else if (data.type == 'signal') {
+		worstValue = 32;
+		rgb += parseInt(worstValue - data.avgSignal * (255 / worstValue)) + ',';
+		rgb += parseInt(data.avgSignal * (204 / worstValue)) + ',0)';
 
-	}
+	} else
+		return "rgb(0,0,0)";
 
 	return rgb;
 }
@@ -322,7 +344,13 @@ $(function() {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
-
+	$('#avgSignal_button').click(function() {
+		lastAction = '#avgSignal_button';
+		$.get('index.php/avgSignal' + getDateString(), function(data) {
+			loadAVGTimeMarkers(JSON.parse(data));
+		});
+	});
+	
 	// Manage Drawer
 	var drawingManager = new google.maps.drawing.DrawingManager({
 		drawingMode : google.maps.drawing.OverlayType.RECTANGLE,
