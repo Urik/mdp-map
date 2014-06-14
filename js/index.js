@@ -150,6 +150,10 @@ function createMarkerWindowData(callerNumber, operatorName, callerBatteryLevel, 
 
 function loadMarkers(title, totalData) {
 	clearMarkers();
+	if (infos.length > 0) {
+		colorNeighs('darkblue');
+		clearInfos();
+	}
 	$.each(totalData, function(i, data) {
 		(function() {
 			var marker = new google.maps.Marker({
@@ -223,7 +227,6 @@ function loadAVGWindows(totalData) {
 			contentString += '<p>Promedio de señal: ' + parseFloat(data.avgSignal).toFixed(2) + '</p>';
 			contentString += '<p>Cantidad de registros: ' + data.numRegs + '</p>';
 
-
 			if ((data.type == 'call' && data.avgConnectionTime > 0) || (data.type == 'internet' && data.avgDownloadTime > 0) || (data.type == 'SMS' && data.avgSendingTime > 0)) {
 				neighArray[data.neighId].setOptions({
 					fillColor : 'red'
@@ -249,90 +252,99 @@ function loadAVGWindows(totalData) {
 
 }
 
-function getColor(data){
+function getColor(data) {
 	var bestValue;
 	var worstValue;
 	var rgb = 'rgb(';
-		
-	if(data.type == 'call'){
+
+	if (data.type == 'call') {
 		bestValue = 5;
 		worstValue = 15;
-		rgb += parseInt(data.avgConnectionTime*17) + ','; //red value
-		rgb += parseInt(204/data.avgConnectionTime) + ',0)'; //green value
+		rgb += parseInt(data.avgConnectionTime * 17) + ',';
+		//red value
+		rgb += parseInt(204 / data.avgConnectionTime) + ',0)';
+		//green value
 
 	}
-	
+
 	return rgb;
 }
 
-function getDateString(){
-	if(document.getElementById("inputDateFrom").value != "" && document.getElementById("inputDateTo").value != ""){
+function getDateString() {
+	if (document.getElementById("inputDateFrom").value != "" && document.getElementById("inputDateTo").value != "") {
 		var dateString = "?dateFrom=" + document.getElementById("inputDateFrom").value + "&dateTo=" + document.getElementById("inputDateTo").value;
 		return dateString;
-	}else return "";
+	} else
+		return "";
 }
 
 $(function() {
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	var lastAction;
+
 	$.get('index.php/neighborhoods', function(response) {
 		displayNeighborhoods(JSON.parse(response));
 	});
 	$('#calls_button').click(function() {
+		lastAction = '#calls_button';
 		$.get('index.php/calls' + getDateString(), function(data) {
 			loadCallsMarkers(JSON.parse(data));
 		});
 		return false;
 	});
 	$('#internet_button').click(function() {
+		lastAction = '#internet_button';
 		$.get('index.php/internet' + getDateString(), function(data) {
 			loadInternetMarkers(JSON.parse(data));
 		});
 	});
 	$('#sms_button').click(function() {
+		lastAction = '#sms_button';
 		$.get('index.php/sms' + getDateString(), function(data) {
 			loadSmsMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgTime_button').click(function() {
+		lastAction = '#avgTime_button';
 		$.get('index.php/avgtime' + getDateString(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgDownloadTime_button').click(function() {
+		lastAction = '#avgDownloadTime_button';
 		$.get('index.php/avgtimeDown' + getDateString(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgSMSTime_button').click(function() {
+		lastAction = '#avgSMSTime_button';
 		$.get('index.php/avgtimeSMS' + getDateString(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 
-	// Manage Drawer 
+	// Manage Drawer
 	var drawingManager = new google.maps.drawing.DrawingManager({
-		drawingMode: google.maps.drawing.OverlayType.RECTANGLE,
-		drawingControl: true,
-		drawingControlOptions: {
-		  position: google.maps.ControlPosition.TOP_CENTER,
-		  drawingModes: [
-		    google.maps.drawing.OverlayType.RECTANGLE
-		  ]
+		drawingMode : google.maps.drawing.OverlayType.RECTANGLE,
+		drawingControl : true,
+		drawingControlOptions : {
+			position : google.maps.ControlPosition.TOP_CENTER,
+			drawingModes : [google.maps.drawing.OverlayType.RECTANGLE]
 		}
 	});
 
-  	drawingManager.setMap(map);
-  	var oldShape = null;
-  	google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
-  		if (oldShape) {
-  			oldShape.setMap(null);
-  		}
-  		oldShape = event.overlay;
+	drawingManager.setMap(map);
+	var oldShape = null;
+	google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
+		if (oldShape) {
+			oldShape.setMap(null);
+		}
+		oldShape = event.overlay;
 		var rectangle = event.overlay;
 		var pos1 = rectangle.getBounds().getNorthEast();
 		var pos2 = rectangle.getBounds().getSouthWest();
 		var queryString = "?lat1=" + pos1.lat() + "&lon1=" + pos1.lng() + "&lat2=" + pos2.lat() + "&lon2=" + pos2.lng();
-		if(document.getElementById("inputDateFrom").value != "" && document.getElementById("inputDateTo").value != ""){
+		if (document.getElementById("inputDateFrom").value != "" && document.getElementById("inputDateTo").value != "") {
 			queryString += "&dateFrom=" + document.getElementById("inputDateFrom").value + "&dateTo=" + document.getElementById("inputDateTo").value;
 		}
 		$.get('index.php/calls' + queryString, function(data) {
@@ -340,6 +352,30 @@ $(function() {
 		});
 	});
 	//############################################################################
-	
-	
+
+	//Dates Manager
+
+	$('#dateFrom').datetimepicker({
+		format : "YYYY-MM-DD hh:mm:ss",
+		language : 'es'
+	});
+	$('#dateTo').datetimepicker({
+		format : "YYYY-MM-DD hh:mm:ss",
+		language : 'es'
+	});
+	$("#dateFrom").on("dp.change", function(e) {
+		$('#dateTo').data("DateTimePicker").setMinDate(e.date);
+	});
+	$("#dateTo").on("dp.change", function(e) {
+		$('#dateFrom').data("DateTimePicker").setMaxDate(e.date);
+	});
+
+	$("#clearDates").click(function() {
+		$("#inputDateFrom").val("");
+		$("#inputDateTo").val("");
+	});
+	$("#reload").click(function() {
+		$(lastAction).trigger("click");
+	});
+	//##############################################################################
 });

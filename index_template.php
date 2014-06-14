@@ -6,40 +6,130 @@
 		<meta charset="utf-8">
 		<title>Polygon Arrays</title>
 
-		<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" media="screen"
-		href="http://tarruda.github.com/bootstrap-datetimepicker/assets/css/bootstrap-datetimepicker.min.css">
-		<link rel="stylesheet" type="text/css" media="screen"
-		href="css/styles.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-datetimepicker.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="css/styles.css">
 
-		<script type="text/javascript" src="./js/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+
 		<script type="text/javascript" src="./js/underscore-min.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing&sensor=false"></script>
-		<script src="js/markerwithlabel.js" type="text/javascript"></script>
 		<script type="text/javascript" src="./js/index.js"></script>
+		<script type="text/javascript" src="js/moment.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
+		<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
 
 	</head>
 	<body>
-		<div>
-			<a id="calls_button" href="#">Ver llamadas</a>
-			<a id="internet_button" href="#">Ver Internet</a>
-			<a id="sms_button" href="#">Ver SMS</a>
-			<a id="avgTime_button" href="#">Tiempo de con. por Zonas</a>
-			<a id="avgDownloadTime_button" href="#">Tiempo de Descarga por Zonas</a>
-			<a id="avgSMSTime_button" href="#">Tiempo de Env. SMS por Zonas</a>
 
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Mar del Celular</a>
+				</div>
 
-		</div>
-			<div id="dateFrom" class="input-append date">
-				<input id='inputDateFrom' type="text" placeholder="Fecha Desde">
-				</input>
-				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-			</div>
-			<div id="dateTo" class="input-append date">
-				<input id='inputDateTo' type="text" placeholder="Fecha Hasta">
-				</input>
-				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-			</div>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Llamadas <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a id="calls_button" href="#">Ver todas</a>
+								</li>
+								<li>
+									<a id="avgTime_button" href="#">Ver por zona</a>
+								</li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Datos de Internet <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a id="internet_button" href="#">Ver todas</a>
+								</li>
+								<li>
+									<a id="avgDownloadTime_button" href="#">Ver por zona</a>
+								</li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">SMS <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a id="sms_button" href="#">Ver todas</a>
+								</li>
+								<li>
+									<a id="avgSMSTime_button"  href="#">Ver por zona</a>
+								</li>
+							</ul>
+						</li>
+
+					</ul>
+					<form class="navbar-form navbar-left" role="search">
+
+						<div class="row">
+							<div class='col-sm-6'>
+								<div class="form-group">
+									<div class='input-group date' id='dateFrom'>
+										<input type='text' id="inputDateFrom" class="form-control" placeholder="Fecha de Inicio" readonly="true"/>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span> </span>
+									</div>
+								</div>
+							</div>
+							<div class='col-sm-6'>
+								<div class="form-group">
+									<div class='input-group date' id='dateTo'>
+										<input type='text' id="inputDateTo" class="form-control" placeholder="Fecha de Final" readonly="true" />
+										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span> </span>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</form>
+					<button type="button" id="reload" class="btn btn-default navbar-btn">
+						Recargar
+					</button>
+					<button type="button" id="clearDates" class="btn btn-default navbar-btn">
+						Limpiar Fechas
+					</button>
+
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<a href="#">Link</a>
+						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="#">Action</a>
+								</li>
+								<li>
+									<a href="#">Another action</a>
+								</li>
+								<li>
+									<a href="#">Something else here</a>
+								</li>
+								<li class="divider"></li>
+								<li>
+									<a href="#">Separated link</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
+		</nav>
+
 		<div id="map-canvas"></div>
 		<div id="neighTable">
 			<p>
@@ -48,20 +138,5 @@
 		</div>
 
 	</body>
-	<script type="text/javascript"
-	src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
-	<script type="text/javascript"
-	src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.min.js"></script>
-	<script type="text/javascript"
-	src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.pt-BR.js"></script>
-	<script type="text/javascript">
-		$('#dateFrom').datetimepicker({
-			format : 'yyyy-MM-dd hh:mm:ss',
-			language : 'en'
-		});
-		$('#dateTo').datetimepicker({
-			format : 'yyyy-MM-dd hh:mm:ss',
-			language : 'en'
-		});
-	</script>
+
 </html>
