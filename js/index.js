@@ -217,8 +217,6 @@ function loadAVGWindows(totalData) {
 		clearInfos();
 	}
 
-	//var contentHTML = '<table><tr><th><b>Barrio</b></th><th><b>Promedio</b></th><th><b>Nro de Reg</b></th></tr>';
-
 	$.each(totalData, function(i, data) {
 		(function() {
 
@@ -230,7 +228,7 @@ function loadAVGWindows(totalData) {
 				contentString += '<p>Tiempo Promedio de Conexión: ' + parseFloat(data.avgConnectionTime).toFixed(2) + ' segs</p>';
 			else if (data.type == 'internet')
 				contentString += '<p>Tiempo Promedio de Descarga: ' + parseFloat(data.avgDownloadTime / 1000).toFixed(2) + ' segs</p>';
-			else if (data.type == 'SMS') 
+			else if (data.type == 'SMS')
 				contentString += '<p>Tiempo Promedio de Envío: ' + parseFloat(data.avgSendingTime / 1000).toFixed(2) + ' segs</p>';
 
 			contentString += '<p>Promedio de señal del Emisor: ' + parseFloat(data.avgSignal).toFixed(2) + '</p>';
@@ -254,7 +252,6 @@ function loadAVGWindows(totalData) {
 			var showInfo = function(event) {
 				infoWindow.setPosition(event.latLng);
 				infoWindow.open(map);
-				//document.getElementById("neighTable").innerHTML += contentString;
 
 			};
 
@@ -292,12 +289,23 @@ function getColor(data) {
 	return rgb;
 }
 
-function getDateString() {
+function getFields() {
+	var first = true;
+	var filterString = "";
 	if (document.getElementById("inputDateFrom").value != "" && document.getElementById("inputDateTo").value != "") {
-		var dateString = "?dateFrom=" + document.getElementById("inputDateFrom").value + "&dateTo=" + document.getElementById("inputDateTo").value;
-		return dateString;
-	} else
-		return "";
+		filterString += "?dateFrom=" + document.getElementById("inputDateFrom").value + "&dateTo=" + document.getElementById("inputDateTo").value;
+		first = false;
+	}
+	if ($("#filterNumber").val() != "") {
+		if (first)
+			filterString += "?"
+		else
+			filterString += "&"
+
+		filterString += "number=" + $("#filterNumber").val();
+	}
+
+	return filterString;
 }
 
 $(function() {
@@ -309,48 +317,49 @@ $(function() {
 	});
 	$('#calls_button').click(function() {
 		lastAction = '#calls_button';
-		$.get('index.php/calls' + getDateString(), function(data) {
+		$.get('index.php/calls' + getFields(), function(data) {
 			loadCallsMarkers(JSON.parse(data));
 		});
 		return false;
 	});
 	$('#internet_button').click(function() {
 		lastAction = '#internet_button';
-		$.get('index.php/internet' + getDateString(), function(data) {
+		var fields = getFields();
+		$.get('index.php/internet' + getFields(), function(data) {
 			loadInternetMarkers(JSON.parse(data));
 		});
 	});
 	$('#sms_button').click(function() {
 		lastAction = '#sms_button';
-		$.get('index.php/sms' + getDateString(), function(data) {
+		$.get('index.php/sms' + getFields(), function(data) {
 			loadSmsMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgTime_button').click(function() {
 		lastAction = '#avgTime_button';
-		$.get('index.php/avgtime' + getDateString(), function(data) {
+		$.get('index.php/avgtime' + getFields(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgDownloadTime_button').click(function() {
 		lastAction = '#avgDownloadTime_button';
-		$.get('index.php/avgtimeDown' + getDateString(), function(data) {
+		$.get('index.php/avgtimeDown' + getFields(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgSMSTime_button').click(function() {
 		lastAction = '#avgSMSTime_button';
-		$.get('index.php/avgtimeSMS' + getDateString(), function(data) {
+		$.get('index.php/avgtimeSMS' + getFields(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgSignal_button').click(function() {
 		lastAction = '#avgSignal_button';
-		$.get('index.php/avgSignal' + getDateString(), function(data) {
+		$.get('index.php/avgSignal' + getFields(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
-	
+
 	// Manage Drawer
 	var drawingManager = new google.maps.drawing.DrawingManager({
 		drawingMode : google.maps.drawing.OverlayType.RECTANGLE,
@@ -375,6 +384,9 @@ $(function() {
 		if (document.getElementById("inputDateFrom").value != "" && document.getElementById("inputDateTo").value != "") {
 			queryString += "&dateFrom=" + document.getElementById("inputDateFrom").value + "&dateTo=" + document.getElementById("inputDateTo").value;
 		}
+		if ($("#filterNumber").val() != "")
+			queryString += "&number = " + $("#filterNumber").val();
+		
 		$.get('index.php/calls' + queryString, function(data) {
 			loadCallsMarkers(JSON.parse(data));
 		});
@@ -405,5 +417,28 @@ $(function() {
 	$("#reload").click(function() {
 		$(lastAction).trigger("click");
 	});
+	$("#clearFilters").click(function() {
+		$(lastAction).trigger("click");
+	});	
+	$("#useFilterButton").click(function() {
+		$(lastAction).trigger("click");
+	});	
+
 	//##############################################################################
+
+	//Filters Manager
+	$("#numberFilterCancel").click(function() {
+		$("#filterNumber").val("");
+	});
+	$("#numberFilterCancel").click(function() {
+		$("#filterNumber").val("");
+	});
+
+	$("#clearFilters").click(function() {
+		$("#filterNumber").val("");
+		$("#inputDateFrom").val("");
+		$("#inputDateTo").val("");
+
+	});
+	//###############################################################################
 });

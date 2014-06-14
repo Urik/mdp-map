@@ -77,7 +77,7 @@ function renderNeighborhood($i, $zone) {
 
 }
 
-function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo) {
+function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
 	$response = Array();
 	$con = connectDB();
 	$sql = "SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal, callerTime AS caller_time FROM matched_calls m ";
@@ -90,6 +90,9 @@ function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo) {
 
 	if (!is_null($dateFrom) && !is_null($dateTo))
 		$whereClause .= " AND m.CallerTime BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
+	
+	if(!is_null($number))
+		$whereClause .= " AND m.CallerNumber = '" . $number . "'";
 
 	$sql .= $whereClause;
 
@@ -101,7 +104,7 @@ function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo) {
 	return $response;
 }
 
-function getSMS($dateFrom, $dateTo) {
+function getSMS($dateFrom, $dateTo, $number) {
 	$response = Array();
 	$con = connectDB();
 
@@ -110,6 +113,10 @@ function getSMS($dateFrom, $dateTo) {
 
 	if (!is_null($dateFrom) && !is_null($dateTo))
 		$whereClause .= "AND dateCreated BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
+
+	if(!is_null($number))
+		$whereClause .= " AND sourceNumber = '" . $number . "'";
+
 
 	$sql .= $whereClause;
 	if ($result = $con -> query($sql)) {
@@ -199,7 +206,7 @@ function renderZone($i) {
 
  }*/
 
-function getInternetTests($dateFrom, $dateTo) {
+function getInternetTests($dateFrom, $dateTo, $number) {
 	$tests = Array();
 	$con = connectDB();
 
@@ -207,7 +214,10 @@ function getInternetTests($dateFrom, $dateTo) {
 	$whereClause = " WHERE neighborhood_id IS NOT NULL AND downloadTime <> 0";
 
 	if (!is_null($dateFrom) && !is_null($dateTo))
-		$whereClause .= "AND dateCreated BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
+		$whereClause .= " AND dateCreated BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
+
+	if(!is_null($number))
+		$whereClause .= " AND sourceNumber = '" . $number . "'";
 
 	$sql .= $whereClause;
 
@@ -222,7 +232,7 @@ function getInternetTests($dateFrom, $dateTo) {
 	return $tests;
 }
 
-function getAVGTime($type, $dateFrom, $dateTo) {
+function getAVGTime($type, $dateFrom, $dateTo, $number) {
 	$response = Array();
 	$con = connectDB();
 	$sql = "";
@@ -236,7 +246,7 @@ function getAVGTime($type, $dateFrom, $dateTo) {
 	} elseif ($type == "internet") {
 		$sql = "SELECT 'internet' as type, AVG(i.downloadTime) as avg_download_time, AVG(i.currentSignal) as avg_signal, COUNT(i.neighborhood_id) as num_regs, i.neighborhood_id as neighborhood_id , n.name FROM internet i
 		INNER JOIN neighborhood n ON i.neighborhood_id = n.id
-		WHERE i.neighborhood_id IS NOT NULL ";
+		WHERE i.neighborhood_id IS NOT NULL AND i.downloadTime <> 0 ";
 		$index = "i";
 	} elseif ($type == "SMS") {
 		$sql = "SELECT 'SMS' as type, AVG(s.sendingTime) as avg_sending_time, AVG(s.currentSignal) as avg_signal, COUNT(s.neighborhood_id) as num_regs, s.neighborhood_id as neighborhood_id , n.name FROM sms s
@@ -253,6 +263,9 @@ function getAVGTime($type, $dateFrom, $dateTo) {
 	if (!is_null($dateFrom) && !is_null($dateTo))
 		$sql .= " AND " . $index . ".dateCreated BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
 
+	if(!is_null($number))
+		$sql .= " AND " . $index . ".sourceNumber = '" . $number . "'";
+
 	$sql .= " GROUP BY " . $index . ".neighborhood_id";
 
 	$result = $con -> query($sql);
@@ -260,7 +273,7 @@ function getAVGTime($type, $dateFrom, $dateTo) {
 	if ($result)
 		while ($item = $result -> fetch_assoc()) {
 			$response[] = $item;
-		}else echo $sql;
+		};
 
 	disconnectDB($con);
 	return $response;

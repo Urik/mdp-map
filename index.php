@@ -13,7 +13,8 @@ $app -> get('/', function() use ($app) {
 $app -> get('/internet', function() use ($app) {
 	$dateFrom = $app -> request() -> get('dateFrom');
 	$dateTo = $app -> request() -> get('dateTo');
-	echo json_encode(getInternetTests($dateFrom, $dateTo));
+	$number = $app -> request() -> get('number');
+	echo json_encode(getInternetTests($dateFrom, $dateTo, $number));
 });
 
 $app -> get('/neighborhoods', function() use ($app) {
@@ -31,34 +32,40 @@ $app -> get('/calls', function() use ($app) {
 	$lon2 = $app -> request() -> get('lon2');
 	$dateFrom = $app -> request() -> get('dateFrom');
 	$dateTo = $app -> request() -> get('dateTo');
-	echo json_encode(getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo));
+	$number = $app -> request() -> get('number');
+	echo json_encode(getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number));
 });
 
 $app -> get('/sms', function() use ($app) {
 	$dateFrom = $app -> request() -> get('dateFrom');
 	$dateTo = $app -> request() -> get('dateTo');
-	echo json_encode(getSMS($dateFrom, $dateTo));
+	$number = $app -> request() -> get('number');
+	echo json_encode(getSMS($dateFrom, $dateTo, $number));
 });
 
 $app -> get('/avgtime', function() use ($app) {
 	$dateFrom = $app -> request() -> get('dateFrom');
 	$dateTo = $app -> request() -> get('dateTo');
-	echo json_encode(getAVGTime('call', $dateFrom, $dateTo));
+	$number = $app -> request() -> get('number');
+	echo json_encode(getAVGTime('call', $dateFrom, $dateTo, $number));
 });
 $app -> get('/avgtimeDown', function() use ($app) {
 	$dateFrom = $app -> request() -> get('dateFrom');
 	$dateTo = $app -> request() -> get('dateTo');	
-	echo json_encode(getAVGTime('internet', $dateFrom, $dateTo));
+	$number = $app -> request() -> get('number');
+	echo json_encode(getAVGTime('internet', $dateFrom, $dateTo, $number));
 });
 $app -> get('/avgtimeSMS', function() use ($app) {
 	$dateFrom = $app -> request() -> get('dateFrom');
 	$dateTo = $app -> request() -> get('dateTo');	
-	echo json_encode(getAVGTime('SMS', $dateFrom, $dateTo));
+	$number = $app -> request() -> get('number');
+	echo json_encode(getAVGTime('SMS', $dateFrom, $dateTo, $number));
 });
 $app -> get('/avgSignal', function() use ($app) {
 	$dateFrom = $app -> request() -> get('dateFrom');
 	$dateTo = $app -> request() -> get('dateTo');	
-	echo json_encode(getAVGTime('signal', $dateFrom, $dateTo));
+	$number = $app -> request() -> get('number');
+	echo json_encode(getAVGTime('signal', $dateFrom, $dateTo, $number));
 });
 
 $app -> run();
