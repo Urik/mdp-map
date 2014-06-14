@@ -265,43 +265,52 @@ function getColor(data){
 	return rgb;
 }
 
+function getDateString(){
+	if(document.getElementById("inputDateFrom").value != "" && document.getElementById("inputDateTo").value != ""){
+		var dateString = "?dateFrom=" + document.getElementById("inputDateFrom").value + "&dateTo=" + document.getElementById("inputDateTo").value;
+		return dateString;
+	}else return "";
+}
+
 $(function() {
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	$.get('index.php/neighborhoods', function(response) {
 		displayNeighborhoods(JSON.parse(response));
 	});
 	$('#calls_button').click(function() {
-		$.get('index.php/calls', function(data) {
+		$.get('index.php/calls' + getDateString(), function(data) {
 			loadCallsMarkers(JSON.parse(data));
 		});
 		return false;
 	});
 	$('#internet_button').click(function() {
-		$.get('index.php/internet', function(data) {
+		$.get('index.php/internet' + getDateString(), function(data) {
 			loadInternetMarkers(JSON.parse(data));
 		});
 	});
 	$('#sms_button').click(function() {
-		$.get('index.php/sms', function(data) {
+		$.get('index.php/sms' + getDateString(), function(data) {
 			loadSmsMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgTime_button').click(function() {
-		$.get('index.php/avgtime', function(data) {
+		$.get('index.php/avgtime' + getDateString(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgDownloadTime_button').click(function() {
-		$.get('index.php/avgtimeDown', function(data) {
+		$.get('index.php/avgtimeDown' + getDateString(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgSMSTime_button').click(function() {
-		$.get('index.php/avgtimeSMS', function(data) {
+		$.get('index.php/avgtimeSMS' + getDateString(), function(data) {
+			document.getElementById("neighTable").innerHTML = data;
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 
+	// Manage Drawer 
 	var drawingManager = new google.maps.drawing.DrawingManager({
 		drawingMode: google.maps.drawing.OverlayType.RECTANGLE,
 		drawingControl: true,
@@ -328,4 +337,7 @@ $(function() {
 			loadCallsMarkers(JSON.parse(data));
 		});
 	});
+	//############################################################################
+	
+	
 });
