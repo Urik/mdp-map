@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
 		<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
+		<script type="text/javascript" src="js/highcharts.js"></script>
 
 	</head>
 	<body>
@@ -135,7 +136,7 @@
 				Nada que mostrar
 			</p>
 		</div>
-	
+		<div id="chart" style="width: 100%; height: 400px;"></div>
 	<!--Filter Number Modal -->
 	<div class="modal fade" id="myModal">
   <div class="modal-dialog">

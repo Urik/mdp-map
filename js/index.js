@@ -308,6 +308,42 @@ function getFields() {
 	return filterString;
 }
 
+function handleReceivedCallsData(data) {
+			var parsedData = JSON.parse(data);
+			loadCallsMarkers(parsedData);
+			var signalsChartData = _.chain(parsedData).groupBy("caller_signal").map(function(values, signal) {
+				return {
+					signal: signal,
+					data: _(values).map(function(val) { return moment.duration(val.connection_time).asSeconds();})
+				};
+			}).value();
+			$('#chart').highcharts({
+				chart: {
+          type: 'column'
+        },
+				xAxis: {
+					title: 'Signal',
+					categories: _(signalsChartData).map(function(x) { return x.signal; })
+				},
+				series: [{
+					name: 'Connection Time',
+					data: _(signalsChartData).map(function(x) {
+						return {
+							y: _(x.data).reduce(function(memo, val) {
+									return memo + val;
+								}, 0) / x.data.length,
+							dataLabels: {
+								enabled: true,
+								formatter: function() {
+									return x.data.length;
+								}
+							}
+						};
+					})
+				}]
+			});
+		}
+
 $(function() {
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	var lastAction;
@@ -317,9 +353,7 @@ $(function() {
 	});
 	$('#calls_button').click(function() {
 		lastAction = '#calls_button';
-		$.get('index.php/calls' + getFields(), function(data) {
-			loadCallsMarkers(JSON.parse(data));
-		});
+		$.get('index.php/calls' + getFields(), handleReceivedCallsData);
 		return false;
 	});
 	$('#internet_button').click(function() {
@@ -387,10 +421,9 @@ $(function() {
 		if ($("#filterNumber").val() != "")
 			queryString += "&number = " + $("#filterNumber").val();
 		
-		$.get('index.php/calls' + queryString, function(data) {
-			loadCallsMarkers(JSON.parse(data));
-		});
+		$.get('index.php/calls' + queryString, handleReceivedCallsData);
 	});
+
 	//############################################################################
 
 	//Dates Manager
