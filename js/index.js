@@ -65,6 +65,7 @@ function colorNeighs(color) {
 		colored[i].setOptions({
 			fillColor : color
 		});
+		google.maps.event.clearListeners(colored[i],'click');
 	}
 	colored = [];
 
@@ -396,7 +397,6 @@ $(function() {
 
 	// Manage Drawer
 	var drawingManager = new google.maps.drawing.DrawingManager({
-		drawingMode : google.maps.drawing.OverlayType.RECTANGLE,
 		drawingControl : true,
 		drawingControlOptions : {
 			position : google.maps.ControlPosition.TOP_CENTER,
