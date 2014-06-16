@@ -136,7 +136,7 @@
 				Nada que mostrar
 			</p>
 		</div>
-		<div id="chart" style="width: 100%; height: 400px;"></div>
+		<div id="chart" style="width: 100%; height: 400px; clear: both;"></div>
 	<!--Filter Number Modal -->
 	<div class="modal fade" id="myModal">
   <div class="modal-dialog">
