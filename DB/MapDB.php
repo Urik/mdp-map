@@ -19,7 +19,7 @@ function getZones() {
 	;
 	if ($result = $con -> query("SELECT z.name, c.latitude, c.longitude FROM zones AS z INNER JOIN zone_coor AS c ON z.id = c.zone_id")) {
 		while ($item = $result -> fetch_assoc()) {
-			$response[] = $item;
+			$response[] = encodeArrayToUtf($item);
 		}
 	}
 	disconnectDB($con);
@@ -81,7 +81,7 @@ function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
 	$response = Array();
 	$con = connectDB();
 	$sql = "SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal, callerTime AS caller_time FROM matched_calls m ";
-	$whereClause = " WHERE  m.CallerLat <> 0 AND  m.CallerLon <> 0 ";
+	$whereClause = " WHERE  m.CallerNumber IS NOT NULL AND m.CallerLat <> 0 AND  m.CallerLon <> 0";
 	if (!is_null($lat1) && !is_null($lon1) && !is_null($lat2) && !is_null($lon2)) {
 		$lineString = 'LINESTRING(' . $lat1 . ' ' . $lon1 . ', ' . $lat2 . ' ' . $lon2 . ')';
 		$whereClause .= ' AND MBRContains(GeomFromText(\'' . $lineString . '\'), m.OutgoingGeom)';
@@ -121,7 +121,7 @@ function getSMS($dateFrom, $dateTo, $number) {
 	$sql .= $whereClause;
 	if ($result = $con -> query($sql)) {
 		while ($item = $result -> fetch_assoc()) {
-			$response[] = $item;
+			$response[] = encodeArrayToUtf($item);
 		}
 	}
 	disconnectDB($con);
@@ -223,7 +223,7 @@ function getInternetTests($dateFrom, $dateTo, $number) {
 
 	if ($result = $con -> query($sql)) {
 		while ($item = $result -> fetch_assoc()) {
-			$tests[] = $item;
+			$tests[] = encodeArrayToUtf($item);
 		}
 	}
 
@@ -272,12 +272,25 @@ function getAVGTime($type, $dateFrom, $dateTo, $number) {
 
 	if ($result)
 		while ($item = $result -> fetch_assoc()) {
-			$response[] = $item;
+			$response[] = encodeArrayToUtf($item);
 		};
 
 	disconnectDB($con);
 	return $response;
 
+}
+
+function encodeArrayToUtf($array) {
+	$response = array();
+	foreach ($array as $key => $value) {
+		if (is_string($value)) {
+			$response[$key] = utf8_encode($value);
+		} else {
+			$response[$key] = $value;
+		}
+	}
+	
+	return $response;
 }
 ?>
 
