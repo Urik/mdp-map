@@ -65,6 +65,7 @@ function colorNeighs(color) {
 		colored[i].setOptions({
 			fillColor : color
 		});
+		google.maps.event.clearListeners(colored[i],'click');
 	}
 	colored = [];
 
@@ -308,6 +309,28 @@ function getFields() {
 	return filterString;
 }
 
+function handleReceivedCallsData(data) {
+			var parsedData = JSON.parse(data);
+			loadCallsMarkers(parsedData);
+			var signalsChartData = _.chain(parsedData).groupBy("caller_signal").map(function(values, signal) {
+				return {
+					signal: signal,
+					data: _(values).map(function(val) { return moment.duration(val.connection_time).asSeconds();})
+				};
+			}).value();
+			createConnectionTimePerSignalChart($('#signalsChart'), signalsChartData);
+
+			var hoursChartData = _.chain(parsedData).groupBy(function(x) { return moment(x.caller_time).format('HH'); })
+				.map(function(values, hour) {
+					return {
+						hour: hour,
+						data: _(values).map(function(x) { return moment.duration(x.connection_time).asSeconds(); })
+					};
+				}).value();
+
+			createConnectionTimePerHour($('#hoursChart'), hoursChartData);
+		}
+
 $(function() {
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	var lastAction;
@@ -317,9 +340,7 @@ $(function() {
 	});
 	$('#calls_button').click(function() {
 		lastAction = '#calls_button';
-		$.get('index.php/calls' + getFields(), function(data) {
-			loadCallsMarkers(JSON.parse(data));
-		});
+		$.get('index.php/calls' + getFields(), handleReceivedCallsData);
 		return false;
 	});
 	$('#internet_button').click(function() {
@@ -362,7 +383,6 @@ $(function() {
 
 	// Manage Drawer
 	var drawingManager = new google.maps.drawing.DrawingManager({
-		drawingMode : google.maps.drawing.OverlayType.RECTANGLE,
 		drawingControl : true,
 		drawingControlOptions : {
 			position : google.maps.ControlPosition.TOP_CENTER,
@@ -387,10 +407,9 @@ $(function() {
 		if ($("#filterNumber").val() != "")
 			queryString += "&number = " + $("#filterNumber").val();
 		
-		$.get('index.php/calls' + queryString, function(data) {
-			loadCallsMarkers(JSON.parse(data));
-		});
+		$.get('index.php/calls' + queryString, handleReceivedCallsData);
 	});
+
 	//############################################################################
 
 	//Dates Manager

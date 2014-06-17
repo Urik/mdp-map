@@ -14,11 +14,14 @@
 
 		<script type="text/javascript" src="./js/underscore-min.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing&sensor=false"></script>
-		<script type="text/javascript" src="./js/index.js"></script>
 		<script type="text/javascript" src="js/moment.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
 		<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
+		<script type="text/javascript" src="js/highcharts.js"></script>
+
+		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="js/charts.js"></script>
 
 	</head>
 	<body>
@@ -135,7 +138,8 @@
 				Nada que mostrar
 			</p>
 		</div>
-	
+		<div id="signalsChart" style="width: 100%; height: 400px;clear:left"></div>
+		<div id="hoursChart" style="width: 100%; height: 400px;"></div>
 	<!--Filter Number Modal -->
 	<div class="modal fade" id="myModal">
   <div class="modal-dialog">
