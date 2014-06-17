@@ -138,8 +138,8 @@
 				Nada que mostrar
 			</p>
 		</div>
-		<div id="signalsChart" style="width: 100%; height: 400px; clear: both;"></div>
-		<div id="hoursChart" style="width: 100%; height: 400px; clear: both;"></div>
+		<div id="signalsChart" style="width: 100%; height: 400px;clear:left"></div>
+		<div id="hoursChart" style="width: 100%; height: 400px;"></div>
 	<!--Filter Number Modal -->
 	<div class="modal fade" id="myModal">
   <div class="modal-dialog">
