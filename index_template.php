@@ -85,7 +85,7 @@
 					<form class="navbar-form navbar-left" role="search">
 
 						<div class="row">
-							<div class='col-sm-6'>
+							<div class='col-sm-3'>
 								<div class="form-group">
 									<div class='input-group date' id='dateFrom'>
 										<input type='text' id="inputDateFrom" class="form-control" placeholder="Fecha de Inicio" readonly="true"/>
@@ -93,7 +93,7 @@
 									</div>
 								</div>
 							</div>
-							<div class='col-sm-6'>
+							<div class='col-sm-2'>
 								<div class="form-group">
 									<div class='input-group date' id='dateTo'>
 										<input type='text' id="inputDateTo" class="form-control" placeholder="Fecha de Final" readonly="true" />

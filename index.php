@@ -68,5 +68,9 @@ $app -> get('/avgSignal', function() use ($app) {
 	echo json_encode(getAVGTime('signal', $dateFrom, $dateTo, $number));
 });
 
+$app -> get('/charts', function() use ($app) {
+	$app -> render('/index_charts.php');
+});
+
 $app -> run();
 ?>
