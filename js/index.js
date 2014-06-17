@@ -318,31 +318,17 @@ function handleReceivedCallsData(data) {
 					data: _(values).map(function(val) { return moment.duration(val.connection_time).asSeconds();})
 				};
 			}).value();
-			$('#chart').highcharts({
-				chart: {
-          type: 'column'
-        },
-				xAxis: {
-					title: 'Signal',
-					categories: _(signalsChartData).map(function(x) { return x.signal; })
-				},
-				series: [{
-					name: 'Connection Time',
-					data: _(signalsChartData).map(function(x) {
-						return {
-							y: _(x.data).reduce(function(memo, val) {
-									return memo + val;
-								}, 0) / x.data.length,
-							dataLabels: {
-								enabled: true,
-								formatter: function() {
-									return x.data.length;
-								}
-							}
-						};
-					})
-				}]
-			});
+			createConnectionTimePerSignalChart($('#signalsChart'), signalsChartData);
+
+			var hoursChartData = _.chain(parsedData).groupBy(function(x) { return moment(x.caller_time).format('HH'); })
+				.map(function(values, hour) {
+					return {
+						hour: hour,
+						data: _(values).map(function(x) { return moment.duration(x.connection_time).asSeconds(); })
+					};
+				}).value();
+
+			createConnectionTimePerHour($('#hoursChart'), hoursChartData);
 		}
 
 $(function() {
