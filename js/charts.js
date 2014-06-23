@@ -7,6 +7,8 @@ function createConnectionTimePerSignalChart(element, chartData) {
         title: {text: 'Tiempo de conexion promedio'},
 		xAxis: {
 			title: { text: 'Señal del llamante'},
+            categories: _.range(1, 32),
+            max: 31
 			
 		},
 		yAxis: {
