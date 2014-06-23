@@ -312,12 +312,18 @@ function getFields() {
 function handleReceivedCallsData(data) {
 			var parsedData = JSON.parse(data);
 			loadCallsMarkers(parsedData);
-			var signalsChartData = _.chain(parsedData).groupBy("caller_signal").map(function(values, signal) {
+			var signalsChartData = _.chain(parsedData).groupBy("receiver_signal").map(function(values, receiverSignal) {
 				return {
-					signal: signal,
-					data: _(values).map(function(val) { return moment.duration(val.connection_time).asSeconds();})
+					receiverSignal: receiverSignal,
+					data: _.chain(values).groupBy("caller_signal").map(function(values, callerSignal) {
+						return {
+							callerSignal: callerSignal,
+							data: _(values).map(function(val) { return moment.duration(val.connection_time).asSeconds();})
+						};
+					}).value()
 				};
 			}).value();
+
 			createConnectionTimePerSignalChart($('#signalsChart'), signalsChartData);
 
 			var hoursChartData = _.chain(parsedData).groupBy(function(x) { return moment(x.caller_time).format('HH'); })

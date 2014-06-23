@@ -1,35 +1,41 @@
 function createConnectionTimePerSignalChart(element, chartData) {
 	$(element).highcharts({
 		chart: {
-      type: 'column'
-    },
-    title: {text: 'Tiempo de conexion promedio'},
+          type: 'spline',
+          zoomType: 'xy'
+        },
+        title: {text: 'Tiempo de conexion promedio'},
 		xAxis: {
-			title: 'Señal',
-			categories: _(chartData).map(function(x) { return x.signal; })
+			title: { text: 'Señal del llamante'},
+			
 		},
 		yAxis: {
-			title: 'Tiempo de conexion',
+			title: {text: 'Tiempo de conexion'},
 			labels: {
 				format: '{value} sec'
 			}
 		},
-		series: [{
-			name: 'Tiempo de conexion',
-			data: _(chartData).map(function(x) {
-				return {
-					y: _(x.data).reduce(function(memo, val) {
-							return memo + val;
-						}, 0) / x.data.length,	//Promedio tiempo de conexion por chartData
-					dataLabels: {
-						enabled: true,
-						formatter: function() {
-							return x.data.length;
-						}
-					}
-				};
-			})
-		}]
+		series: _.chain(chartData).map(function(data) {
+            return {
+                name: 'Señal del receptor: ' + data.receiverSignal,
+                data: _.chain(data.data).filter(function(callData) {
+                    return callData.callerSignal !== "99";
+                }).map(function(callData) {
+                    return {
+                        y: _(callData.data).reduce(function(memo, val) {
+                            return memo + val;
+                        }, 0) / callData.data.length,  //Promedio tiempo de conexion por chartData
+                        x: callData.callerSignal,
+                        dataLabels: {
+                            enabled: true,
+                            formatter: function() {
+                                return callData.data.length;
+                            }
+                        }
+                    };
+                }).value()
+            };
+        }).sortBy('name').value()
 	});
 }
 
