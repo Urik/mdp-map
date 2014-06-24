@@ -88,7 +88,7 @@
 					<form class="navbar-form navbar-left" role="search">
 
 						<div class="row">
-							<div class='col-sm-6'>
+							<div class='col-sm-3'>
 								<div class="form-group">
 									<div class='input-group date' id='dateFrom'>
 										<input type='text' id="inputDateFrom" class="form-control" placeholder="Fecha de Inicio" readonly="true"/>
@@ -96,7 +96,7 @@
 									</div>
 								</div>
 							</div>
-							<div class='col-sm-6'>
+							<div class='col-sm-2'>
 								<div class="form-group">
 									<div class='input-group date' id='dateTo'>
 										<input type='text' id="inputDateTo" class="form-control" placeholder="Fecha de Final" readonly="true" />
@@ -138,8 +138,9 @@
 				Nada que mostrar
 			</p>
 		</div>
-		<div id="signalsChart" style="width: 100%; height: 400px;clear:left"></div>
-		<div id="hoursChart" style="width: 100%; height: 400px;"></div>
+		<div id="signalsChart" style="width: 100%; height: 400px;clear:both"></div>
+		<div id="hoursChart" style="width: 100%; height: 400px;clear: both"></div>
+		<div id="internetHoursChart" style="width: 100%; height: 400px;clear: both"></div>
 	<!--Filter Number Modal -->
 	<div class="modal fade" id="myModal">
   <div class="modal-dialog">
