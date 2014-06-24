@@ -1,32 +1,30 @@
 function createConnectionTimePerSignalChart(element, chartData) {
-	$(element).highcharts({
-		chart: {
+    $(element).highcharts({
+        chart: {
           type: 'spline',
           zoomType: 'xy'
         },
         title: {text: 'Tiempo de conexion promedio'},
-		xAxis: {
-			title: { text: 'Señal del llamante'},
+        xAxis: {
+            title: { text: 'Señal del llamante'},
             categories: _.range(1, 32),
             max: 31
-			
-		},
-		yAxis: {
-			title: {text: 'Tiempo de conexion'},
-			labels: {
-				format: '{value} sec'
-			}
-		},
-		series: _.chain(chartData).map(function(data) {
+            
+        },
+        yAxis: {
+            title: {text: 'Tiempo de conexion'},
+            labels: {
+                format: '{value} sec'
+            }
+        },
+        series: _.chain(chartData).map(function(data) {
             return {
                 name: 'Señal del receptor: ' + data.receiverSignal,
                 data: _.chain(data.data).filter(function(callData) {
                     return callData.callerSignal !== "99";
                 }).map(function(callData) {
                     return {
-                        y: _(callData.data).reduce(function(memo, val) {
-                            return memo + val;
-                        }, 0) / callData.data.length,  //Promedio tiempo de conexion por chartData
+                        y: calculateAverage(_(callData).pluck('data')),
                         x: callData.callerSignal,
                         dataLabels: {
                             enabled: true,
@@ -38,63 +36,97 @@ function createConnectionTimePerSignalChart(element, chartData) {
                 }).value()
             };
         }).sortBy('name').value()
-	});
+    });
+}
+
+function createDownloadTimesPerHourChart(element, hoursChartData) {
+  $(element).highcharts({
+    chart: {
+      type: 'spline',
+      zoomType: 'xy'
+    },
+    title: {text: 'Prueba de internet'},
+    xAxis: {
+      title: { text: 'Horario de prueba'},
+      categories: _.range(0, 24),
+      max: 24
+    },
+    yAxis: {
+        title: {text: 'Tiempo de descarga [msec]'},
+        labels: {
+            format: '{value} msec'
+        }
+    },
+    series: [{
+      name: 'Prueba de descarga',
+      data: _(hoursChartData).map(function(data, hour) {
+        return {
+          y: calculateAverage(_(data).pluck('downloadTime')),
+          x: hour,
+          dataLabels: {
+            enabled: true,
+            formatter: function() {
+                return data.length;
+            }
+          }
+        };
+      })
+    }]
+  });
 }
 
 function createConnectionTimePerHour(element, chartData) {
-	var averageData = _(chartData).map(function(data) {
-		return {
-			hour: data.hour,
-			average: _(data.data).reduce(function(memo, val) {
-					return memo + val;
-				}, 0) / data.data.length,
-			dataCount: data.data.length
-		};
-	});
-	$(element).highcharts({
-		/*chart: {
-			type: 'column'
-		},*/
-		title: {text: 'Tiempo de conexion por hora'},
-		xAxis: {
-			name: 'Hora',
-			data: _(chartData).map(function(x) { return x.hour; })
-		},
-		yAxis: {
-			min: _(averageData).chain().pluck('average').min().value()
-		},
-		series: [{
-			name: 'Tiempo de conexion',
-			type: 'column',
-			data: _(averageData).map(function(x) {
-				return {
-					y: x.average,
-					dataLabels: {
-						enabled: true,
-						formatter: function() {
-							return x.dataCount;
-						}
-					}
-				};
-			})
-		},
-		{
-			type: 'spline',
-			name: 'Tiempo de conexion',
-			showInLegend: false,
-			data: _(averageData).map(function(x) {
-				return {
-					y: x.average,
-					dataLabels: {
-						enabled: true,
-						formatter: function() {
-							return x.dataCount;
-						}
-					}
-				};
-			})
-		}]
-	});
+    var averageData = _(chartData).map(function(data) {
+        return {
+            hour: data.hour,
+            average: calculateAverage(_(data).pluck('data')),
+            dataCount: data.data.length
+        };
+    });
+    $(element).highcharts({
+        /*chart: {
+            type: 'column'
+        },*/
+        title: {text: 'Tiempo de conexion por hora'},
+        xAxis: {
+            name: 'Hora',
+            data: _(chartData).map(function(x) { return x.hour; })
+        },
+        yAxis: {
+            min: _(averageData).chain().pluck('average').min().value()
+        },
+        series: [{
+            name: 'Tiempo de conexion',
+            type: 'column',
+            data: _(averageData).map(function(x) {
+                return {
+                    y: x.average,
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return x.dataCount;
+                        }
+                    }
+                };
+            })
+        },
+        {
+            type: 'spline',
+            name: 'Tiempo de conexion',
+            showInLegend: false,
+            data: _(averageData).map(function(x) {
+                return {
+                    y: x.average,
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return x.dataCount;
+                        }
+                    }
+                };
+            })
+        }]
+    });
 }
 
 var title;
@@ -105,26 +137,26 @@ var time;
 var time_year = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var time_mouth = ['1','2','3','4','5','6','7','8','9','10','11',
-				'12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30'];
+                '12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30'];
 var time_day = ['1','2','3','4','5','6','7','8','9','10','11',
-				'12','13','14','15','16','17','18','19','20','21','22','23','24'];
+                '12','13','14','15','16','17','18','19','20','21','22','23','24'];
 
 
 function loadChart(){
-	type_time =  document.getElementById("time_type").value;
-	var range_time = [];
-	if(type_time == "day")
-		range_time = time_day;
-	else if (type_time =="mouth")
-		range_time = time_mouth;
-	else
-		range_time = time_year;
-	select_chart = document.getElementById("chart_type").value;
-	if(select_chart == "call_signal"){
-		basicLine(range_time);
-	}else if (select_chart == "call_company"){
-		dualAxe(range_time);
-	}
+    type_time =  document.getElementById("time_type").value;
+    var range_time = [];
+    if(type_time == "day")
+        range_time = time_day;
+    else if (type_time =="mouth")
+        range_time = time_mouth;
+    else
+        range_time = time_year;
+    select_chart = document.getElementById("chart_type").value;
+    if(select_chart == "call_signal"){
+        basicLine(range_time);
+    }else if (select_chart == "call_company"){
+        dualAxe(range_time);
+    }
 }
 
 
@@ -258,14 +290,20 @@ function dualAxe(){
     
    $(function (){ 
     $('#date_chart').datetimepicker({
-		format : "YYYY-MM-DD",
-		language : 'es'
-	});
-	$("#clear_chart").click(function() {
-		$("#inputDate_chart").val("");
-		
-	});
-	$("#reload_chart").click(function() {
-		loadChart();
-	});
+        format : "YYYY-MM-DD",
+        language : 'es'
+    });
+    $("#clear_chart").click(function() {
+        $("#inputDate_chart").val("");
+        
+    });
+    $("#reload_chart").click(function() {
+        loadChart();
+    });
    });
+
+function calculateAverage(array) {
+  return array.length ? _(array).reduce(function(memo, num) {
+    return Number(num).valueOf() + Number(memo).valueOf();
+  }, 0) / array.length : 0;
+}

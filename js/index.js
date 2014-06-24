@@ -310,32 +310,39 @@ function getFields() {
 }
 
 function handleReceivedCallsData(data) {
-			var parsedData = JSON.parse(data);
-			loadCallsMarkers(parsedData);
-			var signalsChartData = _.chain(parsedData).groupBy("receiver_signal").map(function(values, receiverSignal) {
+	var parsedData = JSON.parse(data);
+	loadCallsMarkers(parsedData);
+	var signalsChartData = _.chain(parsedData).groupBy("receiver_signal").map(function(values, receiverSignal) {
+		return {
+			receiverSignal: receiverSignal,
+			data: _.chain(values).groupBy("caller_signal").map(function(values, callerSignal) {
 				return {
-					receiverSignal: receiverSignal,
-					data: _.chain(values).groupBy("caller_signal").map(function(values, callerSignal) {
-						return {
-							callerSignal: callerSignal,
-							data: _(values).map(function(val) { return moment.duration(val.connection_time).asSeconds();})
-						};
-					}).value()
+					callerSignal: callerSignal,
+					data: _(values).map(function(val) { return moment.duration(val.connection_time).asSeconds();})
 				};
-			}).value();
+			}).value()
+		};
+	}).value();
 
-			createConnectionTimePerSignalChart($('#signalsChart'), signalsChartData);
+	createConnectionTimePerSignalChart($('#signalsChart'), signalsChartData);
 
-			var hoursChartData = _.chain(parsedData).groupBy(function(x) { return moment(x.caller_time).format('HH'); })
-				.map(function(values, hour) {
-					return {
-						hour: hour,
-						data: _(values).map(function(x) { return moment.duration(x.connection_time).asSeconds(); })
-					};
-				}).value();
+	var hoursChartData = _.chain(parsedData).groupBy(function(x) { return moment(x.caller_time).format('HH'); })
+		.map(function(values, hour) {
+			return {
+				hour: hour,
+				data: _(values).map(function(x) { return moment.duration(x.connection_time).asSeconds(); })
+			};
+		}).value();
 
-			createConnectionTimePerHour($('#hoursChart'), hoursChartData);
-		}
+	createConnectionTimePerHour($('#hoursChart'), hoursChartData);
+}
+
+function handleReceivedInternetData(data) {
+	var internetData = JSON.parse(data);
+	loadInternetMarkers(internetData);
+	var hoursChartData = _(internetData).groupBy(function(value) { return moment(value.dateCreated).hour();});
+	createDownloadTimesPerHourChart($('#internetHoursChart'), hoursChartData);
+}
 
 $(function() {
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -352,9 +359,7 @@ $(function() {
 	$('#internet_button').click(function() {
 		lastAction = '#internet_button';
 		var fields = getFields();
-		$.get('index.php/internet' + getFields(), function(data) {
-			loadInternetMarkers(JSON.parse(data));
-		});
+		$.get('index.php/internet' + getFields(), handleReceivedInternetData);
 	});
 	$('#sms_button').click(function() {
 		lastAction = '#sms_button';
