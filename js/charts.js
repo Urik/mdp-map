@@ -24,7 +24,7 @@ function createConnectionTimePerSignalChart(element, chartData) {
                     return callData.callerSignal !== "99";
                 }).map(function(callData) {
                     return {
-                        y: calculateAverage(_(callData).pluck('data')),
+                        y: calculateAverage(callData.data),
                         x: callData.callerSignal,
                         dataLabels: {
                             enabled: true,
@@ -79,7 +79,7 @@ function createConnectionTimePerHour(element, chartData) {
     var averageData = _(chartData).map(function(data) {
         return {
             hour: data.hour,
-            average: calculateAverage(_(data).pluck('data')),
+            average: calculateAverage(data.data),
             dataCount: data.data.length
         };
     });
