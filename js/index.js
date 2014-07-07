@@ -78,7 +78,13 @@ function loadInternetMarkers(markers) {
 		});
 	});
 
-	loadMarkers('Test de internet', data);
+	var failedDownloadColor = '#5E5E5E';
+
+	loadMarkers('Test de internet', data, function(markerData, marker) {
+		if (markerData.windowContent['Tiempo de descarga [ms]'] == 0) {
+			marker.setIcon('http://maps.google.com/mapfiles/marker_black.png');
+		}
+	});
 }
 
 function loadSmsMarkers(smsData) {
@@ -158,7 +164,8 @@ function createMarkerWindowData(callerNumber, operatorName, callerBatteryLevel, 
 	};
 }
 
-function loadMarkers(title, totalData) {
+//markerCustomFunction should be a function accepting the data variable, and its marker.
+function loadMarkers(title, totalData, markerCustomFunction) {
 	clearMarkers();
 	if (infos.length > 0) {
 		colorNeighs('darkblue');
@@ -168,7 +175,8 @@ function loadMarkers(title, totalData) {
 		(function() {
 			var marker = new google.maps.Marker({
 				position : new google.maps.LatLng(data.callerLat, data.callerLon),
-				title : title
+				title : title,
+				opacity: 0.5
 			});
 			marker.setMap(map);
 			markers.push(marker);
@@ -184,6 +192,10 @@ function loadMarkers(title, totalData) {
 			var infoWindow = new google.maps.InfoWindow({
 				content : contentString
 			});
+
+			if (markerCustomFunction) {
+				markerCustomFunction(data, marker);
+			}
 			google.maps.event.addListener(marker, 'click', function() {
 				infoWindow.open(map, marker);
 			});
@@ -348,47 +360,53 @@ $(function() {
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	var lastAction;
 
-	$.get('index.php/neighborhoods', function(response) {
+	$.get('index.php/api/neighborhoods', function(response) {
 		displayNeighborhoods(JSON.parse(response));
 	});
 	$('#calls_button').click(function() {
 		lastAction = '#calls_button';
-		$.get('index.php/calls' + getFields(), handleReceivedCallsData);
+		$.get('index.php/api/calls' + getFields(), handleReceivedCallsData);
 		return false;
 	});
 	$('#internet_button').click(function() {
 		lastAction = '#internet_button';
 		var fields = getFields();
-		$.get('index.php/internet' + getFields(), handleReceivedInternetData);
+		$.get('index.php/api/internet' + getFields(), handleReceivedInternetData);
 	});
 	$('#sms_button').click(function() {
 		lastAction = '#sms_button';
-		$.get('index.php/sms' + getFields(), function(data) {
+		$.get('index.php/api/sms' + getFields(), function(data) {
 			loadSmsMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgTime_button').click(function() {
 		lastAction = '#avgTime_button';
-		$.get('index.php/avgtime' + getFields(), function(data) {
+		$.get('index.php/api/avgcalltime' + getFields(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgDownloadTime_button').click(function() {
 		lastAction = '#avgDownloadTime_button';
-		$.get('index.php/avgtimeDown' + getFields(), function(data) {
+		$.get('index.php/api/avgtimeDown' + getFields(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgSMSTime_button').click(function() {
 		lastAction = '#avgSMSTime_button';
-		$.get('index.php/avgtimeSMS' + getFields(), function(data) {
+		$.get('index.php/api/avgtimeSMS' + getFields(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
 		});
 	});
 	$('#avgSignal_button').click(function() {
 		lastAction = '#avgSignal_button';
-		$.get('index.php/avgSignal' + getFields(), function(data) {
+		$.get('index.php/api/avgSignal' + getFields(), function(data) {
 			loadAVGTimeMarkers(JSON.parse(data));
+		});
+	});
+	$('#failed_internet_button').click(function() {
+		lastAction = '#failed_internet_button';
+		$.get('index.php/api/internet/failed/all', function(data) {
+			loadFailedInternetConnections(JSON.parse(data));
 		});
 	});
 

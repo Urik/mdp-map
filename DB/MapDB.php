@@ -1,6 +1,7 @@
 <?php
 
 include_once 'DB/DBConnection.php';
+include_once 'underscore.php';
 
 function getNeighborhoods() {
 	$con = connectDB();
@@ -211,7 +212,7 @@ function getInternetTests($dateFrom, $dateTo, $number) {
 	$con = connectDB();
 
 	$sql = "SELECT * FROM internet ";
-	$whereClause = " WHERE neighborhood_id IS NOT NULL AND downloadTime <> 0";
+	$whereClause = " WHERE neighborhood_id IS NOT NULL";
 
 	if (!is_null($dateFrom) && !is_null($dateTo))
 		$whereClause .= " AND dateCreated BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
@@ -277,7 +278,23 @@ function getAVGTime($type, $dateFrom, $dateTo, $number) {
 
 	disconnectDB($con);
 	return $response;
+}
 
+function getPercentagesOfFailedInternet() {
+	$response = array();
+	$con = connectDB();
+	$sql = "SELECT i1.neighborhood_id AS neighborhood_id, COUNT(case when i1.downloadTime = 0 then 1 else null end) / COUNT(i1.downloadTime) as failed_downloads_percentage" 
+		. " FROM internet i1" 
+		. " GROUP BY i1.neighborhood_id";
+	$result = $con -> query($sql);
+	if ($result) {
+		while ($item = $result -> fetch_assoc()) {
+			$response[] = encodeArrayToUtf($item);
+		}
+	}
+
+	disconnectDB($con);
+	return $response;
 }
 
 function encodeArrayToUtf($array) {
