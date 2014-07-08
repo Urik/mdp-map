@@ -2,9 +2,10 @@
 
 <html>
 	<head>
-		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 		<meta charset="utf-8">
-		<title>Polygon Arrays</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Tesis</title>
 
 		<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-datetimepicker.min.css">
@@ -21,7 +22,9 @@
 		<script type="text/javascript" src="js/highcharts.js"></script>
 
 		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="js/averageZonesCreators.js"></script>
 		<script type="text/javascript" src="js/charts.js"></script>
+		<script type="text/javascript" src="js/rainbowvis.js"></script>
 
 	</head>
 	<body>
@@ -61,6 +64,12 @@
 								</li>
 								<li>
 									<a id="avgDownloadTime_button" href="#">Ver por zona</a>
+								</li>
+								<li>
+									<a id="failed_internet_button" href="#">Ver todas las transferencias fallidas</a>
+								</li>
+								<li>
+									<a id="avgFailed_internet_button" href="#">Ver transferencias fallidas por zona</a>
 								</li>
 							</ul>
 						</li>
