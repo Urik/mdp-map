@@ -73,7 +73,7 @@ $app->group('/api', function() use ($app) {
 		$number = $app->request()->get('number');
 		echo json_encode(getAVGTime('signal', $dateFrom, $dateTo, $number));
 	});
-	$app->get('/internet/failed/all', function() use ($app) {
+	$app->get('/internet/failed/average', function() use ($app) {
 		echo json_encode(getPercentagesOfFailedInternet());
 	});
 

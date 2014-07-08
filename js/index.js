@@ -108,8 +108,8 @@ function loadCallsMarkers(callsData) {
 	loadMarkers('Llamada', markerData);
 }
 
-function loadAVGCallData(AVGTimeData) {
-	var markerData = _(AVGTimeData).map(function(x) {
+function loadAVGCallData(AVGCallData) {
+	var data = _(AVGCallData).map(function(x) {
 		return new CallsZoneData({
 			avgConnectionTime : x.avg_connection_time,
 			avgSignal : x.avg_signal,
@@ -120,11 +120,11 @@ function loadAVGCallData(AVGTimeData) {
 		});
 	});
 
-	loadAVGWindows(markerData);
+	loadAVGWindows(data);
 }
 
-function loadAVGInternetData(AVGTimeData) {
-	var markerData = _(AVGTimeData).map(function(x) {
+function loadAVGInternetData(AVGInternetData) {
+	var data = _(AVGInternetData).map(function(x) {
 		return new InternetZoneData({
 			avgDownloadTime : x.avg_download_time,
 			avgSignal : x.avg_signal,
@@ -134,11 +134,11 @@ function loadAVGInternetData(AVGTimeData) {
 		});
 	});
 
-	loadAVGWindows(markerData);
+	loadAVGWindows(data);
 }
 
-function loadAVGSmsData(AVGTimeData) {
-	var markerData = _(AVGTimeData).map(function(x) {
+function loadAVGSmsData(AVGSmsData) {
+	var data = _(AVGSmsData).map(function(x) {
 		return new SmsZoneData({
 			avgSendingTime : x.avg_sending_time,
 			avgSignal : x.avg_signal,
@@ -148,11 +148,11 @@ function loadAVGSmsData(AVGTimeData) {
 		});
 	});
 
-	loadAVGWindows(markerData);
+	loadAVGWindows(data);
 }
 
-function loadAVGSignalData(AVGTimeData) {
-	var markerData = _(AVGTimeData).map(function(x) {
+function loadAVGSignalData(AVGSignalData) {
+	var data = _(AVGSignalData).map(function(x) {
 		return new SignalZoneData({
 				avgSignal : x.avg_signal,
 				neighId : x.neighborhood_id,
@@ -161,7 +161,21 @@ function loadAVGSignalData(AVGTimeData) {
 		});
 	});
 
-	loadAVGWindows(markerData);
+	loadAVGWindows(data);
+}
+
+function loadFailedInternetConnections(AVGFailedData) {
+	var data = _(AVGFailedData).map(function(x) {
+		return new FailedInternetZoneData({
+			avgFailures: x.failed_downloads_percentage,
+			avgSignal: x.signal_average,
+			numRegs: x.total_samples,
+			neighId : x.neighborhood_id,
+			neighName : x.neighborhood_name,
+		});
+	});
+
+	loadAVGWindows(data);
 }
 
 function createMarkerWindowData(callerNumber, operatorName, callerBatteryLevel, callerSignal, lat, lon, date, customData) {
@@ -382,6 +396,12 @@ $(function() {
 	$('#failed_internet_button').click(function() {
 		lastAction = '#failed_internet_button';
 		$.get('index.php/api/internet/failed/all', function(data) {
+			
+		});
+	});
+	$('#avgFailed_internet_button').click(function() {
+		lastAction = '#avgFailed_internet_button';
+		$.get('index.php/api/internet/failed/average', function(data) {
 			loadFailedInternetConnections(JSON.parse(data));
 		});
 	});

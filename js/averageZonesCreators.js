@@ -22,7 +22,7 @@ function InternetZoneData(entity) {
 	};
 }
 
-function CallsZoneData (entity) {
+function CallsZoneData(entity) {
 	this.entity = entity;
 	this.getData = function() {
 		return {
@@ -47,7 +47,7 @@ function CallsZoneData (entity) {
 	};
 }
 
-function SmsZoneData (entity) {
+function SmsZoneData(entity) {
 	this.entity = entity;
 	this.getData = function() {
 		return {
@@ -71,7 +71,7 @@ function SmsZoneData (entity) {
 	};
 }
 
-function SignalZoneData (entity) {
+function SignalZoneData(entity) {
 	this.entity = entity;
 	this.getData = function() {
 		return {
@@ -87,6 +87,28 @@ function SignalZoneData (entity) {
 		rgb += parseInt(204 - this.entity.avgSignal * 204 / worstValue, 10) + ',0)';
 
 		return rgb;
+	};
+
+	this.shouldPaintZone = function() {
+		return this.entity.avgSignal > 0;
+	};
+}
+
+function FailedInternetZoneData(entity) {
+	this.entity = entity;
+	this.getData = function() {
+		return {
+			'Porcentaje de pruebas fallidas': parseFloat(this.entity.avgFailures).toFixed(2),
+			'Promedio de señal': parseFloat(this.entity.avgSignal).toFixed(2),
+			'Cantidad de registros': this.entity.numRegs
+		};
+	};
+
+	this.getColor = function() {
+		var rainBow = new Rainbow();
+		rainBow.setNumberRange(0, 101);
+		rainBow.setSpectrum('green', 'red');
+		return '#' + rainBow.colourAt(parseInt(Number(this.entity.avgFailures) * 100));
 	};
 
 	this.shouldPaintZone = function() {

@@ -283,8 +283,10 @@ function getAVGTime($type, $dateFrom, $dateTo, $number) {
 function getPercentagesOfFailedInternet() {
 	$response = array();
 	$con = connectDB();
-	$sql = "SELECT i1.neighborhood_id AS neighborhood_id, COUNT(case when i1.downloadTime = 0 then 1 else null end) / COUNT(i1.downloadTime) as failed_downloads_percentage" 
+	$sql = "SELECT i1.neighborhood_id AS neighborhood_id, COUNT(case when i1.downloadTime = 0 then 1 else null end) / COUNT(i1.downloadTime) as failed_downloads_percentage, AVG(i1.currentSignal) as signal_average, COUNT(i1.id) as total_samples, n.name as neighborhood_name" 
 		. " FROM internet i1" 
+		. " JOIN neighborhood n ON n.id = i1.neighborhood_id"
+		. " WHERE neighborhood_id is not null"
 		. " GROUP BY i1.neighborhood_id";
 	$result = $con -> query($sql);
 	if ($result) {

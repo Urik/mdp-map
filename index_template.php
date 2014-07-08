@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="js/index.js"></script>
 		<script type="text/javascript" src="js/averageZonesCreators.js"></script>
 		<script type="text/javascript" src="js/charts.js"></script>
+		<script type="text/javascript" src="js/rainbowvis.js"></script>
 
 	</head>
 	<body>
