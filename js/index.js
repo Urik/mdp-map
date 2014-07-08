@@ -278,33 +278,6 @@ function loadAVGWindows(totalData) {
 
 }
 
-function getColor(data) {
-	var worstValue;
-	var rgb = 'rgb(';
-
-	if (data.type == 'call') {
-		worstValue = 15;
-		rgb += parseInt(data.avgConnectionTime * (255 / worstValue)) + ',';
-		rgb += parseInt(204 - data.avgConnectionTime * 204 / worstValue) + ',0)';
-	} else if (data.type == 'internet') {
-		worstValue = 5000;
-		rgb += parseInt(data.avgDownloadTime * (255 / worstValue)) + ',';
-		rgb += parseInt(204 - data.avgDownloadTime * 204 / worstValue) + ',0)';
-	} else if (data.type == 'SMS') {
-		worstValue = 50000;
-		rgb += parseInt(data.avgSendingTime * (255 / worstValue)) + ',';
-		rgb += parseInt(204 - data.avgSendingTime * 204 / worstValue) + ',0)';
-	} else if (data.type == 'signal') {
-		worstValue = 32;
-		rgb += parseInt(worstValue - data.avgSignal * (255 / worstValue)) + ',';
-		rgb += parseInt(data.avgSignal * (204 / worstValue)) + ',0)';
-
-	} else
-		return "rgb(0,0,0)";
-
-	return rgb;
-}
-
 function getFields() {
 	var first = true;
 	var filterString = "";
