@@ -108,44 +108,57 @@ function loadCallsMarkers(callsData) {
 	loadMarkers('Llamada', markerData);
 }
 
-function loadAVGTimeMarkers(AVGTimeData) {
-	var markerData = _.map(AVGTimeData, function(x) {
-		if (x.type == 'call')
-			return {
-				type : x.type,
-				avgConnectionTime : x.avg_connection_time,
+function loadAVGCallData(AVGTimeData) {
+	var markerData = _(AVGTimeData).map(function(x) {
+		return new CallsZoneData({
+			avgConnectionTime : x.avg_connection_time,
+			avgSignal : x.avg_signal,
+			avgRecSignal : x.avg_rec_signal,
+			neighId : x.neighborhood_id,
+			neighName : x.name,
+			numRegs : x.num_regs
+		});
+	});
+
+	loadAVGWindows(markerData);
+}
+
+function loadAVGInternetData(AVGTimeData) {
+	var markerData = _(AVGTimeData).map(function(x) {
+		return new InternetZoneData({
+			avgDownloadTime : x.avg_download_time,
+			avgSignal : x.avg_signal,
+			neighId : x.neighborhood_id,
+			neighName : x.name,
+			numRegs : x.num_regs
+		});
+	});
+
+	loadAVGWindows(markerData);
+}
+
+function loadAVGSmsData(AVGTimeData) {
+	var markerData = _(AVGTimeData).map(function(x) {
+		return new SmsZoneData({
+			avgSendingTime : x.avg_sending_time,
+			avgSignal : x.avg_signal,
+			neighId : x.neighborhood_id,
+			neighName : x.name,
+			numRegs : x.num_regs
+		});
+	});
+
+	loadAVGWindows(markerData);
+}
+
+function loadAVGSignalData(AVGTimeData) {
+	var markerData = _(AVGTimeData).map(function(x) {
+		return new SignalZoneData({
 				avgSignal : x.avg_signal,
-				avgRecSignal : x.avg_rec_signal,
 				neighId : x.neighborhood_id,
 				neighName : x.name,
-				numRegs : x.num_regs
-			};
-		else if (x.type == 'internet')
-			return {
-				type : x.type,
-				avgDownloadTime : x.avg_download_time,
-				avgSignal : x.avg_signal,
-				neighId : x.neighborhood_id,
-				neighName : x.name,
-				numRegs : x.num_regs
-			};
-		else if (x.type == 'SMS')
-			return {
-				type : x.type,
-				avgSendingTime : x.avg_sending_time,
-				avgSignal : x.avg_signal,
-				neighId : x.neighborhood_id,
-				neighName : x.name,
-				numRegs : x.num_regs
-			};
-		else if (x.type == 'signal')
-			return {
-				type : x.type,
-				avgSignal : x.avg_signal,
-				neighId : x.neighborhood_id,
-				neighName : x.name,
-				numRegs : x.num_regs
-			};
+				numRegs: x.num_regs
+		});
 	});
 
 	loadAVGWindows(markerData);
@@ -235,31 +248,21 @@ function loadAVGWindows(totalData) {
 
 			var infoWindow = new google.maps.InfoWindow();
 
-			var contentString = '<p style="color:red"><b>Barrio ' + data.neighName + '</b></p>';
-
-			if (data.type == 'call')
-				contentString += '<p>Tiempo Promedio de Conexión: ' + parseFloat(data.avgConnectionTime).toFixed(2) + ' segs</p>';
-			else if (data.type == 'internet')
-				contentString += '<p>Tiempo Promedio de Descarga: ' + parseFloat(data.avgDownloadTime / 1000).toFixed(2) + ' segs</p>';
-			else if (data.type == 'SMS')
-				contentString += '<p>Tiempo Promedio de Envío: ' + parseFloat(data.avgSendingTime / 1000).toFixed(2) + ' segs</p>';
-
-			contentString += '<p>Promedio de señal del Emisor: ' + parseFloat(data.avgSignal).toFixed(2) + '</p>';
-			if (data.type == 'call')
-				contentString += '<p>Promedio de señal del Receptor: ' + parseFloat(data.avgRecSignal).toFixed(2) + '</p>';
-
-			contentString += '<p>Cantidad de registros: ' + data.numRegs + '</p>';
-			//contentString += '<p>color: ' + getColor(data) + '</p>';
-
-			if ((data.type == 'call' && data.avgConnectionTime > 0) || (data.type == 'internet' && data.avgDownloadTime > 0) || (data.type == 'SMS' && data.avgSendingTime > 0) || (data.type == 'signal' && data.avgSignal > 0)) {
-				neighArray[data.neighId].setOptions({
-					fillColor : getColor(data)
+			var contentString = '<p style="color:red"><b>Barrio ' + data.entity.neighName + '</b></p>';
+			var fields = data.getData();
+			for (var key in fields) {
+				contentString += '<p>' + key + ': ' + fields[key] + '</p>';
+			}
+			
+			if (data.shouldPaintZone()) {
+				neighArray[data.entity.neighId].setOptions({
+					fillColor : data.getColor()
 				});
-				colored.push(neighArray[data.neighId]);
+				colored.push(neighArray[data.entity.neighId]);
 			}
 
 			infoWindow.setContent(contentString);
-			infoWindow.setPosition(polygonCenter(neighArray[data.neighId]));
+			infoWindow.setPosition(polygonCenter(neighArray[data.entity.neighId]));
 			infos.push(infoWindow);
 
 			var showInfo = function(event) {
@@ -268,7 +271,7 @@ function loadAVGWindows(totalData) {
 
 			};
 
-			google.maps.event.addListener(neighArray[data.neighId], 'click', showInfo);
+			google.maps.event.addListener(neighArray[data.entity.neighId], 'click', showInfo);
 
 		})();
 	});
@@ -382,25 +385,25 @@ $(function() {
 	$('#avgTime_button').click(function() {
 		lastAction = '#avgTime_button';
 		$.get('index.php/api/avgcalltime' + getFields(), function(data) {
-			loadAVGTimeMarkers(JSON.parse(data));
+			loadAVGCallData(JSON.parse(data));
 		});
 	});
 	$('#avgDownloadTime_button').click(function() {
 		lastAction = '#avgDownloadTime_button';
 		$.get('index.php/api/avgtimeDown' + getFields(), function(data) {
-			loadAVGTimeMarkers(JSON.parse(data));
+			loadAVGInternetData(JSON.parse(data));
 		});
 	});
 	$('#avgSMSTime_button').click(function() {
 		lastAction = '#avgSMSTime_button';
 		$.get('index.php/api/avgtimeSMS' + getFields(), function(data) {
-			loadAVGTimeMarkers(JSON.parse(data));
+			loadAVGSmsData(JSON.parse(data));
 		});
 	});
 	$('#avgSignal_button').click(function() {
 		lastAction = '#avgSignal_button';
 		$.get('index.php/api/avgSignal' + getFields(), function(data) {
-			loadAVGTimeMarkers(JSON.parse(data));
+			loadAVGSignalData(JSON.parse(data));
 		});
 	});
 	$('#failed_internet_button').click(function() {

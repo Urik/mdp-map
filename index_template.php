@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="js/highcharts.js"></script>
 
 		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="js/averageZonesCreators.js"></script>
 		<script type="text/javascript" src="js/charts.js"></script>
 
 	</head>
