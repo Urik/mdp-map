@@ -287,7 +287,7 @@ function getPercentagesOfFailedInternet() {
 	return $response;
 }
 
-function getConnectionTimesPerCompany() {
+function getConnectionTimesPerCompany($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
 	$query = "";
 	$query .= "SELECT CASE ";
 	$query .= "         WHEN Lower(m.calleroperatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -298,7 +298,11 @@ function getConnectionTimesPerCompany() {
 	$query .= "       Avg(Time_to_sec(m.connectiontime)) AS ConnectionTime, ";
 	$query .= "       Count(*)                           AS DataCount ";
 	$query .= "FROM   matched_calls m ";
-	$query .= "GROUP  BY CASE ";
+	$query .= "WHERE 1=1 ";
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	$query .= "GROUP BY CASE ";
 	$query .= "            WHEN Lower(m.calleroperatorname) LIKE '%claro%' THEN 'Claro' ";
 	$query .= "            WHEN Lower(m.calleroperatorname) LIKE '%personal%' THEN 'Personal' ";
 	$query .= "            WHEN Lower(m.calleroperatorname) LIKE '%movistar%' THEN 'Movistar' ";

@@ -31,8 +31,8 @@ $app->group('/api', function() use ($app) {
 
 	$app->group('/calls', function() use($app) {
 		$app->get('/', function() use ($app) {
-			$params = getQueryParameters($app);
-			echo json_encode(getCalls($params->lat1, $params->lon1, $params->lat2, $params->lon2, $params->dateFrom, $params->dateTo, $params->number));
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getCalls');
+			echo json_encode($queryFunc());
 		});
 
 		$app->get('/avgconnectiontime', function() use ($app) {
@@ -41,13 +41,18 @@ $app->group('/api', function() use ($app) {
 		});
 
 		$app->get('/avgcalltimepersignals', function() use($app) {
-			$params = getQueryParameters($app);
-			echo json_encode(getCallConnectionTimesBySignals($params->lat1, $params->lon1, $params->lat2, $params->lon2, $params->dateFrom, $params->dateTo, $params->number));
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getCallConnectionTimesBySignals');
+			echo json_encode($queryFunc());
 		});
 
 		$app->get('/avgcalltimeperdayandhour', function() use ($app) {
-			$params = getQueryParameters($app);
-			echo json_encode(getCallConnectionTimesByDayAndHour($params->lat1, $params->lon1, $params->lat2, $params->lon2, $params->dateFrom, $params->dateTo, $params->number));
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getCallConnectionTimesByDayAndHour');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/avgcalltimeperoperator', function() use ($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getConnectionTimesPerCompany');
+			echo json_encode($queryFunc());
 		});
 	});
 
@@ -80,7 +85,6 @@ $app->group('/api', function() use ($app) {
 	$app->get('/internet/failed/average', function() use ($app) {
 		echo json_encode(getPercentagesOfFailedInternet());
 	});
-
 });
 $app->run();
 
@@ -98,8 +102,8 @@ function getQueryParameters($app) {
 
 function getFunctionWithDateAndPositionParameters($app, $func)  {
 	$params = getQueryParameters($app);
-	return function() use ($params) {
-		return $func($params->lat1, $params->lon1, $params->lat2, $params->lon2, $params->dateFrom, $params->dateTo);
+	return function() use ($params, $func) {
+		return call_user_func($func, $params->lat1, $params->lon1, $params->lat2, $params->lon2, $params->dateFrom, $params->dateTo, null);
 	};
 }
 ?>
