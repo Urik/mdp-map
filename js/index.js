@@ -311,6 +311,12 @@ function getFields() {
 	return filterString;
 }
 
+function getConnectionTimePerSignalData() {
+	$.get('index.php/calls/avgcalltimepersignals', function(data) {
+
+	});
+}
+
 function handleReceivedCallsData(data) {
 	var parsedData = JSON.parse(data);
 	loadCallsMarkers(parsedData);
@@ -326,17 +332,13 @@ function handleReceivedCallsData(data) {
 		};
 	}).value();
 
-	createConnectionTimePerSignalChart($('#signalsChart'), signalsChartData);
+	$.get('index.php/api/calls/avgcalltimepersignals', function(data) {
+		createConnectionTimePerSignalChart($('#signalsChart'), JSON.parse(data));
+	});
 
-	var hoursChartData = _.chain(parsedData).groupBy(function(x) { return moment(x.caller_time).format('HH'); })
-		.map(function(values, hour) {
-			return {
-				hour: hour,
-				data: _(values).map(function(x) { return moment.duration(x.connection_time).asSeconds(); })
-			};
-		}).value();
-
-	createConnectionTimePerHour($('#hoursChart'), hoursChartData);
+	$.get('index.php/api/calls/avgcalltimeperdayandhour', function(data) {
+		createConnectionTimePerHour($('#hoursChart'), JSON.parse(data));
+	});
 }
 
 function handleReceivedInternetData(data) {
@@ -371,7 +373,7 @@ $(function() {
 	});
 	$('#avgTime_button').click(function() {
 		lastAction = '#avgTime_button';
-		$.get('index.php/api/avgcalltime' + getFields(), function(data) {
+		$.get('index.php/api/calls/avgconnectiontime' + getFields(), function(data) {
 			loadAVGCallData(JSON.parse(data));
 		});
 	});

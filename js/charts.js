@@ -17,23 +17,21 @@ function createConnectionTimePerSignalChart(element, chartData) {
                 format: '{value} sec'
             }
         },
-        series: _.chain(chartData).map(function(data) {
+        series: _.chain(chartData).map(function(data, receiverSignal) {
             return {
-                name: 'Señal del receptor: ' + data.receiverSignal,
-                data: _.chain(data.data).filter(function(callData) {
-                    return callData.callerSignal !== "99";
-                }).map(function(callData) {
+                name: 'Señal del receptor: ' + receiverSignal,
+                data: _(data).map(function(callData, callerSignal) {
                     return {
-                        y: calculateAverage(callData.data),
-                        x: callData.callerSignal,
+                        y: parseFloat(callData[0].ConnectionTime),
+                        x: callData[0].CallerSignal,
                         dataLabels: {
                             enabled: true,
                             formatter: function() {
-                                return callData.data.length;
+                                return callData.DataCount;
                             }
                         }
                     };
-                }).value()
+                })
             };
         }).sortBy('name').value()
     });
@@ -76,56 +74,49 @@ function createDownloadTimesPerHourChart(element, hoursChartData) {
 }
 
 function createConnectionTimePerHour(element, chartData) {
-    var averageData = _(chartData).map(function(data) {
-        return {
-            hour: data.hour,
-            average: calculateAverage(data.data),
-            dataCount: data.data.length
-        };
-    });
+    var minTime = _.chain(chartData).map(function(weekDayValue, weekDayKey) {
+        return _(weekDayValue).map(function(weekNumValue, weekNumKey) {
+            return _(weekNumValue).map(function(auxData) {
+                return parseFloat(auxData.ConnectionTime);
+            });
+        });
+    }).flatten().min().value();
     $(element).highcharts({
-        /*chart: {
-            type: 'column'
-        },*/
         title: {text: 'Tiempo de conexion por hora'},
         xAxis: {
-            name: 'Hora',
+            title: 'Hora',
+            categories: _.range(00, 24),
             data: _(chartData).map(function(x) { return x.hour; })
         },
         yAxis: {
-            min: _(averageData).chain().pluck('average').min().value()
+            min: minTime,
+            title: 'Tiempo de conexion [sec]'
         },
-        series: [{
-            name: 'Tiempo de conexion',
-            type: 'column',
-            data: _(averageData).map(function(x) {
-                return {
-                    y: x.average,
-                    dataLabels: {
-                        enabled: true,
-                        formatter: function() {
-                            return x.dataCount;
+        series: _(chartData).map(function(weekDayValue, weekDayKey) {
+            var hours = Object.keys(weekDayValue);
+            hours = _(hours).sortBy(function(x) {
+                return parseInt(x);
+            });
+            return {
+                type: 'spline',
+                name: weekDayKey,
+                showInLegend: true,
+                data: _(hours).map(function(hour) {
+                    var hourValue = weekDayValue[hour];
+                    var hourKey = hour;
+                    return {
+                        y: parseFloat(hourValue[0].ConnectionTime),
+                        x: parseInt(hourKey),
+                        dataLabels: {
+                            enabled: true,
+                            formatter: function() {
+                                return hourValue[0].DataCount;
+                            }
                         }
-                    }
-                };
-            })
-        },
-        {
-            type: 'spline',
-            name: 'Tiempo de conexion',
-            showInLegend: false,
-            data: _(averageData).map(function(x) {
-                return {
-                    y: x.average,
-                    dataLabels: {
-                        enabled: true,
-                        formatter: function() {
-                            return x.dataCount;
-                        }
-                    }
-                };
-            })
-        }]
+                    };
+                })
+            };
+        })
     });
 }
 
