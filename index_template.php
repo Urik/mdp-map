@@ -21,7 +21,8 @@
 		<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
 		<script type="text/javascript" src="js/highcharts.js"></script>
 		<script type="text/javascript" src="js/async.js"></script>
-
+		<script type="text/javascript" src="js/markerclusterer.js"></script>
+		
 		<script type="text/javascript" src="js/index.js"></script>
 		<script type="text/javascript" src="js/averageZonesCreators.js"></script>
 		<script type="text/javascript" src="js/charts.js"></script>

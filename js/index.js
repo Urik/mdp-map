@@ -228,6 +228,8 @@ function loadMarkers(title, totalData, markerCustomFunction) {
 			});
 		})();
 	});
+
+	new MarkerClusterer(map, markers);
 }
 
 function polygonCenter(poly) {
