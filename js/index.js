@@ -335,19 +335,19 @@ function handleReceivedCallsData(data) {
 	$.get('index.php/api/calls/avgcalltimepersignals', function(data) {
 		createConnectionTimePerSignalChart($('#signalsChart'), JSON.parse(data));
 		$('#signalsChart').css({display: 'block'});
-		//$(window).trigger("resize");
+		$(window).trigger("resize");
 	});
 
 	$.get('index.php/api/calls/avgcalltimeperdayandhour', function(data) {
 		createConnectionTimePerHour($('#hoursChart'), JSON.parse(data));
 		$('#hoursChart').css({display: 'block'});
-		//$(window).trigger("resize");
+		$(window).trigger("resize");
 	});
 
 	$.get('index.php/api/calls/avgcalltimeperoperator', function(data) {
 		createConnectionTimePerOperator($('#operatorsChart'), JSON.parse(data));
 		$('#operatorsChart').css({display: 'block'});
-		//$(window).trigger("resize");
+		$(window).trigger("resize");
 	});
 }
 
@@ -361,9 +361,10 @@ function handleReceivedInternetData(data) {
 $(function() {
 	var mapCanvas = $('#map-canvas');
 	mapCanvas.css({height: $(window).height() - mapCanvas.offset().top - 2 + 'px'});
+	$('.chart').css({height: $(window).height()});
 	$(window).resize(function() {
 		mapCanvas.css({height: $(window).height() - mapCanvas.offset().top - 2 + 'px'});
-		$('.chart').css({height: $(window).height() - 2});
+		$('.chart').css({height: $(window).height()});
 	});
 
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
