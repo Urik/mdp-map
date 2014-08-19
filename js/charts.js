@@ -20,6 +20,7 @@ function createConnectionTimePerSignalChart(element, chartData) {
         series: _.chain(chartData).map(function(data, receiverSignal) {
             return {
                 name: 'Señal del receptor: ' + receiverSignal,
+                visible: false,
                 data: _(data).map(function(callData, callerSignal) {
                     return {
                         y: parseFloat(callData[0].ConnectionTime),
@@ -50,7 +51,7 @@ function createDownloadTimesPerHourChart(element, hoursChartData) {
       max: 24
     },
     yAxis: {
-        title: {text: 'Tiempo de descarga [msec]'},
+        title: {text: 'Tiempo de descarga en msec'},
         labels: {
             format: '{value} msec'
         }
@@ -81,11 +82,20 @@ function createConnectionTimePerHour(element, chartData) {
             });
         });
     }).flatten().min().value();
+    var weekDaysTranslator = {
+        sunday: 'Domingo',
+        monday: 'Lunes',
+        tuesday: 'Martes',
+        wednesday: 'Miercoles',
+        thursday: 'Jueves',
+        friday: 'Viernes',
+        saturday: 'Sabado'
+    };
     $(element).highcharts({
         title: {text: 'Tiempo de conexion por hora'},
         xAxis: {
             title: 'Hora',
-            categories: _.range(00, 24),
+            categories: _.range(0, 24),
             data: _(chartData).map(function(x) { return x.hour; })
         },
         yAxis: {
@@ -99,7 +109,7 @@ function createConnectionTimePerHour(element, chartData) {
             });
             return {
                 type: 'spline',
-                name: weekDayKey,
+                name: weekDaysTranslator[weekDayKey.toLowerCase()],
                 showInLegend: true,
                 data: _(hours).map(function(hour) {
                     var hourValue = weekDayValue[hour];
@@ -117,6 +127,46 @@ function createConnectionTimePerHour(element, chartData) {
                 })
             };
         })
+    });
+}
+
+function createConnectionTimePerOperator(element, chartData) {
+    var companiesColors = {
+        claro: '#D22D27',
+        movistar: '#B3CC08',
+        personal: '#0095AB'
+    };
+    $(element).highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {text: 'Tiempo de conexion promedio por operador'},
+        xAxis: {
+            categories: _(chartData).map(function(data) {
+                return data.Company;
+            }),
+            title: 'Operadora'
+        },
+        yAxis: {
+            min: 0,
+            title: 'Tiempo de conexion [sec]'
+        },
+        series: [{
+            showInLegend: false,
+            data: _(chartData).map(function(data) {
+                return {
+                    y: parseFloat(data.ConnectionTime),
+                    name: data.Company,
+                    color: companiesColors[data.Company.toLowerCase()],
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return data.DataCount;
+                        }
+                    }
+                };
+            })
+        }]
     });
 }
 
@@ -204,82 +254,82 @@ function basicLine (rangeX) {
     
 function dualAxe(){
   $('#chart').highcharts({
-            chart: {
-                zoomType: 'xy'
-            },
-            title: {
-                text: 'Average Monthly Temperature and Rainfall in Tokyo'
-            },
-            subtitle: {
-                text: 'Source: WorldClimate.com'
-            },
-            xAxis: [{
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            }],
-            yAxis: [{ // Primary yAxis
-                labels: {
-                    format: '{value}°C',
-                    style: {
-                        color: Highcharts.getOptions().colors[1]
-                    }
-                },
-                title: {
-                    text: 'Temperature',
-                    style: {
-                        color: Highcharts.getOptions().colors[1]
-                    }
-                }
-            }, { // Secondary yAxis
-                title: {
-                    text: 'Rainfall',
-                    style: {
-                        color: Highcharts.getOptions().colors[0]
-                    }
-                },
-                labels: {
-                    format: '{value} mm',
-                    style: {
-                        color: Highcharts.getOptions().colors[0]
-                    }
-                },
-                opposite: true
-            }],
-            tooltip: {
-                shared: true
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'left',
-                x: 120,
-                verticalAlign: 'top',
-                y: 100,
-                floating: true,
-                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-            },
-            series: [{
-                name: 'Rainfall',
-                type: 'column',
-                yAxis: 1,
-                data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
-                tooltip: {
-                    valueSuffix: ' mm'
-                }
-    
-            }, {
-                name: 'Temperature',
-                type: 'spline',
-                data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
-                tooltip: {
-                    valueSuffix: '°C'
-                }
-            }]
-        });
-    }
+    chart: {
+        zoomType: 'xy'
+    },
+    title: {
+        text: 'Average Monthly Temperature and Rainfall in Tokyo'
+    },
+    subtitle: {
+        text: 'Source: WorldClimate.com'
+    },
+    xAxis: [{
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    }],
+    yAxis: [{ // Primary yAxis
+        labels: {
+            format: '{value}°C',
+            style: {
+                color: Highcharts.getOptions().colors[1]
+            }
+        },
+        title: {
+            text: 'Temperature',
+            style: {
+                color: Highcharts.getOptions().colors[1]
+            }
+        }
+    }, { // Secondary yAxis
+        title: {
+            text: 'Rainfall',
+            style: {
+                color: Highcharts.getOptions().colors[0]
+            }
+        },
+        labels: {
+            format: '{value} mm',
+            style: {
+                color: Highcharts.getOptions().colors[0]
+            }
+        },
+        opposite: true
+    }],
+    tooltip: {
+        shared: true
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'left',
+        x: 120,
+        verticalAlign: 'top',
+        y: 100,
+        floating: true,
+        backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+    },
+    series: [{
+        name: 'Rainfall',
+        type: 'column',
+        yAxis: 1,
+        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+        tooltip: {
+            valueSuffix: ' mm'
+        }
+
+    }, {
+        name: 'Temperature',
+        type: 'spline',
+        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+        tooltip: {
+            valueSuffix: '°C'
+        }
+    }]
+});
+}
     
    
     
-   $(function (){ 
+$(function (){ 
     $('#date_chart').datetimepicker({
         format : "YYYY-MM-DD",
         language : 'es'

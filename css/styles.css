@@ -1,21 +1,3 @@
-html, body, #map-canvas {
-	height: 100%;
-	margin: 0px;
-	padding: 0px
-}
-
-#neighList{
-	width: 20%;
-	float: right
-}
-
 #map-canvas {
-	float:left;
-	width: 80%;
-	height: 100%;
-	margin: 0px;
-	padding: 0px;
-	margin-top: -20px
+	height: 600px;
 }
-
-
