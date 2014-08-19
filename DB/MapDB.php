@@ -312,6 +312,28 @@ function getConnectionTimesPerCompany($lat1, $lon1, $lat2, $lon2, $dateFrom, $da
 	return queryDatabase($query);
 }
 
+function getFailedCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+	$query = "";
+	$query .= "SELECT c.operatorname, ";
+	$query .= "       c.sourcenumber, ";
+	$query .= "       c.batterylevel, ";
+	$query .= "       c.currentsignal, ";
+	$query .= "       c.locationlat, ";
+	$query .= "       c.locationlon, ";
+	$query .= "       c.dispatchdate ";
+	$query .= "FROM   tesis.CALL c ";
+	$query .= "WHERE  c.incoming = 0 ";
+
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	$query .= "       AND c.id NOT IN (SELECT m.outgoingcallid ";
+	$query .= "                        FROM   matched_calls m) ";
+	$query .= "       AND c.datecreated < ( Now() - INTERVAL 1 day ) " ;
+
+	return queryDatabase($query);
+}
+
 function encodeArrayToUtf($array) {
 	$response = array();
 	foreach ($array as $key => $value) {

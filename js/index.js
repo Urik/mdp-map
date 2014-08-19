@@ -1,5 +1,6 @@
 var ENDPOINT = 'http://localhost/mdp-map/index.php/';
 var map;
+var markersClusterer;
 var mapOptions = {
 	zoom : 12,
 	center : new google.maps.LatLng(-38, -57.55),
@@ -47,10 +48,8 @@ function displayNeighborhoods(neighborhoods) {
 }
 
 function clearMarkers() {
-	for (var i = 0; i < markers.length; i++) {
-		markers[i].setMap(null);
-	}
 	markers = [];
+	markersClusterer.clearMarkers();
 }
 
 function clearInfos() {
@@ -205,8 +204,8 @@ function loadMarkers(title, totalData, markerCustomFunction) {
 				title : title,
 				opacity: 0.5
 			});
-			marker.setMap(map);
 			markers.push(marker);
+			markersClusterer.addMarker(marker);
 			var contentString = '<p>Numero de origen: ' + data.sourceNumber + '</p>';
 			contentString += '<p>Fecha de evento: ' + data.date + '</p>';
 			contentString += '<p>Operador: ' + data.operatorName + '</p>';
@@ -228,8 +227,6 @@ function loadMarkers(title, totalData, markerCustomFunction) {
 			});
 		})();
 	});
-
-	new MarkerClusterer(map, markers, {maxZoom: 14, gridSize: 30});
 }
 
 function polygonCenter(poly) {
@@ -370,6 +367,9 @@ $(function() {
 	});
 
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	markersClusterer = new MarkerClusterer(map);
+	markersClusterer.setMaxZoom(14);
+	markersClusterer.setGridSize(40);
 	var lastAction;
 
 	$.get('index.php/api/neighborhoods', function(response) {
@@ -377,7 +377,20 @@ $(function() {
 	});
 	$('#calls_button').click(function() {
 		lastAction = '#calls_button';
-		$.get('index.php/api/calls' + getFields(), handleReceivedCallsData);
+		async.parallel([
+			function(callback) {
+				$.get('index.php/api/calls' + getFields(), function(data) {
+					callback(null, data);
+				});
+			},
+			function(callback) {
+				$.get('index.php/api/calls/failed' + getFields(), function(data) {
+					callback(null, data);
+				});
+			}], function(err, data) {
+				handleReceivedCallsData(data[0]);
+			});
+		//$.get('index.php/api/calls' + getFields(), handleReceivedCallsData);
 		return false;
 	});
 	$('#internet_button').click(function() {

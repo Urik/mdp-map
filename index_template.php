@@ -107,7 +107,7 @@
 									</div>
 								</div>
 							</div>
-							<div class='col-sm-2'>
+							<div class='col-sm-3'>
 								<div class="form-group">
 									<div class='input-group date' id='dateTo'>
 										<input type='text' id="inputDateTo" class="form-control" placeholder="Fecha de Final" readonly="true" />

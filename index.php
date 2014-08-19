@@ -35,6 +35,11 @@ $app->group('/api', function() use ($app) {
 			echo json_encode($queryFunc());
 		});
 
+		$app->get('/failed', function() use ($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getFailedCalls');
+			echo json_encode($queryFunc());
+		});
+
 		$app->get('/avgconnectiontime', function() use ($app) {
 			$params = getQueryParameters($app);
 			echo json_encode(getAVGTime('call', $params->dateFrom, $params->dateTo, $params->number));
