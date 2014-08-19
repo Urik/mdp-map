@@ -83,15 +83,8 @@ function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
 	$con = connectDB();
 	$sql = "SELECT m.CallerNumber AS caller_number, m.CallerOperatorName as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal, callerTime AS caller_time FROM matched_calls m ";
 	$whereClause = " WHERE  m.CallerNumber IS NOT NULL AND m.CallerLat <> 0 AND  m.CallerLon <> 0";
-	if (!is_null($lat1) && !is_null($lon1) && !is_null($lat2) && !is_null($lon2)) {
-		$lineString = 'LINESTRING(' . $lat1 . ' ' . $lon1 . ', ' . $lat2 . ' ' . $lon2 . ')';
-		$whereClause .= ' AND MBRContains(GeomFromText(\'' . $lineString . '\'), m.OutgoingGeom)';
-
-	}
-
-	if (!is_null($dateFrom) && !is_null($dateTo))
-		$whereClause .= " AND m.CallerTime BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
-	
+	$whereClause .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$whereClause .= getDateBasedWhereClause($dateFrom, $dateTo);
 	if(!is_null($number))
 		$whereClause .= " AND m.CallerNumber = '" . $number . "'";
 
@@ -105,22 +98,93 @@ function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
 	return $response;
 }
 
-function getSMS($dateFrom, $dateTo, $number) {
+function getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2) {
+	$whereClause = "";
+	if (!is_null($lat1) && !is_null($lon1) && !is_null($lat2) && !is_null($lon2)) {
+		$lineString = 'LINESTRING(' . $lat1 . ' ' . $lon1 . ', ' . $lat2 . ' ' . $lon2 . ')';
+		$whereClause .= ' AND MBRContains(GeomFromText(\'' . $lineString . '\'), m.OutgoingGeom)';
+	}
+
+	return $whereClause;
+}
+
+function getDateBasedWhereClause($dateFrom, $dateTo) {
+	$whereClause = "";
+	if (!is_null($dateFrom) && !is_null($dateTo)) {
+		$whereClause .= " AND m.CallerTime BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
+	}
+
+	return $whereClause;
+}
+
+function getCallConnectionTimesBySignals($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+	$query = "";
+	$query .= "SELECT c.callersignal, ";
+	$query .= "       c.receiversignal, ";
+	$query .= "       Avg(Time_to_sec(c.connectiontime)) as ConnectionTime, ";
+	$query .= "       Count(*) AS DataCount ";
+	$query .= "FROM   matched_calls c ";
+	$query .= "WHERE  c.callersignal <> 99 ";
+	$query .= "       AND c.receiversignal <> 99 ";
+	$query .= "       AND c.callersignal <> 0 ";
+	$query .= "       AND c.receiversignal <> 0 ";
+
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	$query .= " GROUP  BY c.receiversignal, ";
+	$query .= "           c.callersignal " ;
+
+	$data = queryDatabase($query);
+	$dataByCallerSignal = __($data)->groupBy(function($row) {
+		return $row['ReceiverSignal'];
+	});
+	foreach ($dataByCallerSignal as $key => $value) {
+		$dataByCallerSignal[$key] = __($value)->groupBy(function($row) {
+			return $row['CallerSignal'];
+		});
+	}
+
+	return $dataByCallerSignal;
+}
+
+function getCallConnectionTimesByDayAndHour($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+	$query = "";
+	$query .= "SELECT Date_format(c.callertime, '%W') as WeekDay, ";
+	$query .= "       Date_format(c.callertime, '%H') as Hour, ";
+	$query .= "       Avg(Time_to_sec(c.connectiontime)) AS ConnectionTime, ";
+	$query .= "       Count(*)                           AS DataCount ";
+	$query .= "FROM   matched_calls c ";
+	$query .= "WHERE  c.callersignal <> 99 ";
+	$query .= "       AND c.receiversignal <> 99 ";
+	$query .= "       AND c.callersignal <> 0 ";
+	$query .= "       AND c.receiversignal <> 0 ";
+
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	$query .= " GROUP  BY Date_format(c.callertime, '%W'), ";
+	$query .= "          Date_format(c.callertime, '%H') ";
+	$query .= " ORDER  BY Date_format(c.callertime, '%w'), Date_format(c.callertime, '%H')" ;
+
+	$data = queryDatabase($query);
+	$groupedData = __($data)->groupBy(function($row) {
+		return $row['WeekDay'];
+	});
+	foreach ($groupedData as $key => $value) {
+		$groupedData[$key] = __($value)->groupBy(function($row) {
+			return $row['Hour'];
+		});
+	}
+
+	return $groupedData;
+}
+
+function queryDatabase($query) {
 	$response = Array();
 	$con = connectDB();
-
-	$sql = "SELECT * FROM sms ";
-	$whereClause = " WHERE neighborhood_id IS NOT NULL ";
-
-	if (!is_null($dateFrom) && !is_null($dateTo))
-		$whereClause .= "AND dateCreated BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
-
-	if(!is_null($number))
-		$whereClause .= " AND sourceNumber = '" . $number . "'";
-
-
-	$sql .= $whereClause;
-	if ($result = $con -> query($sql)) {
+	
+	if ($result = $con -> query($query)) {
 		while ($item = $result -> fetch_assoc()) {
 			$response[] = encodeArrayToUtf($item);
 		}
@@ -129,108 +193,32 @@ function getSMS($dateFrom, $dateTo, $number) {
 	return $response;
 }
 
-function displayMarkers($view, $result) {
-	$i = 1;
-	while ($obj = $result -> fetch_object()) {
-		echo "var marker" . $i . " = new google.maps.Marker({ ";
-		echo "position: new google.maps.LatLng(" . $obj -> locationLat . " , " . $obj -> locationLon . "), ";
-		echo "title:'Hello World!' ";
-		echo "}); ";
-		echo "marker" . $i . ".setMap(map); ";
+function getSMS($dateFrom, $dateTo, $number) {
+	$sql = "SELECT * FROM sms ";
+	$whereClause = " WHERE neighborhood_id IS NOT NULL ";
 
-		echo "var contentString" . $i . " = '<p>Número orígen: " . $obj -> sourceNumber . "</p><p>Operador: " . $obj -> operatorName . "</p><p>Nivel de Batería: " . $obj -> batteryLevel . "</p><p>Señal del Emisor: " . $obj -> currentSignal . "</p>";
-		if ($view == 1) {
-			echo "<p>Señal del Destinatario: " . $obj -> ReceiverSignal . " ms</p>";
-			echo "<p>Tiempo de Conexión: " . $obj -> ConnectionTime . " seg</p>";
-		} elseif ($view == 2)
-			echo "<p>Tiempo de Descarga: " . $obj -> downloadTime . " ms</p>";
-		elseif ($view == 3)
-			echo "<p>Tiempo de Envío: " . $obj -> sendingTime . " ms</p>";
-		echo "'; ";
-		echo "var infowindow" . $i . " = new google.maps.InfoWindow({ ";
-		echo "content: contentString" . $i . " ";
-		echo "}); ";
-		echo " google.maps.event.addListener(marker" . $i . ", 'click', function() { ";
-		echo "infowindow" . $i . ".open(map,marker" . $i . "); ";
-		echo " }); ";
-
-		$i = $i + 1;
-
-	}
-
-}
-
-function loadZones($result) {
-	$i = 0;
-	$lastZone = "";
-	while ($zone = $result -> fetch_object()) {
-		if ($lastZone != $zone -> name) {//change of polygon
-			if ($i) {//unless first loop
-				renderZone($i);
-			}
-			$lastZone = $zone -> name;
-			$i = $i + 1;
-			echo "var zone" . $i . "; ";
-			echo "var zoneCoords" . $i . " = [";
-			$first = 1;
-		}
-		if (!$first)
-			echo ", ";
-		else
-			$first = 0;
-		echo "new google.maps.LatLng(" . $zone -> latitude . " , " . $zone -> longitude . ")";
-	}
-
-	renderZone($i);
-}
-
-function renderZone($i) {
-	echo "]; ";
-	echo "zone" . $i . "= new google.maps.Polygon({
-									paths: zoneCoords" . $i . ",
-									strokeColor: '#000000',
-									strokeOpacity: 0.8,
-									strokeWeight: 3,
-									fillColor: '#' + (0x1000000 + Math.random() * 0xFFFFFF).toString(16).substr(1,6),
-									fillOpacity: 0.35
-									}); ";
-	echo "zones.push(zone" . $i . "); ";
-}
-
-/* Creo que no sirve
- * function zoning($table){
- if($table == "internet")
- $result = getInternet();
- while ($obj = $result -> fetch_object()) {
-
- }
-
- }*/
-
-function getInternetTests($dateFrom, $dateTo, $number) {
-	$tests = Array();
-	$con = connectDB();
-
-	$sql = "SELECT * FROM internet ";
-	$whereClause = " WHERE neighborhood_id IS NOT NULL";
-
-	if (!is_null($dateFrom) && !is_null($dateTo))
-		$whereClause .= " AND dateCreated BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "'";
-
+	$whereClause .= getDateBasedWhereClause($dateFrom, $dateTo);
+	
 	if(!is_null($number))
 		$whereClause .= " AND sourceNumber = '" . $number . "'";
 
 	$sql .= $whereClause;
+	return queryDatabase($sql);
+}
 
-	if ($result = $con -> query($sql)) {
-		while ($item = $result -> fetch_assoc()) {
-			$tests[] = encodeArrayToUtf($item);
-		}
+function getInternetTests($dateFrom, $dateTo, $number) {
+	$sql = "SELECT * FROM internet ";
+	$whereClause = " WHERE neighborhood_id IS NOT NULL";
+
+	$whereClause .= getDateBasedWhereClause($dateFrom, $dateTo);
+	
+	if(!is_null($number)) {
+		$whereClause .= " AND sourceNumber = '" . $number . "'";
 	}
 
-	disconnectDB($con);
+	$sql .= $whereClause;
 
-	return $tests;
+	return queryDatabase($sql);
 }
 
 function getAVGTime($type, $dateFrom, $dateTo, $number) {
@@ -297,6 +285,31 @@ function getPercentagesOfFailedInternet() {
 
 	disconnectDB($con);
 	return $response;
+}
+
+function getConnectionTimesPerCompany($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+	$query = "";
+	$query .= "SELECT CASE ";
+	$query .= "         WHEN Lower(m.calleroperatorname) LIKE '%claro%' THEN 'Claro' ";
+	$query .= "         WHEN Lower(m.calleroperatorname) LIKE '%personal%' THEN 'Personal' ";
+	$query .= "         WHEN Lower(m.calleroperatorname) LIKE '%movistar%' THEN 'Movistar' ";
+	$query .= "         ELSE m.calleroperatorname ";
+	$query .= "       end                                AS Company, ";
+	$query .= "       Avg(Time_to_sec(m.connectiontime)) AS ConnectionTime, ";
+	$query .= "       Count(*)                           AS DataCount ";
+	$query .= "FROM   matched_calls m ";
+	$query .= "WHERE 1=1 ";
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	$query .= "GROUP BY CASE ";
+	$query .= "            WHEN Lower(m.calleroperatorname) LIKE '%claro%' THEN 'Claro' ";
+	$query .= "            WHEN Lower(m.calleroperatorname) LIKE '%personal%' THEN 'Personal' ";
+	$query .= "            WHEN Lower(m.calleroperatorname) LIKE '%movistar%' THEN 'Movistar' ";
+	$query .= "            ELSE m.calleroperatorname ";
+	$query .= "          end " ;
+
+	return queryDatabase($query);
 }
 
 function encodeArrayToUtf($array) {

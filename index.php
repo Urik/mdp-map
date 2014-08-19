@@ -17,10 +17,8 @@ $app->get('/charts', function() use ($app) {
 $app->group('/api', function() use ($app) {
 
 	$app->get('/internet', function() use ($app) {
-		$dateFrom = $app->request()->get('dateFrom');
-		$dateTo = $app->request()->get('dateTo');
-		$number = $app->request()->get('number');
-		echo json_encode(getInternetTests($dateFrom, $dateTo, $number));
+		$params = getQueryParameters($app);
+		echo json_encode(getInternetTests($params->dateFrom, $params->dateTo, $params->number));
 	});
 
 	$app->get('/neighborhoods', function() use ($app) {
@@ -31,43 +29,54 @@ $app->group('/api', function() use ($app) {
 		echo json_encode(getZones());
 	});
 
-	$app->get('/calls', function() use ($app) {
-		$lat1 = $app->request()->get('lat1');
-		$lon1 = $app->request()->get('lon1');
-		$lat2 = $app->request()->get('lat2');
-		$lon2 = $app->request()->get('lon2');
-		$dateFrom = $app->request()->get('dateFrom');
-		$dateTo = $app->request()->get('dateTo');
-		$number = $app->request()->get('number');
-		echo json_encode(getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number));
+	$app->group('/calls', function() use($app) {
+		$app->get('/', function() use ($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getCalls');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/avgconnectiontime', function() use ($app) {
+			$params = getQueryParameters($app);
+			echo json_encode(getAVGTime('call', $params->dateFrom, $params->dateTo, $params->number));
+		});
+
+		$app->get('/avgcalltimepersignals', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getCallConnectionTimesBySignals');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/avgcalltimeperdayandhour', function() use ($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getCallConnectionTimesByDayAndHour');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/avgcalltimeperoperator', function() use ($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getConnectionTimesPerCompany');
+			echo json_encode($queryFunc());
+		});
 	});
 
 	$app->get('/sms', function() use ($app) {
-		$dateFrom = $app->request()->get('dateFrom');
-		$dateTo = $app->request()->get('dateTo');
-		$number = $app->request()->get('number');
-		echo json_encode(getSMS($dateFrom, $dateTo, $number));
+		$params = getQueryParameters($app);
+		echo json_encode(getSMS($params->dateFrom, $params->dateTo, $params->number));
 	});
 
-	$app->get('/avgcalltime', function() use ($app) {
-		$dateFrom = $app->request()->get('dateFrom');
-		$dateTo = $app->request()->get('dateTo');
-		$number = $app->request()->get('number');
-		echo json_encode(getAVGTime('call', $dateFrom, $dateTo, $number));
-	});
 	$app->get('/avgtimeDown', function() use ($app) {
+		$params = getQueryParameters($app);
 		$dateFrom = $app->request()->get('dateFrom');
 		$dateTo = $app->request()->get('dateTo');	
 		$number = $app->request()->get('number');
 		echo json_encode(getAVGTime('internet', $dateFrom, $dateTo, $number));
 	});
 	$app->get('/avgtimeSMS', function() use ($app) {
+		$params = getQueryParameters($app);
 		$dateFrom = $app->request()->get('dateFrom');
 		$dateTo = $app->request()->get('dateTo');	
 		$number = $app->request()->get('number');
 		echo json_encode(getAVGTime('SMS', $dateFrom, $dateTo, $number));
 	});
 	$app->get('/avgSignal', function() use ($app) {
+		$params = getQueryParameters($app);
 		$dateFrom = $app->request()->get('dateFrom');
 		$dateTo = $app->request()->get('dateTo');	
 		$number = $app->request()->get('number');
@@ -76,7 +85,25 @@ $app->group('/api', function() use ($app) {
 	$app->get('/internet/failed/average', function() use ($app) {
 		echo json_encode(getPercentagesOfFailedInternet());
 	});
-
 });
 $app->run();
+
+function getQueryParameters($app) {
+	$params = new stdClass;
+	$params->dateFrom = $app->request->get('dateFrom');
+	$params->dateTo = $app->request->get('dateTo');
+	$params->number = $app->request->get('number');
+	$params->lat1 = $app->request->get('lat1');
+	$params->lon1 = $app->request->get('lon1');
+	$params->lat2 = $app->request->get('lat2');
+	$params->lon2 = $app->request->get('lon2');
+	return $params;
+}
+
+function getFunctionWithDateAndPositionParameters($app, $func)  {
+	$params = getQueryParameters($app);
+	return function() use ($params, $func) {
+		return call_user_func($func, $params->lat1, $params->lon1, $params->lat2, $params->lon2, $params->dateFrom, $params->dateTo, null);
+	};
+}
 ?>

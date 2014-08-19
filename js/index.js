@@ -311,6 +311,12 @@ function getFields() {
 	return filterString;
 }
 
+function getConnectionTimePerSignalData() {
+	$.get('index.php/calls/avgcalltimepersignals', function(data) {
+
+	});
+}
+
 function handleReceivedCallsData(data) {
 	var parsedData = JSON.parse(data);
 	loadCallsMarkers(parsedData);
@@ -326,17 +332,23 @@ function handleReceivedCallsData(data) {
 		};
 	}).value();
 
-	createConnectionTimePerSignalChart($('#signalsChart'), signalsChartData);
+	$.get('index.php/api/calls/avgcalltimepersignals', function(data) {
+		createConnectionTimePerSignalChart($('#signalsChart'), JSON.parse(data));
+		$('#signalsChart').css({display: 'block'});
+		$(window).trigger("resize");
+	});
 
-	var hoursChartData = _.chain(parsedData).groupBy(function(x) { return moment(x.caller_time).format('HH'); })
-		.map(function(values, hour) {
-			return {
-				hour: hour,
-				data: _(values).map(function(x) { return moment.duration(x.connection_time).asSeconds(); })
-			};
-		}).value();
+	$.get('index.php/api/calls/avgcalltimeperdayandhour', function(data) {
+		createConnectionTimePerHour($('#hoursChart'), JSON.parse(data));
+		$('#hoursChart').css({display: 'block'});
+		$(window).trigger("resize");
+	});
 
-	createConnectionTimePerHour($('#hoursChart'), hoursChartData);
+	$.get('index.php/api/calls/avgcalltimeperoperator', function(data) {
+		createConnectionTimePerOperator($('#operatorsChart'), JSON.parse(data));
+		$('#operatorsChart').css({display: 'block'});
+		$(window).trigger("resize");
+	});
 }
 
 function handleReceivedInternetData(data) {
@@ -347,6 +359,14 @@ function handleReceivedInternetData(data) {
 }
 
 $(function() {
+	var mapCanvas = $('#map-canvas');
+	mapCanvas.css({height: $(window).height() - mapCanvas.offset().top - 2 + 'px'});
+	$('.chart').css({height: $(window).height()});
+	$(window).resize(function() {
+		mapCanvas.css({height: $(window).height() - mapCanvas.offset().top - 2 + 'px'});
+		$('.chart').css({height: $(window).height()});
+	});
+
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	var lastAction;
 
@@ -371,7 +391,7 @@ $(function() {
 	});
 	$('#avgTime_button').click(function() {
 		lastAction = '#avgTime_button';
-		$.get('index.php/api/avgcalltime' + getFields(), function(data) {
+		$.get('index.php/api/calls/avgconnectiontime' + getFields(), function(data) {
 			loadAVGCallData(JSON.parse(data));
 		});
 	});

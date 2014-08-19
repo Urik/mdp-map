@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
 		<script type="text/javascript" src="js/locales/bootstrap-datetimepicker.es.js"></script>
 		<script type="text/javascript" src="js/highcharts.js"></script>
+		<script type="text/javascript" src="js/async.js"></script>
 
 		<script type="text/javascript" src="js/index.js"></script>
 		<script type="text/javascript" src="js/averageZonesCreators.js"></script>
@@ -140,35 +141,49 @@
 				</div><!-- /.navbar-collapse -->
 			</div><!-- /.container-fluid -->
 		</nav>
-
-		<div id="map-canvas"></div>
-		<div id="neighTable">
-			<p>
-				Nada que mostrar
-			</p>
-		</div>
-		<div id="signalsChart" style="width: 100%; height: 400px;clear:both"></div>
-		<div id="hoursChart" style="width: 100%; height: 400px;clear: both"></div>
-		<div id="internetHoursChart" style="width: 100%; height: 400px;clear: both"></div>
-	<!--Filter Number Modal -->
-	<div class="modal fade" id="myModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Añadir Número de Teléfono</h4>
-      </div>
-      <div class="modal-body">
-        <input id="filterNumber" type="text" class="form-control" placeholder="Número de Teléfono a filtrar">
-      </div>
-      <div class="modal-footer">
-        <button id="numberFilterCancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-        <button id="useFilterButton" type="button" class="btn btn-primary" data-dismiss="modal">Usar Filtro</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
+		<div class="container-fluid">
+			<div class="row">
+				<div id="map-canvas" class="col-xs-12"></div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<h1 class="text-center">Estadisticas</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6 col-xs-12">
+					<div id="signalsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+				</div>
+				<div class="col-sm-6 col-xs-12">
+					<div id="hoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div id="operatorsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+				</div>
+			</div>
+			<div id="internetHoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+		
+		<!--Filter Number Modal -->
+		<div class="modal fade" id="myModal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title">Añadir Número de Teléfono</h4>
+		      </div>
+		      <div class="modal-body">
+		        <input id="filterNumber" type="text" class="form-control" placeholder="Número de Teléfono a filtrar">
+		      </div>
+		      <div class="modal-footer">
+		        <button id="numberFilterCancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+		        <button id="useFilterButton" type="button" class="btn btn-primary" data-dismiss="modal">Usar Filtro</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+	</div>
 	
 	</body>
 
