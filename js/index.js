@@ -229,7 +229,7 @@ function loadMarkers(title, totalData, markerCustomFunction) {
 		})();
 	});
 
-	new MarkerClusterer(map, markers);
+	new MarkerClusterer(map, markers, {maxZoom: 14});
 }
 
 function polygonCenter(poly) {
