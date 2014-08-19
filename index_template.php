@@ -148,18 +148,18 @@
 			
 			<div class="row">
 				<div class="col-sm-6 col-xs-12">
-					<div id="signalsChart" style="width: 100%; height: 400px;display: none"></div>
+					<div id="signalsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
 				</div>
 				<div class="col-sm-6 col-xs-12">
-					<div id="hoursChart" style="width: 100%; height: 400px;display: none"></div>
+					<div id="hoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-xs-12">
-					<div id="operatorsChart" style="width: 100%; height: 400px;display: none"></div>
+					<div id="operatorsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
 				</div>
 			</div>
-			<div id="internetHoursChart" style="width: 100%; height: 400px;display: none"></div>
+			<div id="internetHoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
 		
 		<!--Filter Number Modal -->
 		<div class="modal fade" id="myModal">

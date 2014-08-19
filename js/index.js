@@ -361,6 +361,11 @@ function handleReceivedInternetData(data) {
 $(function() {
 	var mapCanvas = $('#map-canvas');
 	mapCanvas.css({height: $(window).height() - mapCanvas.offset().top - 2 + 'px'});
+	$(window).resize(function() {
+		mapCanvas.css({height: $(window).height() - mapCanvas.offset().top - 2 + 'px'});
+		$('.chart').css({height: $(window).height() - 2});
+	});
+
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	var lastAction;
 
