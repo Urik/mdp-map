@@ -332,6 +332,20 @@ function handleReceivedCallsData(data) {
 	}).value();
 }
 
+function loadGeneralStatistics() {
+	async.parallel([
+		function(callback) {
+			$.get('index.php/api/neighborhoods/averagesignals', function(data) {
+				createSignalsPerNeighborhoodChart($('#signalPerNeighborhoodChart'), JSON.parse(data));
+				$('#signalPerNeighborhoodChart').css({display: 'block'});
+				callback(null, true);
+    		});
+		}
+	], function(err, data) {
+		$('.general-statistics').css({display: 'block'});
+	});
+}
+
 function loadCallsStatistics() {
 	async.parallel([
 		function(callback) {
@@ -552,7 +566,7 @@ $(function() {
 
 	});
 	//###############################################################################
-
+    loadGeneralStatistics();
 	loadCallsStatistics();
 	loadInternetStatistics();
 });

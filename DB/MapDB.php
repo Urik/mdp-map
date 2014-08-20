@@ -350,6 +350,24 @@ function getConnectionTimesPerCompany($lat1, $lon1, $lat2, $lon2, $dateFrom, $da
 	return queryDatabase($query);
 }
 
+function getAverageSignalPerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+	$query = "";
+	$query .= "SELECT n.name              AS Neighborhood, ";
+	$query .= "       Avg(c.callersignal) AS AverageSignal, ";
+	$query .= "       Count(*)            AS DataCount ";
+	$query .= "FROM   matched_calls c ";
+	$query .= "       JOIN neighborhood n ";
+	$query .= "         ON n.id = c.callerneighborhoodid ";
+
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	$query .= "GROUP  BY c.callerneighborhoodid ";
+	$query .= "ORDER  BY n.name " ;
+
+	return queryDatabase($query);
+}
+
 function getFailedCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
 	$query = "";
 	$query .= "SELECT c.operatorname, ";
@@ -385,4 +403,3 @@ function encodeArrayToUtf($array) {
 	return $response;
 }
 ?>
-

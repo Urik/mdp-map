@@ -129,7 +129,7 @@ function createConnectionTimePerHour(element, chartData) {
         })
     });
 }
-//createConnectionTimePerOperator
+
 function createConnectionTimePerOperatorChart(element, chartData) {
     return createPerOperatorChart(
         element,
@@ -191,6 +191,45 @@ function createPerOperatorChart(element, chartData, chartTitle, xAxisTitle, yAxi
                         }
                     }
                 };
+            })
+        }]
+    });
+}
+
+function createSignalsPerNeighborhoodChart(element, chartData) {
+    $(element).highcharts({
+        chart: {
+            type: 'column'
+        },
+        plotOptions: {
+            column: { colorByPoint: true }
+        },
+        title: {text: 'Señal promedio por barrio' },
+        xAxis: {
+            title: {text: 'Barrios'},
+            type: 'category',
+            labels: {
+                rotation: 90
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {text: 'Señal'}
+        },
+        series: [{
+            name: 'Barrios',
+            showInLegend: false,
+            data: _(chartData).map(function(data) {
+                return {
+                    y: parseFloat(data.AverageSignal),
+                    name: data.Neighborhood,
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return data.DataCount;
+                        }
+                    }
+                }
             })
         }]
     });

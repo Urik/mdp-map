@@ -151,6 +151,19 @@
 				</div>
 			</div>
 
+			<div class="general-statistics">
+				<div class="row">
+					<div class="col-xs-12">
+						<h2 class="text-center">Estadisticas generales</h2>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="signalPerNeighborhoodChart" class="chart"></div>
+					</div>
+				</div>
+			</div>
+
 			<div class="call-statistics">
 				<div class="row">
 					<div class="col-xs-12">

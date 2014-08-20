@@ -21,8 +21,15 @@ $app->group('/api', function() use ($app) {
 		echo json_encode(getInternetTests($params->dateFrom, $params->dateTo, $params->number));
 	});
 
-	$app->get('/neighborhoods', function() use ($app) {
-		echo json_encode(getNeighborhoods());
+	$app->group('/neighborhoods', function() use($app) {
+		$app->get('/', function() use($app) {
+			echo json_encode(getNeighborhoods());
+		});
+
+		$app->get('/averagesignals', function() use($app) {
+			$func = getFunctionWithDateAndPositionParameters($app, 'getAverageSignalPerNeighborhood');
+			echo json_encode($func());
+		});
 	});
 
 	$app->get('/zones', function() use ($app) {
