@@ -61,6 +61,18 @@ $app->group('/api', function() use ($app) {
 		});
 	});
 
+	$app->group('/internet', function() use($app) {
+		$app->get('/downloadtimeperhour', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getDownloadTimesPerHour');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/downloadtimeperoperator', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getDownloadTimesPerOperator');
+			echo json_encode($queryFunc());
+		});
+	});
+
 	$app->get('/sms', function() use ($app) {
 		$params = getQueryParameters($app);
 		echo json_encode(getSMS($params->dateFrom, $params->dateTo, $params->number));

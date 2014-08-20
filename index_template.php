@@ -30,7 +30,6 @@
 
 	</head>
 	<body>
-
 		<nav class="navbar navbar-default" role="navigation">
 			<div class="container-fluid">
 				<!-- Brand and toggle get grouped for better mobile display -->
@@ -107,7 +106,7 @@
 									</div>
 								</div>
 							</div>
-							<div class='col-sm-3'>
+							<div class='col-sm-2'>
 								<div class="form-group">
 									<div class='input-group date' id='dateTo'>
 										<input type='text' id="inputDateTo" class="form-control" placeholder="Fecha de Final" readonly="true" />
@@ -151,27 +150,48 @@
 					<h1 class="text-center">Estadisticas</h1>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-sm-6 col-xs-12">
-					<div id="signalsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+			<div class="call-statistics">
+				<div class="row">
+					<div class="col-xs-12">
+						<h2 class="text-center">Estadisticas de llamada</h2>
+					</div>	
 				</div>
-				<div class="col-sm-6 col-xs-12">
-					<div id="hoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+				<div class="row">
+					<div class="col-sm-6 col-xs-12">
+						<div id="signalsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<div id="hoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="operatorsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-xs-12">
-					<div id="operatorsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+
+			<div class="internet-statistics">
+				<div class="row">
+					<div class="col-xs-12">
+						<h2 class="text-center">Estadisticas de internet</h2>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-6">
+						<div id="internetHoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+					</div>
+					<div class="col-xs-12 col-sm-6">
+						<div id="internetHoursPerOperatorChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+					</div>
 				</div>
 			</div>
-			<div id="internetHoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
-		
 		<!--Filter Number Modal -->
 		<div class="modal fade" id="myModal">
 		  <div class="modal-dialog">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		        <h4 class="modal-title">Añadir Número de Teléfono</h4>
 		      </div>
 		      <div class="modal-body">

@@ -58,14 +58,14 @@ function createDownloadTimesPerHourChart(element, hoursChartData) {
     },
     series: [{
       name: 'Prueba de descarga',
-      data: _(hoursChartData).map(function(data, hour) {
+      data: _(hoursChartData).map(function(data) {
         return {
-          y: calculateAverage(_(data).pluck('downloadTime')),
-          x: hour,
+          y: parseFloat(data.DownloadTime),
+          x: data.Hour,
           dataLabels: {
             enabled: true,
             formatter: function() {
-                return data.length;
+                return data.DataCount;
             }
           }
         };
@@ -129,8 +129,34 @@ function createConnectionTimePerHour(element, chartData) {
         })
     });
 }
+//createConnectionTimePerOperator
+function createConnectionTimePerOperatorChart(element, chartData) {
+    return createPerOperatorChart(
+        element,
+        chartData,
+        'Tiempo de conexion promedio por operador',
+        'Operadora',
+        'Tiempo de conexion [sec]',
+        function(data) { return data.Company; },
+        function(data) { return parseFloat(data.ConnectionTime); },
+        function(data) { return data.DataCount; }
+    );
+}
 
-function createConnectionTimePerOperator(element, chartData) {
+function createDownloadTimePerOperatorChart(element, chartData) {
+    return createPerOperatorChart(
+        element,
+        chartData,
+        'Tiempo de descarga promedio por operador',
+        'Operadora',
+        'Tiempo de descarga [sec]',
+        function(data) { return data.Operator; },
+        function(data) { return parseFloat(data.DownloadTime); },
+        function(data) { return data.DataCount; }
+    );
+}
+
+function createPerOperatorChart(element, chartData, chartTitle, xAxisTitle, yAxisTitle, companyNameAccessor, valueAccessor, recordsCountAccessor) {
     var companiesColors = {
         claro: '#D22D27',
         movistar: '#B3CC08',
@@ -140,28 +166,28 @@ function createConnectionTimePerOperator(element, chartData) {
         chart: {
             type: 'column'
         },
-        title: {text: 'Tiempo de conexion promedio por operador'},
+        title: {text: chartTitle},
         xAxis: {
             categories: _(chartData).map(function(data) {
-                return data.Company;
+                return companyNameAccessor(data);
             }),
-            title: 'Operadora'
+            title: xAxisTitle
         },
         yAxis: {
             min: 0,
-            title: 'Tiempo de conexion [sec]'
+            title: yAxisTitle
         },
         series: [{
             showInLegend: false,
             data: _(chartData).map(function(data) {
                 return {
-                    y: parseFloat(data.ConnectionTime),
-                    name: data.Company,
-                    color: companiesColors[data.Company.toLowerCase()],
+                    y: valueAccessor(data),
+                    name: companyNameAccessor(data),
+                    color: companiesColors[companyNameAccessor(data).toLowerCase()],
                     dataLabels: {
                         enabled: true,
                         formatter: function() {
-                            return data.DataCount;
+                            return recordsCountAccessor(data);
                         }
                     }
                 };

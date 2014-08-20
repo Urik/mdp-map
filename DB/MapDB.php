@@ -287,6 +287,44 @@ function getPercentagesOfFailedInternet() {
 	return $response;
 }
 
+function getDownloadTimesPerHour($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+	$query = "";
+	$query .= "SELECT Date_format(i.datecreated, '%H') AS Hour, ";
+	$query .= "       Avg(i.downloadtime)              AS DownloadTime, ";
+	$query .= "       Count(*)              AS DataCount ";
+	$query .= "FROM   internet i ";
+
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo);
+	
+	$query .= "GROUP  BY Date_format(i.datecreated, '%H') ";
+	$query .= "ORDER  BY Date_format(i.datecreated, '%H') " ;
+
+	return queryDatabase($query);
+}
+
+function getDownloadTimesPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+	$query = "";
+	$query .= "SELECT CASE ";
+	$query .= "         WHEN Lower(i.operatorname) LIKE '%claro%' THEN 'Claro' ";
+	$query .= "         WHEN Lower(i.operatorname) LIKE '%personal%' THEN 'Personal' ";
+	$query .= "         WHEN Lower(i.operatorname) LIKE '%movistar%' THEN 'Movistar' ";
+	$query .= "         ELSE 'Otros' ";
+	$query .= "       end                 AS Operator, ";
+	$query .= "       Avg(i.downloadtime) AS DownloadTime, ";
+	$query .= "       Count(*)            AS DataCount ";
+	$query .= "FROM   internet i ";
+	$query .= "GROUP  BY CASE ";
+	$query .= "            WHEN Lower(i.operatorname) LIKE '%claro%' THEN 'Claro' ";
+	$query .= "            WHEN Lower(i.operatorname) LIKE '%personal%' THEN 'Personal' ";
+	$query .= "            WHEN Lower(i.operatorname) LIKE '%movistar%' THEN 'Movistar' ";
+	$query .= "            ELSE 'Otros' ";
+	$query .= "          end " ;
+
+
+	return queryDatabase($query);
+}
+
 function getConnectionTimesPerCompany($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
 	$query = "";
 	$query .= "SELECT CASE ";

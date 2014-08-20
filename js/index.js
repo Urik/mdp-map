@@ -330,31 +330,63 @@ function handleReceivedCallsData(data) {
 			}).value()
 		};
 	}).value();
+}
 
-	$.get('index.php/api/calls/avgcalltimepersignals', function(data) {
-		createConnectionTimePerSignalChart($('#signalsChart'), JSON.parse(data));
-		$('#signalsChart').css({display: 'block'});
+function loadCallsStatistics() {
+	async.parallel([
+		function(callback) {
+			$.get('index.php/api/calls/avgcalltimepersignals', function(data) {
+					createConnectionTimePerSignalChart($('#signalsChart'), JSON.parse(data));
+					$('#signalsChart').css({display: 'block'});
+					callback(null, true);
+				});
+		},
+		function(callback) {
+			$.get('index.php/api/calls/avgcalltimeperdayandhour', function(data) {
+				createConnectionTimePerHour($('#hoursChart'), JSON.parse(data));
+				$('#hoursChart').css({display: 'block'});
+				callback(null, true);
+			});
+		},
+		function(callback) {
+			$.get('index.php/api/calls/avgcalltimeperoperator', function(data) {
+				createConnectionTimePerOperatorChart($('#operatorsChart'), JSON.parse(data));
+				$('#operatorsChart').css({display: 'block'});
+				callback(null, true);
+			});
+		}
+	], function(err, data) {
+		$('.call-statistics').css({display: 'block'});
 		$(window).trigger("resize");
 	});
+}
 
-	$.get('index.php/api/calls/avgcalltimeperdayandhour', function(data) {
-		createConnectionTimePerHour($('#hoursChart'), JSON.parse(data));
-		$('#hoursChart').css({display: 'block'});
-		$(window).trigger("resize");
-	});
-
-	$.get('index.php/api/calls/avgcalltimeperoperator', function(data) {
-		createConnectionTimePerOperator($('#operatorsChart'), JSON.parse(data));
-		$('#operatorsChart').css({display: 'block'});
-		$(window).trigger("resize");
-	});
+function loadInternetStatistics() {
+	async.parallel([
+			function(callback) {
+				$.get('index.php/api/internet/downloadtimeperhour', function(data) {
+					createDownloadTimesPerHourChart($('#internetHoursChart'), JSON.parse(data));
+					$('#internetHoursChart').css({display: 'block'});
+					callback(null, true);
+				});
+			},
+			function(callback) {
+				$.get('index.php/api/internet/downloadtimeperoperator', function(data) {
+					createDownloadTimePerOperatorChart($('#internetHoursPerOperatorChart'), JSON.parse(data));
+					$('#internetHoursPerOperatorChart').css({display: 'block'});
+					callback(null, true);
+				});
+			}
+		], function(err, data) {
+			$('.internet-statistics').css({display: 'block'});
+			$(window).trigger('resize');
+		});
 }
 
 function handleReceivedInternetData(data) {
 	var internetData = JSON.parse(data);
 	loadInternetMarkers(internetData);
 	var hoursChartData = _(internetData).groupBy(function(value) { return moment(value.dateCreated).hour();});
-	createDownloadTimesPerHourChart($('#internetHoursChart'), hoursChartData);
 }
 
 $(function() {
@@ -520,4 +552,7 @@ $(function() {
 
 	});
 	//###############################################################################
+
+	loadCallsStatistics();
+	loadInternetStatistics();
 });

@@ -1,3 +1,19 @@
 #map-canvas {
 	height: 600px;
 }
+
+.statistics-header {
+	background-color: #FFE056;
+}
+
+.internet-data {
+	background-color: white;
+}
+
+.call-statistics {
+	display: none;
+}
+
+.internet-statistics {
+	display: none;
+}
