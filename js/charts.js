@@ -94,13 +94,13 @@ function createConnectionTimePerHour(element, chartData) {
     $(element).highcharts({
         title: {text: 'Tiempo de conexion por hora'},
         xAxis: {
-            title: 'Hora',
+            title: {text: 'Hora'},
             categories: _.range(0, 24),
             data: _(chartData).map(function(x) { return x.hour; })
         },
         yAxis: {
             min: minTime,
-            title: 'Tiempo de conexion [sec]'
+            title: {text: 'Tiempo de conexion [sec]'}
         },
         series: _(chartData).map(function(weekDayValue, weekDayKey) {
             var hours = Object.keys(weekDayValue);
@@ -171,11 +171,11 @@ function createPerOperatorChart(element, chartData, chartTitle, xAxisTitle, yAxi
             categories: _(chartData).map(function(data) {
                 return companyNameAccessor(data);
             }),
-            title: xAxisTitle
+            title: {text: xAxisTitle}
         },
         yAxis: {
             min: 0,
-            title: yAxisTitle
+            title: {text: yAxisTitle}
         },
         series: [{
             showInLegend: false,
