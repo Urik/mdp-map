@@ -235,6 +235,97 @@ function createSignalsPerNeighborhoodChart(element, chartData) {
     });
 }
 
+function createFailedDownloadsProportionsPerOperatorChart(element, chartData) {
+    var categories = [];
+    var successfulDownloads = [];
+    var failedDownloads = [];
+    for (var i = 0; i < chartData.length; i++) {
+        categories.push(chartData[i].Operator);
+        successfulDownloads.push(parseFloat(chartData[i].SuccessfulDownloads));
+        failedDownloads.push(parseFloat(chartData[i].FailedDownloads));
+    }
+    $(element).highcharts({
+        chart: {
+            type: 'column'
+        },
+        plotOptions: {
+            column: { colorByPoint: true }
+        },
+        title: {text: 'Proporcion de descargas fallidas por operador' },
+        xAxis: {
+            title: {text: 'Barrios'},
+            labels: {
+                rotation: 90
+            },
+            categories: categories
+        },
+        yAxis: {
+            min: 0,
+            title: {text: 'Proporcion'},
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            }
+        },
+        series: [{
+            name: 'Fallidas',
+            data: failedDownloads,
+            color: '#FF5E59'
+        }, {
+            name: 'Exitosas',
+            data: successfulDownloads,
+            color: '#7CB5EC'
+        }]
+    });
+}
+
+function createFailedDownloadsProportionsPerNeighborhoodChart(element, chartData) {
+    var categories = [];
+    var successfulDownloads = [];
+    var failedDownloads = [];
+    for (var i = 0; i < chartData.length; i++) {
+        categories.push(chartData[i].Neighborhood);
+        successfulDownloads.push(parseFloat(chartData[i].SuccessfulDownloads));
+        failedDownloads.push(parseFloat(chartData[i].FailedDownloads));
+    }
+    $(element).highcharts({
+        chart: {
+            type: 'bar'
+        },
+        plotOptions: {
+            bar: { colorByPoint: true }
+        },
+        title: {text: 'Proporcion de descargas fallidas' },
+        subtitle: {text: 'Solo se muestran los datos de barrios con mas de 10 muestras.'},
+        xAxis: {
+            title: {text: 'Barrios'},
+            labels: {
+                rotation: 0
+            },
+            categories: categories
+        },
+        yAxis: {
+            min: 0,
+            title: {text: 'Proporcion'},
+        },
+        plotOptions: {
+            bar: {
+                stacking: 'percent'
+            }
+        },
+        series: [{
+            name: 'Fallidas',
+            data: failedDownloads,
+            color: '#FF5E59'
+        }, {
+            name: 'Exitosas',
+            data: successfulDownloads,
+            color: '#7CB5EC'
+        }]
+    });
+}
+
 var title;
 var subtitle;
 var select_chart;

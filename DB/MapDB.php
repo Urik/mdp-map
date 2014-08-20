@@ -390,6 +390,66 @@ function getFailedCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number)
 	return queryDatabase($query);
 }
 
+function getFailedDownloadsProportionPerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+    $query = "";
+	$query .= "SELECT n.name   AS Neighborhood, ";
+	$query .= "       Sum(CASE ";
+	$query .= "             WHEN i.downloadtime = 0 THEN 1 ";
+	$query .= "             ELSE 0 ";
+	$query .= "           end) AS FailedDownloads, ";
+	$query .= "       Sum(CASE ";
+	$query .= "             WHEN i.downloadtime <> 0 THEN 1 ";
+	$query .= "             ELSE 0 ";
+	$query .= "           end) AS SuccessfulDownloads ";
+	$query .= "FROM   internet i ";
+	$query .= "       JOIN neighborhood n ";
+	$query .= "         ON n.id = i.neighborhood_id ";
+
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo);
+    $query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	$query .= "GROUP  BY i.neighborhood_id ";
+	$query .= "HAVING Count(*) > 10 ";
+	$query .= "ORDER  BY n.name";
+
+	return queryDatabase($query);
+}
+
+function getFailedDownloadsProportionPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+	$query = "";
+	$query .= "SELECT CASE ";
+	$query .= "         WHEN Lower(i.operatorname) LIKE '%claro%' THEN 'Claro' ";
+	$query .= "         WHEN Lower(i.operatorname) LIKE '%personal%' THEN 'Personal' ";
+	$query .= "         WHEN Lower(i.operatorname) LIKE '%movistar%' THEN 'Movistar' ";
+	$query .= "         ELSE 'Otros' ";
+	$query .= "       end      AS Operator, ";
+	$query .= "       Sum(CASE ";
+	$query .= "             WHEN i.downloadtime = 0 THEN 1 ";
+	$query .= "             ELSE 0 ";
+	$query .= "           end) AS FailedDownloads, ";
+	$query .= "       Sum(CASE ";
+	$query .= "             WHEN i.downloadtime <> 0 THEN 1 ";
+	$query .= "             ELSE 0 ";
+	$query .= "           end) AS SuccessfulDownloads ";
+	$query .= "FROM   internet i ";
+	$query .= "       JOIN neighborhood n ";
+	$query .= "         ON n.id = i.neighborhood_id ";
+
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo);
+    $query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	$query .= "GROUP  BY CASE ";
+	$query .= "            WHEN Lower(i.operatorname) LIKE '%claro%' THEN 'Claro' ";
+	$query .= "            WHEN Lower(i.operatorname) LIKE '%personal%' THEN 'Personal' ";
+	$query .= "            WHEN Lower(i.operatorname) LIKE '%movistar%' THEN 'Movistar' ";
+	$query .= "            ELSE 'Otros' ";
+	$query .= "          end ";
+	$query .= "HAVING Count(*) > 10 ";
+	$query .= "ORDER  BY n.name " ;
+
+	return queryDatabase($query);
+}
+
 function encodeArrayToUtf($array) {
 	$response = array();
 	foreach ($array as $key => $value) {

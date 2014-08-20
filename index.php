@@ -78,6 +78,16 @@ $app->group('/api', function() use ($app) {
 			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getDownloadTimesPerOperator');
 			echo json_encode($queryFunc());
 		});
+
+		$app->get('/failedproportionperneighborhood', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getFailedDownloadsProportionPerNeighborhood');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/failedproportionperoperator', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getFailedDownloadsProportionPerOperator');
+			echo json_encode($queryFunc());
+		});
 	});
 
 	$app->get('/sms', function() use ($app) {

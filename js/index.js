@@ -390,6 +390,20 @@ function loadInternetStatistics() {
 					$('#internetHoursPerOperatorChart').css({display: 'block'});
 					callback(null, true);
 				});
+			},
+			function(callback) {
+				$.get('index.php/api/internet/failedproportionperneighborhood', function(data) {
+					createFailedDownloadsProportionsPerNeighborhoodChart($('#failedDownloadsPerNeighborhoodChart'), JSON.parse(data));
+					$('#failedDownloadsPerNeighborhoodChart').css({display: 'block'});
+					callback(null, true);
+				});
+			},
+			function(callback) {
+				$.get('index.php/api/internet/failedproportionperoperator', function(data) {
+					createFailedDownloadsProportionsPerOperatorChart($('#failedDownloadsPerOperatorChart'), JSON.parse(data));
+					$('#failedDownloadsPerOperatorChart').css({display: 'block'});
+					callback(null, true);
+				});
 			}
 		], function(err, data) {
 			$('.internet-statistics').css({display: 'block'});
