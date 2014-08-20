@@ -150,6 +150,7 @@
 					<h1 class="text-center">Estadisticas</h1>
 				</div>
 			</div>
+
 			<div class="call-statistics">
 				<div class="row">
 					<div class="col-xs-12">

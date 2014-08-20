@@ -28,7 +28,7 @@ function createConnectionTimePerSignalChart(element, chartData) {
                         dataLabels: {
                             enabled: true,
                             formatter: function() {
-                                return callData.DataCount;
+                                return callData[0].DataCount;
                             }
                         }
                     };
