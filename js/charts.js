@@ -70,7 +70,7 @@ function createScatteredConnectionTimePerSignalChart(element, chartData) {
             return {
                 name: operator,
                 color: companiesColors[operator.toLowerCase()],
-                data: _.chain(operatorData).sample(100).map(function(data) {
+                data: _.chain(operatorData)/*.sample(100)*/.map(function(data) {
                     return [parseInt(data.signal), parseFloat(data.connectionTime)];
                 }).value()
             };

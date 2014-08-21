@@ -82,6 +82,12 @@ $app->group('/api', function() use ($app) {
 			$groupedData = __($filteredData)->groupBy(function($row) {
 				return $row['operator'];
 			});
+			foreach ($groupedData as $key => $value) {
+				$randomKeys = array_rand($value, sizeof($value) >= 100 ? 100 : sizeof($value));
+				$groupedData[$key] = __($randomKeys)->map(function($randomKey) use($value) {
+					return $value[$randomKey];
+				});
+			}
 
 			echo json_encode($groupedData);
 		});
