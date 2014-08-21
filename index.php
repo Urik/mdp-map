@@ -18,8 +18,8 @@ $app->get('/charts', function() use ($app) {
 $app->group('/api', function() use ($app) {
 
 	$app->get('/internet', function() use ($app) {
-		$params = getQueryParameters($app);
-		echo json_encode(getInternetTests($params->dateFrom, $params->dateTo, $params->number));
+		$func = getFunctionWithDateAndPositionParameters($app, 'getInternetTests');
+		echo json_encode($func());
 	});
 
 	$app->group('/neighborhoods', function() use($app) {

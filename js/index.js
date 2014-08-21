@@ -10,10 +10,35 @@ var markers = [];
 var infos = [];
 var colored = [];
 var zones = [];
+var positionDelimiter = null;
 //array for map zones polygons
 
 var neighArray = {};
 var callArray = [];
+var callsState = {
+	loadMarkers: function(queryString) {
+		$.get('index.php/api/calls' + queryString, handleReceivedCallsData);
+	}
+};
+var internetState = {
+	loadMarkers: function(queryString) {
+		$.get('index.php/api/internet' + queryString, handleReceivedInternetData);
+	}
+};
+
+var smsState = {
+	loadMarkers: function(queryString) {
+		$.get('index.php/api/sms' + queryString, function(data) { loadSmsMarkers(JSON.parse(data)); });
+	}
+};
+
+var positionFilter = {
+	position1: null,
+	position2: null
+};
+
+var state = callsState;
+
 
 function displayNeighborhoods(neighborhoods) {
 	var lastNeigh = "";
@@ -299,12 +324,15 @@ function getFields() {
 		first = false;
 	}
 	if ($("#filterNumber").val() != "") {
-		if (first)
-			filterString += "?"
-		else
-			filterString += "&"
-
+		filterString += first ? "?" : "&";
 		filterString += "number=" + $("#filterNumber").val();
+		first = false;
+	}
+	if (positionFilter.position1 != null && positionFilter.position2 != null) {
+		var pos1 = positionFilter.position1;
+		var pos2 = positionFilter.position2;
+		filterString += first ? "?" : "&";
+		filterString += "lat1=" + pos1.lat() + "&lon1=" + pos1.lng() + "&lat2=" + pos2.lat() + "&lon2=" + pos2.lng();
 	}
 
 	return filterString;
@@ -335,7 +363,7 @@ function handleReceivedCallsData(data) {
 function loadGeneralStatistics() {
 	async.parallel([
 		function(callback) {
-			$.get('index.php/api/neighborhoods/averagesignals', function(data) {
+			$.get('index.php/api/neighborhoods/averagesignals' + getFields(), function(data) {
 				createSignalsPerNeighborhoodChart($('#signalPerNeighborhoodChart'), JSON.parse(data));
 				$('#signalPerNeighborhoodChart').css({display: 'block'});
 				callback(null, true);
@@ -349,28 +377,28 @@ function loadGeneralStatistics() {
 function loadCallsStatistics() {
 	async.parallel([
 		function(callback) {
-			$.get('index.php/api/calls/avgcalltimepersignals', function(data) {
+			$.get('index.php/api/calls/avgcalltimepersignals' + getFields(), function(data) {
 					createConnectionTimePerSignalChart($('#signalsChart'), JSON.parse(data));
 					$('#signalsChart').css({display: 'block'});
 					callback(null, true);
 				});
 		},
 		function(callback) {
-			$.get('index.php/api/calls/avgcalltimeperdayandhour', function(data) {
+			$.get('index.php/api/calls/avgcalltimeperdayandhour' + getFields(), function(data) {
 				createConnectionTimePerHour($('#hoursChart'), JSON.parse(data));
 				$('#hoursChart').css({display: 'block'});
 				callback(null, true);
 			});
 		},
 		function(callback) {
-			$.get('index.php/api/calls/avgcalltimeperoperator', function(data) {
+			$.get('index.php/api/calls/avgcalltimeperoperator' + getFields(), function(data) {
 				createConnectionTimePerOperatorChart($('#operatorsChart'), JSON.parse(data));
 				$('#operatorsChart').css({display: 'block'});
 				callback(null, true);
 			});
 		},
 		function(callback) {
-			$.get('index.php/api/calls/scatteredsignalconnectiontimedata', function(data) {
+			$.get('index.php/api/calls/scatteredsignalconnectiontimedata' + getFields(), function(data) {
 				createScatteredConnectionTimePerSignalChart($('#scatteredSignalsConnectionTimeChart'), JSON.parse(data));
 				$('#scatteredSignalsConnectionTimeChart').css({display: 'block'});
 				callback(null, true);
@@ -385,28 +413,28 @@ function loadCallsStatistics() {
 function loadInternetStatistics() {
 	async.parallel([
 			function(callback) {
-				$.get('index.php/api/internet/downloadtimeperhour', function(data) {
+				$.get('index.php/api/internet/downloadtimeperhour' + getFields(), function(data) {
 					createDownloadTimesPerHourChart($('#internetHoursChart'), JSON.parse(data));
 					$('#internetHoursChart').css({display: 'block'});
 					callback(null, true);
 				});
 			},
 			function(callback) {
-				$.get('index.php/api/internet/downloadtimeperoperator', function(data) {
+				$.get('index.php/api/internet/downloadtimeperoperator' + getFields(), function(data) {
 					createDownloadTimePerOperatorChart($('#internetHoursPerOperatorChart'), JSON.parse(data));
 					$('#internetHoursPerOperatorChart').css({display: 'block'});
 					callback(null, true);
 				});
 			},
 			function(callback) {
-				$.get('index.php/api/internet/failedproportionperneighborhood', function(data) {
+				$.get('index.php/api/internet/failedproportionperneighborhood' + getFields(), function(data) {
 					createFailedDownloadsProportionsPerNeighborhoodChart($('#failedDownloadsPerNeighborhoodChart'), JSON.parse(data));
 					$('#failedDownloadsPerNeighborhoodChart').css({display: 'block'});
 					callback(null, true);
 				});
 			},
 			function(callback) {
-				$.get('index.php/api/internet/failedproportionperoperator', function(data) {
+				$.get('index.php/api/internet/failedproportionperoperator' + getFields(), function(data) {
 					createFailedDownloadsProportionsPerOperatorChart($('#failedDownloadsPerOperatorChart'), JSON.parse(data));
 					$('#failedDownloadsPerOperatorChart').css({display: 'block'});
 					callback(null, true);
@@ -422,6 +450,22 @@ function handleReceivedInternetData(data) {
 	var internetData = JSON.parse(data);
 	loadInternetMarkers(internetData);
 	var hoursChartData = _(internetData).groupBy(function(value) { return moment(value.dateCreated).hour();});
+}
+
+function clearPositionFilter() {
+	if (positionDelimiter) {
+		positionDelimiter.setMap(null);
+	}
+	positionFilter.position1 = null;
+	positionFilter.position2 = null;
+
+	loadStatistics();
+}
+
+function loadStatistics() {
+	loadGeneralStatistics();
+	loadCallsStatistics();
+	loadInternetStatistics();
 }
 
 $(function() {
@@ -443,6 +487,11 @@ $(function() {
 		displayNeighborhoods(JSON.parse(response));
 	});
 	$('#calls_button').click(function() {
+		clearPositionFilter();
+		state = callsState;
+		if (positionDelimiter) {
+			positionDelimiter.setMap(null);
+		}
 		lastAction = '#calls_button';
 		async.parallel([
 			function(callback) {
@@ -461,12 +510,18 @@ $(function() {
 		return false;
 	});
 	$('#internet_button').click(function() {
+		clearPositionFilter();
+		state = internetState;
 		lastAction = '#internet_button';
 		var fields = getFields();
+		markersAddress = 'index.php/api/internet';
 		$.get('index.php/api/internet' + getFields(), handleReceivedInternetData);
 	});
 	$('#sms_button').click(function() {
+		clearPositionFilter();
+		state = smsState;
 		lastAction = '#sms_button';
+		markersAddress = 'index.php/api/sms';
 		$.get('index.php/api/sms' + getFields(), function(data) {
 			loadSmsMarkers(JSON.parse(data));
 		});
@@ -518,15 +573,16 @@ $(function() {
 	});
 
 	drawingManager.setMap(map);
-	var oldShape = null;
 	google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
-		if (oldShape) {
-			oldShape.setMap(null);
+		if (positionDelimiter) {
+			positionDelimiter.setMap(null);
 		}
-		oldShape = event.overlay;
+		positionDelimiter = event.overlay;
 		var rectangle = event.overlay;
 		var pos1 = rectangle.getBounds().getNorthEast();
 		var pos2 = rectangle.getBounds().getSouthWest();
+		positionFilter.position1 = pos1;
+		positionFilter.position2 = pos2;
 		var queryString = "?lat1=" + pos1.lat() + "&lon1=" + pos1.lng() + "&lat2=" + pos2.lat() + "&lon2=" + pos2.lng();
 		if (document.getElementById("inputDateFrom").value != "" && document.getElementById("inputDateTo").value != "") {
 			queryString += "&dateFrom=" + document.getElementById("inputDateFrom").value + "&dateTo=" + document.getElementById("inputDateTo").value;
@@ -534,7 +590,8 @@ $(function() {
 		if ($("#filterNumber").val() != "")
 			queryString += "&number = " + $("#filterNumber").val();
 		
-		$.get('index.php/calls' + queryString, handleReceivedCallsData);
+		state.loadMarkers(queryString);
+		loadStatistics();
 	});
 
 	//############################################################################
@@ -561,6 +618,7 @@ $(function() {
 		$("#inputDateTo").val("");
 	});
 	$("#reload").click(function() {
+		loadStatistics();
 		$(lastAction).trigger("click");
 	});
 	$("#clearFilters").click(function() {
@@ -587,7 +645,6 @@ $(function() {
 
 	});
 	//###############################################################################
-    loadGeneralStatistics();
-	loadCallsStatistics();
-	loadInternetStatistics();
+
+	loadStatistics();
 });
