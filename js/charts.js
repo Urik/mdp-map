@@ -38,6 +38,46 @@ function createConnectionTimePerSignalChart(element, chartData) {
     });
 }
 
+function createScatteredConnectionTimePerSignalChart(element, chartData) {
+    var companiesColors = {
+        claro: 'rgba(210, 45, 39, 0.5)',
+        movistar: 'rgba(179, 204, 8, 0.5)',
+        personal: 'rgba(0, 149, 171, 0.5)'
+    };
+    $(element).highcharts({
+        chart: {
+            type: 'scatter',
+            zoomType: 'xy'
+        },
+        plotOptions: {
+            scatter: {
+                tooltip: {
+                    pointFormat: 'Señal: {point.x}, TConexion: {point.y}'
+                }
+            }
+        },
+        title: {text: 'Distribucion señal - tiempo de conexion'},
+        xAxis: {
+            title: { text: 'Señal' },
+            startOnTick: true,
+            showLastLabel: true,
+            categories: _.range(1, 31)
+        },
+        yAxis: {
+            title: { text: 'Tiempo de conexion [sec]' }
+        },
+        series: _(chartData).map(function(operatorData, operator) {
+            return {
+                name: operator,
+                color: companiesColors[operator.toLowerCase()],
+                data: _.chain(operatorData).sample(100).map(function(data) {
+                    return [parseInt(data.signal), parseFloat(data.connectionTime)];
+                }).value()
+            };
+        })
+    });
+}
+
 function createDownloadTimesPerHourChart(element, hoursChartData) {
   $(element).highcharts({
     chart: {

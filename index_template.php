@@ -175,12 +175,15 @@
 						<div id="signalsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
 					</div>
 					<div class="col-sm-6 col-xs-12">
-						<div id="hoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+						<div id="scatteredSignalsConnectionTimeChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-12">
+					<div class="col-sm-6 col-xs-12">
 						<div id="operatorsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<div id="hoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
 					</div>
 				</div>
 			</div>

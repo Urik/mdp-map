@@ -1,6 +1,7 @@
 <?php
 require 'Slim/Slim.php';
 include_once "DB/MapDB.php";
+include_once 'underscore.php';
 \Slim\Slim::registerAutoloader();
 
 $app = new \Slim\Slim( array('debug' => true, 'templates.path' => './'));
@@ -57,14 +58,32 @@ $app->group('/api', function() use ($app) {
 			echo json_encode($queryFunc());
 		});
 
-		$app->get('/avgcalltimeperdayandhour', function() use ($app) {
+		$app->get('/avgcalltimeperdayandhour', function() use($app) {
 			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getCallConnectionTimesByDayAndHour');
 			echo json_encode($queryFunc());
 		});
 
-		$app->get('/avgcalltimeperoperator', function() use ($app) {
+		$app->get('/avgcalltimeperoperator', function() use($app) {
 			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getConnectionTimesPerCompany');
 			echo json_encode($queryFunc());
+		});
+
+		$app->get('/scatteredsignalconnectiontimedata', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getCalls');
+			$data = $queryFunc();
+			$pluckedData = __($data)->map(function($row) {
+				return array(
+					'operator' => $row['caller_operator_name'],
+					'signal' => $row['caller_signal'],
+					'connectionTime' => substr($row['connection_time'], 6)	//We only want the seconds!
+					);
+			});
+			$filteredData = __($pluckedData)->reject(function($data) { return $data['signal'] == "99"; });
+			$groupedData = __($filteredData)->groupBy(function($row) {
+				return $row['operator'];
+			});
+
+			echo json_encode($groupedData);
 		});
 	});
 

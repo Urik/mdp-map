@@ -368,6 +368,13 @@ function loadCallsStatistics() {
 				$('#operatorsChart').css({display: 'block'});
 				callback(null, true);
 			});
+		},
+		function(callback) {
+			$.get('index.php/api/calls/scatteredsignalconnectiontimedata', function(data) {
+				createScatteredConnectionTimePerSignalChart($('#scatteredSignalsConnectionTimeChart'), JSON.parse(data));
+				$('#scatteredSignalsConnectionTimeChart').css({display: 'block'});
+				callback(null, true);
+			});
 		}
 	], function(err, data) {
 		$('.call-statistics').css({display: 'block'});
