@@ -82,16 +82,13 @@ $app->group('/api', function() use ($app) {
 			$groupedData = __($filteredData)->groupBy(function($row) {
 				return $row['operator'];
 			});
-			foreach ($groupedData as $key => $value) {
-				$randomKeys = array_rand($value, sizeof($value) >= 100 ? 100 : sizeof($value));
-				$groupedData[$key] = __($randomKeys)->map(function($randomKey) use($value) {
-					return $value[$randomKey];
-				});
-			}
+			$groupedData = produceRandomSample($groupedData, 100);
 
 			echo json_encode($groupedData);
 		});
 	});
+
+	
 
 	$app->group('/internet', function() use($app) {
 		$app->get('/downloadtimeperhour', function() use($app) {
@@ -164,5 +161,16 @@ function getFunctionWithDateAndPositionParameters($app, $func)  {
 	return function() use ($params, $func) {
 		return call_user_func($func, $params->lat1, $params->lon1, $params->lat2, $params->lon2, $params->dateFrom, $params->dateTo, null);
 	};
+}
+
+function produceRandomSample($array, $maxSize) {
+	foreach ($array as $key => $value) {
+		$randomKeys = array_rand($value, sizeof($value) >= $maxSize ? $maxSize : sizeof($value));
+		$array[$key] = __($randomKeys)->map(function($randomKey) use($value) {
+			return $value[$randomKey];
+		});
+	}
+
+	return $array;
 }
 ?>
