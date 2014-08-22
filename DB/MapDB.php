@@ -440,6 +440,49 @@ function getFailedDownloadsProportionPerOperator($lat1, $lon1, $lat2, $lon2, $da
 	return queryDatabase($query);
 }
 
+function getAverageSignalPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+	$query = "";
+	$query .= "SELECT CASE ";
+	$query .= "         WHEN Lower(c.calleroperatorname) LIKE '%claro%' THEN 'Claro' ";
+	$query .= "         WHEN Lower(c.calleroperatorname) LIKE '%personal%' THEN 'Personal' ";
+	$query .= "         WHEN Lower(c.calleroperatorname) LIKE '%movistar%' THEN 'Movistar' ";
+	$query .= "         ELSE 'Otros' ";
+	$query .= "       end                 AS 'Operator', ";
+	$query .= "       Avg(c.callersignal) AS 'AverageSignal', ";
+	$query .= "       Count(*)            AS 'DataCount' ";
+	$query .= "FROM   matched_calls c ";
+
+	$query .= getCallsDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	$query .= "GROUP  BY CASE ";
+	$query .= "            WHEN Lower(c.calleroperatorname) LIKE '%claro%' THEN 'Claro' ";
+	$query .= "            WHEN Lower(c.calleroperatorname) LIKE '%personal%' THEN 'Personal' ";
+	$query .= "            WHEN Lower(c.calleroperatorname) LIKE '%movistar%' THEN 'Movistar' ";
+	$query .= "            ELSE 'Otros' ";
+	$query .= "          end " ;
+
+	return queryDatabase($query);
+}
+
+function getAverageConnectionTimePerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+	$query = "";
+	$query .= "SELECT n.name                             AS Neighborhood, ";
+	$query .= "       Avg(Time_to_sec(c.connectiontime)) AS 'AverageConnectionTime', ";
+	$query .= "       Count(*)                           AS 'DataCount' ";
+	$query .= "FROM   matched_calls c ";
+	$query .= "       JOIN neighborhood n ";
+	$query .= "         ON n.id = c.callerneighborhoodid ";
+
+	$query .= getCallsDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	$query .= "GROUP  BY c.callerneighborhoodid ";
+	$query .= "ORDER  BY n.name " ;
+
+	return queryDatabase($query);
+}
+
 function getCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, $tableIdentifier = 'm') {
 	return getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, $tableIdentifier, 'OutgoingGeom');
 }

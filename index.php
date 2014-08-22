@@ -17,11 +17,6 @@ $app->get('/charts', function() use ($app) {
 
 $app->group('/api', function() use ($app) {
 
-	$app->get('/internet', function() use ($app) {
-		$func = getFunctionWithDateAndPositionParameters($app, 'getInternetTests');
-		echo json_encode($func());
-	});
-
 	$app->group('/neighborhoods', function() use($app) {
 		$app->get('/', function() use($app) {
 			echo json_encode(getNeighborhoods());
@@ -35,6 +30,11 @@ $app->group('/api', function() use ($app) {
 
 	$app->get('/zones', function() use ($app) {
 		echo json_encode(getZones());
+	});
+
+	$app->get('/signalsperoperator', function() use($app) {
+		$func = getFunctionWithDateAndPositionParameters($app, 'getAverageSignalPerOperator');
+		echo json_encode($func());
 	});
 
 	$app->group('/calls', function() use($app) {
@@ -68,6 +68,11 @@ $app->group('/api', function() use ($app) {
 			echo json_encode($queryFunc());
 		});
 
+		$app->get('/avgcalltimeperneighborhood', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getAverageConnectionTimePerNeighborhood');
+			echo json_encode($queryFunc());
+		});
+
 		$app->get('/scatteredsignalconnectiontimedata', function() use($app) {
 			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getCalls');
 			$data = $queryFunc();
@@ -91,6 +96,12 @@ $app->group('/api', function() use ($app) {
 	
 
 	$app->group('/internet', function() use($app) {
+
+		$app->get('/', function() use ($app) {
+			$func = getFunctionWithDateAndPositionParameters($app, 'getInternetTests');
+			echo json_encode($func());
+		});
+
 		$app->get('/downloadtimeperhour', function() use($app) {
 			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getDownloadTimesPerHour');
 			echo json_encode($queryFunc());

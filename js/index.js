@@ -367,7 +367,14 @@ function loadGeneralStatistics() {
 				createSignalsPerNeighborhoodChart($('#signalPerNeighborhoodChart'), JSON.parse(data));
 				$('#signalPerNeighborhoodChart').css({display: 'block'});
 				callback(null, true);
-    		});
+			});
+		},
+		function(callback) {
+			$.get('index.php/api/signalsperoperator' + getFields(), function(data) {
+				createSignalsPerOperatorChart($('#signalPerOperatorChart'), JSON.parse(data));
+				$('#signalPerOperatorChart').css({display: 'block'});
+				callback(null, true);
+			});
 		}
 	], function(err, data) {
 		$('.general-statistics').css({display: 'block'});
@@ -401,6 +408,13 @@ function loadCallsStatistics() {
 			$.get('index.php/api/calls/scatteredsignalconnectiontimedata' + getFields(), function(data) {
 				createScatteredConnectionTimePerSignalChart($('#scatteredSignalsConnectionTimeChart'), JSON.parse(data));
 				$('#scatteredSignalsConnectionTimeChart').css({display: 'block'});
+				callback(null, true);
+			});
+		},
+		function(callback) {
+			$.get('index.php/api/calls/avgcalltimeperneighborhood' + getFields(), function(data) {
+				createConnectionTimePerNeighborhoodChart($('#connectionTimePerNeighborhoodChart'), JSON.parse(data));
+				$('#connectionTimePerNeighborhoodChart').css({display: 'block'});
 				callback(null, true);
 			});
 		}

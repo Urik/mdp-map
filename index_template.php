@@ -158,8 +158,11 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-12">
+					<div class="col-xs-12 col-sm-8">
 						<div id="signalPerNeighborhoodChart" class="chart"></div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div id="signalPerOperatorChart" class="chart"></div>
 					</div>
 				</div>
 			</div>
@@ -172,18 +175,23 @@
 				</div>
 				<div class="row">
 					<div class="col-sm-6 col-xs-12">
-						<div id="signalsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+						<div id="signalsChart" class="chart"></div>
 					</div>
 					<div class="col-sm-6 col-xs-12">
-						<div id="scatteredSignalsConnectionTimeChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+						<div id="scatteredSignalsConnectionTimeChart" class="chart" ></div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-6 col-xs-12">
-						<div id="operatorsChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+						<div id="operatorsChart" class="chart"></div>
 					</div>
 					<div class="col-sm-6 col-xs-12">
-						<div id="hoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+						<div id="hoursChart" class="chart"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="connectionTimePerNeighborhoodChart" class="chart"></div>
 					</div>
 				</div>
 			</div>

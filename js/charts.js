@@ -196,6 +196,19 @@ function createDownloadTimePerOperatorChart(element, chartData) {
     );
 }
 
+function createSignalsPerOperatorChart(element, chartData) {
+    return createPerOperatorChart(
+        element,
+        chartData,
+        'Señal promedio por operador',
+        'Operador',
+        'Señal',
+        function(data) { return data.Operator; },
+        function(data) { return parseFloat(data.AverageSignal); },
+        function(data) { return data.DataCount; }
+    );
+}
+
 function createPerOperatorChart(element, chartData, chartTitle, xAxisTitle, yAxisTitle, companyNameAccessor, valueAccessor, recordsCountAccessor) {
     var companiesColors = {
         claro: '#D22D27',
@@ -237,6 +250,29 @@ function createPerOperatorChart(element, chartData, chartTitle, xAxisTitle, yAxi
 }
 
 function createSignalsPerNeighborhoodChart(element, chartData) {
+    return createPerNeighborhoodColumnChart(
+        element,
+        chartData,
+        'Señal promedio por barrio',
+        'Señal',
+        function(data) { return data.AverageSignal; },
+        function(data) { return data.Neighborhood; },
+        function(data) { return data.DataCount; }
+    );
+}
+
+function createConnectionTimePerNeighborhoodChart(element, chartData) {
+    return createPerNeighborhoodColumnChart(
+        element,
+        chartData,
+        'Tiempo de conexion promedio por barrio',
+        'Tiempo de conexion [sec]',
+        function(data) { return data.AverageConnectionTime; },
+        function(data) { return data.Neighborhood; },
+        function(data) { return data.DataCount; }
+    );
+}
+function createPerNeighborhoodColumnChart(element, chartData, chartTitle, yAxisTitle, seriesValueAccessor, neighborhoodNameAccessor, seriesDataCountAccessor) {
     $(element).highcharts({
         chart: {
             type: 'column'
@@ -244,7 +280,7 @@ function createSignalsPerNeighborhoodChart(element, chartData) {
         plotOptions: {
             column: { colorByPoint: true }
         },
-        title: {text: 'Señal promedio por barrio' },
+        title: {text: chartTitle },
         xAxis: {
             title: {text: 'Barrios'},
             type: 'category',
@@ -254,22 +290,22 @@ function createSignalsPerNeighborhoodChart(element, chartData) {
         },
         yAxis: {
             min: 0,
-            title: {text: 'Señal'}
+            title: {text: yAxisTitle}
         },
         series: [{
             name: 'Barrios',
             showInLegend: false,
             data: _(chartData).map(function(data) {
                 return {
-                    y: parseFloat(data.AverageSignal),
-                    name: data.Neighborhood,
+                    y: parseFloat(seriesValueAccessor(data)),
+                    name: neighborhoodNameAccessor(data),
                     dataLabels: {
                         enabled: true,
                         formatter: function() {
-                            return data.DataCount;
+                            return seriesDataCountAccessor(data);
                         }
                     }
-                }
+                };
             })
         }]
     });
@@ -287,9 +323,6 @@ function createFailedDownloadsProportionsPerOperatorChart(element, chartData) {
     $(element).highcharts({
         chart: {
             type: 'column'
-        },
-        plotOptions: {
-            column: { colorByPoint: true }
         },
         title: {text: 'Proporcion de descargas fallidas por operador' },
         xAxis: {
@@ -332,9 +365,6 @@ function createFailedDownloadsProportionsPerNeighborhoodChart(element, chartData
     $(element).highcharts({
         chart: {
             type: 'bar'
-        },
-        plotOptions: {
-            bar: { colorByPoint: true }
         },
         title: {text: 'Proporcion de descargas fallidas' },
         subtitle: {text: 'Solo se muestran los datos de barrios con mas de 10 muestras.'},
