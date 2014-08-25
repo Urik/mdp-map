@@ -194,6 +194,16 @@
 						<div id="connectionTimePerNeighborhoodChart" class="chart"></div>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="failureRatePerNeighborhoodChart" class="chart"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="failureRaterPerOperatorChart" class="chart"></div>
+					</div>
+				</div>
 			</div>
 
 			<div class="internet-statistics">

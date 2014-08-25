@@ -196,6 +196,35 @@ function createDownloadTimePerOperatorChart(element, chartData) {
     );
 }
 
+function createCallsFailureRatePerOperatorChart(element, chartData) {
+    var chart = createPerOperatorChart(
+        element,
+        chartData,
+        'Tasa de llamadas fallidas por operador',
+        'Operador',
+        'Tasa de fallas [%]',
+        function(data) { return data.Operador; },
+        function(data) { return 100 * parseFloat(data.FailedCallsPercentage); },
+        function(data) { return ''; }
+    );
+    return chart;
+}
+
+function createCallsFailureRatePerNeighborhood(element, chartData) {
+    var chart = createPerNeighborhoodColumnChart(
+        element,
+        chartData,
+        'Tasa de llamadas fallidas por barrio',
+        'Tasa de fallas [%]',
+        function(data) { return 100 * parseFloat(data.FailedCallsPercentage); },
+        function(data) { return data.Neighborhood; },
+        function(data) { return data.DataCount; }
+    );
+
+    $(element).highcharts().setTitle(null, {text: 'Solo se tienen en cuenta los barrios con llamadas fallidas, y mas de 10 muestras'});
+    return chart;
+}
+
 function createSignalsPerOperatorChart(element, chartData) {
     return createPerOperatorChart(
         element,
@@ -215,7 +244,7 @@ function createPerOperatorChart(element, chartData, chartTitle, xAxisTitle, yAxi
         movistar: '#B3CC08',
         personal: '#0095AB'
     };
-    $(element).highcharts({
+    return $(element).highcharts({
         chart: {
             type: 'column'
         },
@@ -293,7 +322,7 @@ function createPerNeighborhoodColumnChart(element, chartData, chartTitle, yAxisT
             title: {text: yAxisTitle}
         },
         series: [{
-            name: 'Barrios',
+            name: 'Valor',
             showInLegend: false,
             data: _(chartData).map(function(data) {
                 return {

@@ -365,14 +365,12 @@ function loadGeneralStatistics() {
 		function(callback) {
 			$.get('index.php/api/neighborhoods/averagesignals' + getFields(), function(data) {
 				createSignalsPerNeighborhoodChart($('#signalPerNeighborhoodChart'), JSON.parse(data));
-				$('#signalPerNeighborhoodChart').css({display: 'block'});
 				callback(null, true);
 			});
 		},
 		function(callback) {
 			$.get('index.php/api/signalsperoperator' + getFields(), function(data) {
 				createSignalsPerOperatorChart($('#signalPerOperatorChart'), JSON.parse(data));
-				$('#signalPerOperatorChart').css({display: 'block'});
 				callback(null, true);
 			});
 		}
@@ -386,35 +384,42 @@ function loadCallsStatistics() {
 		function(callback) {
 			$.get('index.php/api/calls/avgcalltimepersignals' + getFields(), function(data) {
 					createConnectionTimePerSignalChart($('#signalsChart'), JSON.parse(data));
-					$('#signalsChart').css({display: 'block'});
 					callback(null, true);
 				});
 		},
 		function(callback) {
 			$.get('index.php/api/calls/avgcalltimeperdayandhour' + getFields(), function(data) {
 				createConnectionTimePerHour($('#hoursChart'), JSON.parse(data));
-				$('#hoursChart').css({display: 'block'});
 				callback(null, true);
 			});
 		},
 		function(callback) {
 			$.get('index.php/api/calls/avgcalltimeperoperator' + getFields(), function(data) {
 				createConnectionTimePerOperatorChart($('#operatorsChart'), JSON.parse(data));
-				$('#operatorsChart').css({display: 'block'});
 				callback(null, true);
 			});
 		},
 		function(callback) {
 			$.get('index.php/api/calls/scatteredsignalconnectiontimedata' + getFields(), function(data) {
 				createScatteredConnectionTimePerSignalChart($('#scatteredSignalsConnectionTimeChart'), JSON.parse(data));
-				$('#scatteredSignalsConnectionTimeChart').css({display: 'block'});
 				callback(null, true);
 			});
 		},
 		function(callback) {
 			$.get('index.php/api/calls/avgcalltimeperneighborhood' + getFields(), function(data) {
 				createConnectionTimePerNeighborhoodChart($('#connectionTimePerNeighborhoodChart'), JSON.parse(data));
-				$('#connectionTimePerNeighborhoodChart').css({display: 'block'});
+				callback(null, true);
+			});
+		},
+		function(callback) {
+			$.get('index.php/api/calls/failurerateperoperator' + getFields(), function(data) {
+				createCallsFailureRatePerOperatorChart($('#failureRaterPerOperatorChart'), JSON.parse(data));
+				callback(null, true);
+			});
+		},
+		function(callback) {
+			$.get('index.php/api/calls/failurerateperneighborhood' + getFields(), function(data) {
+				createCallsFailureRatePerNeighborhood($('#failureRatePerNeighborhoodChart'), JSON.parse(data));
 				callback(null, true);
 			});
 		}
@@ -429,28 +434,24 @@ function loadInternetStatistics() {
 			function(callback) {
 				$.get('index.php/api/internet/downloadtimeperhour' + getFields(), function(data) {
 					createDownloadTimesPerHourChart($('#internetHoursChart'), JSON.parse(data));
-					$('#internetHoursChart').css({display: 'block'});
 					callback(null, true);
 				});
 			},
 			function(callback) {
 				$.get('index.php/api/internet/downloadtimeperoperator' + getFields(), function(data) {
 					createDownloadTimePerOperatorChart($('#internetHoursPerOperatorChart'), JSON.parse(data));
-					$('#internetHoursPerOperatorChart').css({display: 'block'});
 					callback(null, true);
 				});
 			},
 			function(callback) {
 				$.get('index.php/api/internet/failedproportionperneighborhood' + getFields(), function(data) {
 					createFailedDownloadsProportionsPerNeighborhoodChart($('#failedDownloadsPerNeighborhoodChart'), JSON.parse(data));
-					$('#failedDownloadsPerNeighborhoodChart').css({display: 'block'});
 					callback(null, true);
 				});
 			},
 			function(callback) {
 				$.get('index.php/api/internet/failedproportionperoperator' + getFields(), function(data) {
 					createFailedDownloadsProportionsPerOperatorChart($('#failedDownloadsPerOperatorChart'), JSON.parse(data));
-					$('#failedDownloadsPerOperatorChart').css({display: 'block'});
 					callback(null, true);
 				});
 			}

@@ -91,6 +91,16 @@ $app->group('/api', function() use ($app) {
 
 			echo json_encode($groupedData);
 		});
+
+		$app->get('/failurerateperoperator', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getFailedConnectionsRatePerOperator');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/failurerateperneighborhood', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getFailedConnectionsRatePerNeighborhood');
+			echo json_encode($queryFunc());
+		});
 	});
 
 	
