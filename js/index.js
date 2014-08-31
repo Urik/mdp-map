@@ -422,6 +422,12 @@ function loadCallsStatistics() {
 				createCallsFailureRatePerNeighborhood($('#failureRatePerNeighborhoodChart'), JSON.parse(data));
 				callback(null, true);
 			});
+		},
+		function(callback) {
+			$.get('index.php/api/calls/avgcalltimeperbattery' + getFields(), function(data) {
+				createConnectionTimePerBatteryChart($('#connectionTimePerBatteryLevelChart'), JSON.parse(data));
+				callback(null, true);
+			})
 		}
 	], function(err, data) {
 		$('.call-statistics').css({display: 'block'});

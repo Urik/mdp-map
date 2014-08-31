@@ -12,10 +12,7 @@ function createConnectionTimePerSignalChart(element, chartData) {
             
         },
         yAxis: {
-            title: {text: 'Tiempo de conexion'},
-            labels: {
-                format: '{value} sec'
-            }
+            title: {text: 'Tiempo de conexion [sec]'}
         },
         series: _.chain(chartData).map(function(data, receiverSignal) {
             return {
@@ -35,6 +32,40 @@ function createConnectionTimePerSignalChart(element, chartData) {
                 })
             };
         }).sortBy('name').value()
+    });
+}
+
+function createConnectionTimePerBatteryChart(element, chartData) {
+    $(element).highcharts({
+        chart: {
+          type: 'spline',
+          zoomType: 'xy'
+        },
+        title: {text: 'Tiempo de conexion promedio por carga de bateria'},
+        xAxis: {
+            title: { text: 'Bateria del llamante [%]'},
+            type: 'category',
+            categories: ['0 - 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69', '70 - 79', '80 - 89', '90 - 100'],
+            labels: { rotation: 90 }
+        },
+        yAxis: {
+            title: {text: 'Tiempo de conexion [sec]'}
+        },
+        series: [{
+            name: 'Bateria del receptor',
+            visible: true,
+            data: _(chartData).map(function(data) { 
+                return {
+                    y: parseFloat(data.ConnectionTime),
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return data.DataCount;
+                        }
+                    }
+                };
+            })
+        }]
     });
 }
 
@@ -91,10 +122,7 @@ function createDownloadTimesPerHourChart(element, hoursChartData) {
       max: 24
     },
     yAxis: {
-        title: {text: 'Tiempo de descarga en msec'},
-        labels: {
-            format: '{value} msec'
-        }
+        title: {text: 'Tiempo de descarga [msec]'}
     },
     series: [{
       name: 'Prueba de descarga',
