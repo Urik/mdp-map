@@ -174,13 +174,14 @@ function getQueryParameters($app) {
 	$params->lon1 = $app->request->get('lon1');
 	$params->lat2 = $app->request->get('lat2');
 	$params->lon2 = $app->request->get('lon2');
+	$params->neighborhoodId = $app->request->get('neighborhoodId');
 	return $params;
 }
 
 function getFunctionWithDateAndPositionParameters($app, $func)  {
 	$params = getQueryParameters($app);
 	return function() use ($params, $func) {
-		return call_user_func($func, $params->lat1, $params->lon1, $params->lat2, $params->lon2, $params->dateFrom, $params->dateTo, null);
+		return call_user_func($func, $params->lat1, $params->lon1, $params->lat2, $params->lon2, $params->dateFrom, $params->dateTo,  $params->neighborhoodId, null);
 	};
 }
 

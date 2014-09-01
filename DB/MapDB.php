@@ -78,13 +78,15 @@ function renderNeighborhood($i, $zone) {
 
 }
 
-function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$response = Array();
 	$con = connectDB();
 	$sql = "SELECT m.CallerNumber AS caller_number, CASE WHEN Lower(m.CallerOperatorName) LIKE '%claro%' THEN 'Claro' WHEN Lower(m.CallerOperatorName) LIKE '%personal%' THEN 'Personal' WHEN Lower(m.CallerOperatorName) LIKE '%movistar%' THEN 'Movistar' ELSE 'Otro' END as caller_operator_name, m.CallerBatteryLevel as caller_battery_level, m.CallerSignal AS caller_signal, m.CallerLat AS caller_lat, m.CallerLon AS caller_lon, m.connectionTime AS connection_time, m.ReceiverSignal AS receiver_signal, callerTime AS caller_time FROM matched_calls m ";
 	$whereClause = " WHERE  m.CallerNumber IS NOT NULL AND m.CallerLat <> 0 AND  m.CallerLon <> 0 ";
 	$whereClause .= getMatchedCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
 	$whereClause .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo);
+	$whereClause .= getMatchedCallsNeighborhoodBasedWhereClause($neighborhoodId);
+
 	if(!is_null($number))
 		$whereClause .= " AND m.CallerNumber = '" . $number . "'";
 
@@ -98,7 +100,7 @@ function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
 	return $response;
 }
 
-function getCallConnectionTimesBySignals($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getCallConnectionTimesBySignals($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT m.callersignal, ";
 	$query .= "       m.receiversignal, ";
@@ -112,6 +114,7 @@ function getCallConnectionTimesBySignals($lat1, $lon1, $lat2, $lon2, $dateFrom, 
 
 	$query .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo);
 	$query .= getMatchedCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$query .= getMatchedCallsNeighborhoodBasedWhereClause($neighborhoodId);
 
 	$query .= " GROUP  BY m.receiversignal, ";
 	$query .= "           m.callersignal " ;
@@ -129,7 +132,7 @@ function getCallConnectionTimesBySignals($lat1, $lon1, $lat2, $lon2, $dateFrom, 
 	return $dataByCallerSignal;
 }
 
-function getCallConnectionTimesByDayAndHour($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getCallConnectionTimesByDayAndHour($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT Date_format(m.callertime, '%W') as WeekDay, ";
 	$query .= "       Date_format(m.callertime, '%H') as Hour, ";
@@ -143,6 +146,7 @@ function getCallConnectionTimesByDayAndHour($lat1, $lon1, $lat2, $lon2, $dateFro
 
 	$query .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo);
 	$query .= getMatchedCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$query .= getMatchedCallsNeighborhoodBasedWhereClause($neighborhoodId);
 
 	$query .= " GROUP  BY Date_format(m.callertime, '%W'), ";
 	$query .= "          Date_format(m.callertime, '%H') ";
@@ -161,24 +165,11 @@ function getCallConnectionTimesByDayAndHour($lat1, $lon1, $lat2, $lon2, $dateFro
 	return $groupedData;
 }
 
-function queryDatabase($query) {
-	$response = Array();
-	$con = connectDB();
-	
-	if ($result = $con -> query($query)) {
-		while ($item = $result -> fetch_assoc()) {
-			$response[] = encodeArrayToUtf($item);
-		}
-	}
-	disconnectDB($con);
-	return $response;
-}
-
-function getSMS($dateFrom, $dateTo, $number) {
-	$sql = "SELECT * FROM sms ";
+function getSMS($dateFrom, $dateTo, $neighborhoodId, $number) {
+	$sql = "SELECT * FROM sms s";
 	$whereClause = " WHERE neighborhood_id IS NOT NULL ";
 
-	$whereClause .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo);
+	$whereClause .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo, 's');
 	
 	if(!is_null($number))
 		$whereClause .= " AND sourceNumber = '" . $number . "'";
@@ -187,12 +178,13 @@ function getSMS($dateFrom, $dateTo, $number) {
 	return queryDatabase($sql);
 }
 
-function getInternetTests($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getInternetTests($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$sql = "SELECT * FROM internet i";
 	$whereClause = " WHERE i.neighborhood_id IS NOT NULL";
 
 	$whereClause .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
 	$whereClause .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$whereClause .= getInternetNeighborhoodBasedWhereClause($neighborhoodId);
 	
 	if(!is_null($number)) {
 		$whereClause .= " AND i.sourceNumber = '" . $number . "'";
@@ -203,7 +195,7 @@ function getInternetTests($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $numbe
 	return queryDatabase($sql);
 }
 
-function getAVGTime($type, $dateFrom, $dateTo, $number) {
+function getAVGTime($type, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$response = Array();
 	$con = connectDB();
 	$sql = "";
@@ -268,7 +260,7 @@ function getPercentagesOfFailedInternet() {
 	return $response;
 }
 
-function getDownloadTimesPerHour($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getDownloadTimesPerHour($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT Date_format(i.datecreated, '%H') AS Hour, ";
 	$query .= "       Avg(i.downloadtime)              AS DownloadTime, ";
@@ -278,6 +270,7 @@ function getDownloadTimesPerHour($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo,
 
 	$query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
 	$query .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getInternetNeighborhoodBasedWhereClause($neighborhoodId);
 	
 	$query .= " GROUP  BY Date_format(i.datecreated, '%H') ";
 	$query .= " ORDER  BY Date_format(i.datecreated, '%H') " ;
@@ -285,7 +278,7 @@ function getDownloadTimesPerHour($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo,
 	return queryDatabase($query);
 }
 
-function getDownloadTimesPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getDownloadTimesPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT CASE ";
 	$query .= "         WHEN Lower(i.operatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -300,6 +293,7 @@ function getDownloadTimesPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dat
 
 	$query .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
 	$query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$query .= getInternetNeighborhoodBasedWhereClause($neighborhoodId);
 
 	$query .= " GROUP  BY CASE ";
 	$query .= "            WHEN Lower(i.operatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -312,7 +306,7 @@ function getDownloadTimesPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dat
 	return queryDatabase($query);
 }
 
-function getConnectionTimesPerCompany($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getConnectionTimesPerCompany($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT CASE ";
 	$query .= "         WHEN Lower(m.calleroperatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -324,8 +318,10 @@ function getConnectionTimesPerCompany($lat1, $lon1, $lat2, $lon2, $dateFrom, $da
 	$query .= "       Count(*)                           AS DataCount ";
 	$query .= "FROM   matched_calls m ";
 	$query .= "WHERE 1=1 ";
+
 	$query .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo);
 	$query .= getMatchedCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$query .= getMatchedCallsNeighborhoodBasedWhereClause($neighborhoodId);
 
 	$query .= "GROUP BY CASE ";
 	$query .= "            WHEN Lower(m.calleroperatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -337,7 +333,7 @@ function getConnectionTimesPerCompany($lat1, $lon1, $lat2, $lon2, $dateFrom, $da
 	return queryDatabase($query);
 }
 
-function getAverageSignalPerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getAverageSignalPerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT n.name              AS Neighborhood, ";
 	$query .= "       Avg(m.callersignal) AS AverageSignal, ";
@@ -349,6 +345,7 @@ function getAverageSignalPerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, 
 
 	$query .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo);
 	$query .= getMatchedCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$query .= getMatchedCallsNeighborhoodBasedWhereClause($neighborhoodId);
 
 	$query .= " GROUP  BY m.callerneighborhoodid ";
 	$query .= " ORDER  BY n.name " ;
@@ -356,7 +353,7 @@ function getAverageSignalPerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, 
 	return queryDatabase($query);
 }
 
-function getFailedCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getFailedCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT m.operatorname, ";
 	$query .= "       m.sourcenumber, ";
@@ -370,6 +367,7 @@ function getFailedCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number)
 
 	$query .= getDateBasedWhereClause($dateFrom, $dateTo, 'm', 'dispatchdate');
 	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 'm', 'Geom');
+	$query .= getNeighborhoodBasedWhereClause($neighborhoodId, ',', 'neighborhood_id');
 
 	$query .= "       AND m.id NOT IN (SELECT m1.outgoingcallid ";
 	$query .= "                        FROM   matched_calls m1) ";
@@ -378,7 +376,7 @@ function getFailedCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number)
 	return queryDatabase($query);
 }
 
-function getFailedDownloadsProportionPerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getFailedDownloadsProportionPerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
     $query = "";
 	$query .= "SELECT n.name   AS Neighborhood, ";
 	$query .= "       Sum(CASE ";
@@ -394,7 +392,8 @@ function getFailedDownloadsProportionPerNeighborhood($lat1, $lon1, $lat2, $lon2,
 	$query .= "         ON n.id = i.neighborhood_id ";
 
 	$query .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
-    $query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+  $query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+  $query .= getInternetNeighborhoodBasedWhereClause($neighborhoodId);
 
 	$query .= "GROUP  BY i.neighborhood_id ";
 	$query .= "HAVING Count(*) > 10 ";
@@ -403,7 +402,7 @@ function getFailedDownloadsProportionPerNeighborhood($lat1, $lon1, $lat2, $lon2,
 	return queryDatabase($query);
 }
 
-function getFailedDownloadsProportionPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getFailedDownloadsProportionPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT CASE ";
 	$query .= "         WHEN Lower(i.operatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -425,6 +424,7 @@ function getFailedDownloadsProportionPerOperator($lat1, $lon1, $lat2, $lon2, $da
 
 	$query .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
   $query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+  $query .= getInternetNeighborhoodBasedWhereClause($neighborhoodId);
 
 	$query .= "GROUP  BY CASE ";
 	$query .= "            WHEN Lower(i.operatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -440,7 +440,7 @@ function getFailedDownloadsProportionPerOperator($lat1, $lon1, $lat2, $lon2, $da
 	return queryDatabase($query);
 }
 
-function getAverageSignalPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getAverageSignalPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT CASE ";
 	$query .= "         WHEN Lower(c.calleroperatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -455,6 +455,7 @@ function getAverageSignalPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dat
 
 	$query .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo, 'c');
 	$query .= getMatchedCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 'c');
+	$query .= getMatchedCallsNeighborhoodBasedWhereClause($neighborhoodId, 'c');
 
 	$query .= " GROUP  BY CASE ";
 	$query .= "            WHEN Lower(c.calleroperatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -466,7 +467,7 @@ function getAverageSignalPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dat
 	return queryDatabase($query);
 }
 
-function getAverageConnectionTimePerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getAverageConnectionTimePerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT n.name                             AS Neighborhood, ";
 	$query .= "       Avg(Time_to_sec(c.connectiontime)) AS 'AverageConnectionTime', ";
@@ -477,6 +478,7 @@ function getAverageConnectionTimePerNeighborhood($lat1, $lon1, $lat2, $lon2, $da
 
 	$query .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo, 'c');
 	$query .= getMatchedCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 'c');
+	$query .= getMatchedCallsNeighborhoodBasedWhereClause($neighborhoodId, 'c');
 
 	$query .= "GROUP  BY c.callerneighborhoodid ";
 	$query .= "ORDER  BY n.name " ;
@@ -484,7 +486,7 @@ function getAverageConnectionTimePerNeighborhood($lat1, $lon1, $lat2, $lon2, $da
 	return queryDatabase($query);
 }
 
-function getFailedConnectionsRatePerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getFailedConnectionsRatePerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT CASE ";
 	$query .= "         WHEN Lower(o.operatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -504,6 +506,7 @@ function getFailedConnectionsRatePerOperator($lat1, $lon1, $lat2, $lon2, $dateFr
 
 	$query .= getDateBasedWhereClause($dateFrom, $dateTo, 'o', 'dateCreated');
 	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 'o', 'Geom');
+	$query .= getNeighborhoodBasedWhereClause($neighborhoodId, 'o', 'neighborhoodId');
 
 	$query .= " GROUP  BY CASE ";
 	$query .= "            WHEN Lower(o.operatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -515,7 +518,7 @@ function getFailedConnectionsRatePerOperator($lat1, $lon1, $lat2, $lon2, $dateFr
 	return queryDatabase($query);
 }
 
-function getFailedConnectionsRatePerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $number) {
+function getFailedConnectionsRatePerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$query = "";
 	$query .= "SELECT n.name AS 'Neighborhood', ";
 	$query .= "       Sum(CASE ";
@@ -533,6 +536,7 @@ function getFailedConnectionsRatePerNeighborhood($lat1, $lon1, $lat2, $lon2, $da
 	$query .= "WHERE 1=1 ";
 	$query .= getDateBasedWhereClause($dateFrom, $dateTo, 'o', 'dateCreated');
 	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 'o', 'Geom');
+	$query .= getNeighborhoodBasedWhereClause($neighborhoodId, 'o', 'neighborhoodId');
 
 	$query .= " GROUP  BY n.id ";
 	$query .= " HAVING Count(*) > 10 ";
@@ -583,6 +587,23 @@ function getDateBasedWhereClause($dateFrom, $dateTo, $tableIdentifier, $dateColu
 	return $whereClause;
 }
 
+function getMatchedCallsNeighborhoodBasedWhereClause($neighborhoodId, $tableIdentifier = 'm') {
+	return getNeighborhoodBasedWhereClause($neighborhoodId, $tableIdentifier, 'callerNeighborhoodId');
+}
+
+function getInternetNeighborhoodBasedWhereClause($neighborhoodId, $tableIdentifier = 'i') {
+	return getNeighborhoodBasedWhereClause($neighborhoodId, $tableIdentifier, 'neighborhood_id');
+}
+
+function getNeighborhoodBasedWhereClause($neighborhoodId, $tableIdentifier, $neighborhoodIdColumnName) {
+	$whereClause = "";
+	if (!is_null($neighborhoodId)) {
+		$whereClause .= " AND " . $tableIdentifier . "." . $neighborhoodIdColumnName . " = " . $neighborhoodId . " ";
+	}
+
+	return $whereClause;
+}
+
 function encodeArrayToUtf($array) {
 	$response = array();
 	foreach ($array as $key => $value) {
@@ -593,6 +614,19 @@ function encodeArrayToUtf($array) {
 		}
 	}
 	
+	return $response;
+}
+
+function queryDatabase($query) {
+	$response = Array();
+	$con = connectDB();
+	
+	if ($result = $con -> query($query)) {
+		while ($item = $result -> fetch_assoc()) {
+			$response[] = encodeArrayToUtf($item);
+		}
+	}
+	disconnectDB($con);
 	return $response;
 }
 ?>
