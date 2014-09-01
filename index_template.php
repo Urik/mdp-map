@@ -183,7 +183,7 @@
 				</div>
 				<div class="row">
 					<div class="col-sm-6 col-xs-12">
-						<div id="operatorsChart" class="chart"></div>
+						<div id="connectionTimePerBatteryLevelChart" class="chart"></div>
 					</div>
 					<div class="col-sm-6 col-xs-12">
 						<div id="hoursChart" class="chart"></div>
@@ -200,8 +200,11 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-xs-12">
+					<div class="col-sm-6 col-xs-12">
 						<div id="failureRaterPerOperatorChart" class="chart"></div>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<div id="operatorsChart" class="chart"></div>
 					</div>
 				</div>
 			</div>
@@ -214,10 +217,10 @@
 				</div>
 				<div class="row">
 					<div class="col-xs-12 col-sm-6">
-						<div id="internetHoursChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+						<div id="internetHoursChart" class="chart"></div>
 					</div>
 					<div class="col-xs-12 col-sm-6">
-						<div id="internetHoursPerOperatorChart" class="chart" style="width: 100%; height: 400px;display: none"></div>
+						<div id="internetHoursPerOperatorChart" class="chart"></div>
 					</div>
 				</div>
 				<div class="row">

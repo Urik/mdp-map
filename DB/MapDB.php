@@ -179,7 +179,7 @@ function getSMS($dateFrom, $dateTo, $neighborhoodId, $number) {
 }
 
 function getInternetTests($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
-	$sql = "SELECT * FROM internet i";
+	$sql = "SELECT * FROM fixed_hours_internet i";
 	$whereClause = " WHERE i.neighborhood_id IS NOT NULL";
 
 	$whereClause .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
@@ -206,7 +206,7 @@ function getAVGTime($type, $dateFrom, $dateTo, $number) {
 		WHERE c.neighborhood_id IS NOT NULL ";
 		$index = "c";
 	} elseif ($type == "internet") {
-		$sql = "SELECT 'internet' as type, AVG(i.downloadTime) as avg_download_time, AVG(i.currentSignal) as avg_signal, COUNT(i.neighborhood_id) as num_regs, i.neighborhood_id as neighborhood_id , n.name FROM internet i
+		$sql = "SELECT 'internet' as type, AVG(i.downloadTime) as avg_download_time, AVG(i.currentSignal) as avg_signal, COUNT(i.neighborhood_id) as num_regs, i.neighborhood_id as neighborhood_id , n.name FROM fixed_hours_internet i
 		INNER JOIN neighborhood n ON i.neighborhood_id = n.id
 		WHERE i.neighborhood_id IS NOT NULL AND i.downloadTime <> 0 ";
 		$index = "i";
@@ -245,7 +245,7 @@ function getPercentagesOfFailedInternet() {
 	$response = array();
 	$con = connectDB();
 	$sql = "SELECT i1.neighborhood_id AS neighborhood_id, COUNT(case when i1.downloadTime = 0 then 1 else null end) / COUNT(i1.downloadTime) as failed_downloads_percentage, AVG(i1.currentSignal) as signal_average, COUNT(i1.id) as total_samples, n.name as neighborhood_name" 
-		. " FROM internet i1" 
+		. " FROM fixed_hours_internet i1" 
 		. " JOIN neighborhood n ON n.id = i1.neighborhood_id"
 		. " WHERE neighborhood_id is not null"
 		. " GROUP BY i1.neighborhood_id";
@@ -265,7 +265,7 @@ function getDownloadTimesPerHour($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo,
 	$query .= "SELECT Date_format(i.datecreated, '%H') AS Hour, ";
 	$query .= "       Avg(i.downloadtime)              AS DownloadTime, ";
 	$query .= "       Count(*)              AS DataCount ";
-	$query .= "FROM   internet i ";
+	$query .= "FROM   fixed_hours_internet i ";
 	$query .= "WHERE 1=1 ";
 
 	$query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
@@ -288,7 +288,7 @@ function getDownloadTimesPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dat
 	$query .= "       end                 AS Operator, ";
 	$query .= "       Avg(i.downloadtime) AS DownloadTime, ";
 	$query .= "       Count(*)            AS DataCount ";
-	$query .= "FROM   internet i ";
+	$query .= "FROM   fixed_hours_internet i ";
 	$query .= "WHERE 1=1 ";
 
 	$query .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
@@ -387,7 +387,7 @@ function getFailedDownloadsProportionPerNeighborhood($lat1, $lon1, $lat2, $lon2,
 	$query .= "             WHEN i.downloadtime <> 0 THEN 1 ";
 	$query .= "             ELSE 0 ";
 	$query .= "           end) AS SuccessfulDownloads ";
-	$query .= "FROM   internet i ";
+	$query .= "FROM   fixed_hours_internet i ";
 	$query .= "       JOIN neighborhood n ";
 	$query .= "         ON n.id = i.neighborhood_id ";
 
@@ -418,7 +418,7 @@ function getFailedDownloadsProportionPerOperator($lat1, $lon1, $lat2, $lon2, $da
 	$query .= "             WHEN i.downloadtime <> 0 THEN 1 ";
 	$query .= "             ELSE 0 ";
 	$query .= "           end) AS SuccessfulDownloads ";
-	$query .= "FROM   internet i ";
+	$query .= "FROM   fixed_hours_internet i ";
 	$query .= "       JOIN neighborhood n ";
 	$query .= "         ON n.id = i.neighborhood_id ";
 
@@ -434,8 +434,6 @@ function getFailedDownloadsProportionPerOperator($lat1, $lon1, $lat2, $lon2, $da
 	$query .= "          end ";
 	$query .= "HAVING Count(*) > 10 ";
 	$query .= "ORDER  BY n.name " ;
-
-	//echo $query;
 
 	return queryDatabase($query);
 }
@@ -463,6 +461,35 @@ function getAverageSignalPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dat
 	$query .= "            WHEN Lower(c.calleroperatorname) LIKE '%movistar%' THEN 'Movistar' ";
 	$query .= "            ELSE 'Otros' ";
 	$query .= "          end " ;
+
+	return queryDatabase($query);
+}
+
+function getAverageConnectionTimePerBatteryLevel($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
+	$query = "";
+	$query .= "SELECT c.batteryrange                     AS BatteryLevel, ";
+	$query .= "       Avg(Time_to_sec(c.connectiontime)) AS ConnectionTime, ";
+	$query .= "       Count(*)                           AS DataCount ";
+	$query .= "FROM   (SELECT CASE ";
+	$query .= "                 WHEN c1.callerbatterylevel BETWEEN 0 AND 0.09 THEN '0 - 9' ";
+	$query .= "                 WHEN c1.callerbatterylevel BETWEEN 0.1 AND 0.19 THEN '10 - 19' ";
+	$query .= "                 WHEN c1.callerbatterylevel BETWEEN 0.2 AND 0.29 THEN '20 - 29' ";
+	$query .= "                 WHEN c1.callerbatterylevel BETWEEN 0.3 AND 0.39 THEN '30 - 39' ";
+	$query .= "                 WHEN c1.callerbatterylevel BETWEEN 0.4 AND 0.49 THEN '40 - 49' ";
+	$query .= "                 WHEN c1.callerbatterylevel BETWEEN 0.5 AND 0.59 THEN '50 - 59' ";
+	$query .= "                 WHEN c1.callerbatterylevel BETWEEN 0.6 AND 0.69 THEN '60 - 69' ";
+	$query .= "                 WHEN c1.callerbatterylevel BETWEEN 0.7 AND 0.79 THEN '70 - 79' ";
+	$query .= "                 WHEN c1.callerbatterylevel BETWEEN 0.8 AND 0.89 THEN '80 - 89' ";
+	$query .= "                 WHEN c1.callerbatterylevel BETWEEN 0.9 AND 1 THEN '90 - 100' ";
+	$query .= "               end AS batteryRange, ";
+	$query .= "               c1.* ";
+	$query .= "        FROM   matched_calls c1) c ";
+	$query .= "        WHERE 1=1 ";
+
+	$query .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo, 'c');
+	$query .= getMatchedCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 'c');
+
+	$query .= "GROUP  BY c.batteryrange " ;
 
 	return queryDatabase($query);
 }

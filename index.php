@@ -63,6 +63,11 @@ $app->group('/api', function() use ($app) {
 			echo json_encode($queryFunc());
 		});
 
+		$app->get('/avgcalltimeperbattery', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getAverageConnectionTimePerBatteryLevel');
+			echo json_encode($queryFunc());
+		});
+
 		$app->get('/avgcalltimeperoperator', function() use($app) {
 			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getConnectionTimesPerCompany');
 			echo json_encode($queryFunc());
