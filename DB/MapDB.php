@@ -195,7 +195,7 @@ function getInternetTests($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neigh
 	return queryDatabase($sql);
 }
 
-function getAVGTime($type, $dateFrom, $dateTo, $neighborhoodId, $number) {
+function getAVGTime($type, $dateFrom, $dateTo, $number) {
 	$response = Array();
 	$con = connectDB();
 	$sql = "";

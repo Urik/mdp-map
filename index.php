@@ -135,7 +135,7 @@ $app->group('/api', function() use ($app) {
 
 	$app->get('/sms', function() use ($app) {
 		$params = getQueryParameters($app);
-		echo json_encode(getSMS($params->dateFrom, $params->dateTo, $params->number));
+		echo json_encode(getSMS($params->dateFrom, $params->dateTo, $params->neighborhoodId, $params->number));
 	});
 
 	$app->get('/avgtimeDown', function() use ($app) {
