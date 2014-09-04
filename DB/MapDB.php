@@ -488,6 +488,7 @@ function getAverageConnectionTimePerBatteryLevel($lat1, $lon1, $lat2, $lon2, $da
 
 	$query .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo, 'c');
 	$query .= getMatchedCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 'c');
+	$query .= getMatchedCallsNeighborhoodBasedWhereClause($neighborhoodId, 'c');
 
 	$query .= "GROUP  BY c.batteryrange " ;
 
