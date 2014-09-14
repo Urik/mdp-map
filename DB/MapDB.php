@@ -37,47 +37,6 @@ function getCoordinates($neigh_id) {
 
 }
 
-function displayNeighborhoods($result) {
-	$i = 0;
-	$lastNeigh = "";
-	while ($neigh = $result -> fetch_object()) {
-		$zone = $neigh -> zone_id;
-		if ($lastNeigh != $neigh -> name) {//change of polygon
-			if ($i) {//unless first loop
-				renderNeighborhood($i, $zone);
-			}
-			$lastNeigh = $neigh -> name;
-			$i = $i + 1;
-			echo "var neighborhood" . $i . "; ";
-			echo "var neighborhoodCoords" . $i . " = [";
-			$first = 1;
-		}
-		if (!$first)
-			echo ", ";
-		else
-			$first = 0;
-		echo "new google.maps.LatLng(" . $neigh -> latitude . " , " . $neigh -> longitude . ")";
-	}
-
-	renderNeighborhood($i, $zone);
-}
-
-function renderNeighborhood($i, $zone) {
-	echo "]; ";
-	echo "neighborhood" . $i . "= new google.maps.Polygon({
-									paths: neighborhoodCoords" . $i . ",
-									strokeColor: '#000000',
-									strokeOpacity: 0.8,
-									strokeWeight: 3,
-									fillColor: '#' + (0x1000000 + Math.random() * 0xFFFFFF).toString(16).substr(1,6),
-									fillOpacity: 0.35
-									}); ";
-	echo "neighborhood" . $i . ".setMap(map); ";
-	echo "zoneArray" . $zone . ".push(neighborhood" . $i . "); ";
-	echo "neighArray.push(neighborhood" . $i . "); ";
-
-}
-
 function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $number) {
 	$response = Array();
 	$con = connectDB();
