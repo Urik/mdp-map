@@ -29,7 +29,8 @@ function CallsZoneData(entity) {
 			'Tiempo Promedio de Conexión': parseFloat(this.entity.avgConnectionTime).toFixed(2) + ' segs',
 			'Promedio de señal del Emisor': parseFloat(this.entity.avgSignal).toFixed(2),
 			'Promedio de señal del Receptor': parseFloat(this.entity.avgRecSignal).toFixed(2),
-			'Cantidad de registros': this.entity.numRegs
+			'Cantidad de registros': this.entity.numRegs,
+			'Tasa de interferencia': this.entity.interferenceFactor
 		};
 	};
 

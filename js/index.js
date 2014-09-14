@@ -140,7 +140,8 @@ function loadAVGCallData(AVGCallData) {
 			avgRecSignal : x.avg_rec_signal,
 			neighId : x.neighborhood_id,
 			neighName : x.name,
-			numRegs : x.num_regs
+			numRegs : x.num_regs,
+			interferenceFactor : x.avg_connection_time / x.avg_rec_signal
 		});
 	});
 
