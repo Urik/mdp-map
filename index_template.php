@@ -246,7 +246,7 @@
 		      </div>
 		      <div class="modal-footer">
 		        <button id="numberFilterCancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-		        <button id="useFilterButton" type="button" class="btn btn-primary" data-dismiss="modal">Usar Filtro</button>
+		        <button id="useNumberFilterButton" type="button" class="btn btn-primary" data-dismiss="modal">Usar Filtro</button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->

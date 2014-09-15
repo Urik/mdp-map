@@ -322,6 +322,8 @@ function loadAVGWindows(totalData) {
 		var firstValue = auxColoredNeighs[0];
 		var lastValue = auxColoredNeighs[auxColoredNeighs.length-1];
 
+		//var leftOverauxColoredNeighs.slice(1, auxColoredNeighs.length - 1);
+		//for (var i = 0; )
 	}
 }
 
@@ -654,7 +656,7 @@ $(function() {
 	$("#clearFilters").click(function() {
 		$(lastAction).trigger("click");
 	});	
-	$("#useFilterButton").click(function() {
+	$("#useNumberFilterButton").click(function() {
 		$(lastAction).trigger("click");
 	});	
 
