@@ -577,7 +577,7 @@ function getDateBasedWhereClause($dateFrom, $dateTo, $tableIdentifier, $dateColu
 function getOperatorsBasedWhereClause($operator, $tableIdentifier, $operatorColumnName) {
 	$whereClause = "";
 	if (!is_null($operator)) {
-		$whereClause .= " AND UPPER(" . $tableIdentifier . "." . $operatorColumnName . ") LIKE '%" . strtoupper($operator) "%' ";
+		$whereClause .= " AND UPPER(" . $tableIdentifier . "." . $operatorColumnName . ") LIKE '\%" . strtoupper($operator) . "%' ";
 	}
 
 	return $whereClause;
