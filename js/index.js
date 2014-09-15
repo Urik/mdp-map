@@ -8,8 +8,9 @@ var mapOptions = {
 };
 var markers = [];
 var infos = [];
-var colored = [];
+var coloredNeighborhoods = [];
 var zones = [];
+var LEGEND_COUNT = 5;
 var positionDelimiter = null;
 //array for map zones polygons
 
@@ -85,13 +86,13 @@ function clearInfos() {
 }
 
 function colorNeighs(color) {
-	for (var i = 0; i < colored.length; i++) {
-		colored[i].setOptions({
+	for (var i = 0; i < coloredNeighborhoods.length; i++) {
+		coloredNeighborhoods[i].setOptions({
 			fillColor : color
 		});
-		google.maps.event.clearListeners(colored[i],'click');
+		google.maps.event.clearListeners(coloredNeighborhoods[i],'click');
 	}
-	colored = [];
+	coloredNeighborhoods = [];
 
 }
 
@@ -282,6 +283,7 @@ function loadAVGWindows(totalData) {
 		clearInfos();
 	}
 
+	var auxColoredNeighs = [];
 	$.each(totalData, function(i, data) {
 		(function() {
 
@@ -294,10 +296,11 @@ function loadAVGWindows(totalData) {
 			}
 			
 			if (data.shouldPaintZone()) {
+				coloredNeighborhoods.push(neighArray[data.entity.neighId]);
+				auxColoredNeighs.push(data);
 				neighArray[data.entity.neighId].setOptions({
 					fillColor : data.getColor()
 				});
-				colored.push(neighArray[data.entity.neighId]);
 			}
 
 			infoWindow.setContent(contentString);
@@ -315,6 +318,11 @@ function loadAVGWindows(totalData) {
 		})();
 	});
 
+	if (auxColoredNeighs.length > 0) {
+		var firstValue = auxColoredNeighs[0];
+		var lastValue = auxColoredNeighs[auxColoredNeighs.length-1];
+
+	}
 }
 
 function getFields() {

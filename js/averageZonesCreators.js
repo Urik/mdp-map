@@ -20,6 +20,10 @@ function InternetZoneData(entity) {
 	this.shouldPaintZone = function() {
 		return this.entity.avgDownloadTime > 0;
 	};
+
+	this.comparator = function(a, b) {
+		return a.entity.avgDownloadTime >= b.entity.avgDownloadTime;
+	};
 }
 
 function CallsZoneData(entity) {
@@ -30,7 +34,7 @@ function CallsZoneData(entity) {
 			'Promedio de señal del Emisor': parseFloat(this.entity.avgSignal).toFixed(2),
 			'Promedio de señal del Receptor': parseFloat(this.entity.avgRecSignal).toFixed(2),
 			'Cantidad de registros': this.entity.numRegs,
-			'Tasa de interferencia': this.entity.interferenceFactor
+			'Tasa de interferencia': this.entity.interferenceFactor.toFixed(2)
 		};
 	};
 
@@ -45,6 +49,10 @@ function CallsZoneData(entity) {
 
 	this.shouldPaintZone = function() {
 		return this.entity.avgConnectionTime > 0;
+	};
+
+	this.comparator = function(a, b) {
+		return parseFloat(a.entity.avgConnectionTime) >= parseFloat(b.entity.avgConnectionTime);
 	};
 }
 
@@ -70,6 +78,10 @@ function SmsZoneData(entity) {
 	this.shouldPaintZone = function() {
 		return false;
 	};
+
+	this.comparator = function(a, b) {
+		return parseFloat(a.entity.avgSendingTime) >= parseFloat(b.entity.avgSendingTime);
+	};
 }
 
 function SignalZoneData(entity) {
@@ -93,6 +105,10 @@ function SignalZoneData(entity) {
 	this.shouldPaintZone = function() {
 		return this.entity.avgSignal > 0;
 	};
+
+	this.comparator = function(a, b) {
+		return parseFloat(a.entity.avgSignal) >= parseFloat(b.entity.avgSignal);
+	};
 }
 
 function FailedInternetZoneData(entity) {
@@ -114,5 +130,9 @@ function FailedInternetZoneData(entity) {
 
 	this.shouldPaintZone = function() {
 		return this.entity.avgSignal > 0;
+	};
+
+	this.comparator = function(a, b) {
+		return parseFloat(a.entity.avgFailures) >= parseFloat(b.entity.avgFailures);
 	};
 }
