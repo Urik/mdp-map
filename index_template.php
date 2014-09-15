@@ -130,7 +130,10 @@
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtros <b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<li>
-									<a id="filterModalNumber"  data-toggle="modal" data-target="#myModal" href="#">Añadir Número de Teléfono</a>
+									<a id="filterModalNumber"  data-toggle="modal" data-target="#numbersFilterModal" href="#">Añadir Número de Teléfono</a>
+								</li>
+								<li>
+									<a id="filterModalOperator"  data-toggle="modal" data-target="#operatorModal" href="#">Filtrar operadora</a>
 								</li>
 								<li class="divider"></li>
 								<li>
@@ -234,7 +237,7 @@
 				</div>
 			</div>
 		<!--Filter Number Modal -->
-		<div class="modal fade" id="myModal">
+		<div class="modal fade" id="numbersFilterModal">
 		  <div class="modal-dialog">
 		    <div class="modal-content">
 		      <div class="modal-header">
@@ -247,6 +250,30 @@
 		      <div class="modal-footer">
 		        <button id="numberFilterCancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
 		        <button id="useNumberFilterButton" type="button" class="btn btn-primary" data-dismiss="modal">Usar Filtro</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+		<!--Filter Operator Modal -->
+		<div class="modal fade" id="operatorModal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title">Seleccionar Operadora</h4>
+		      </div>
+		      <div class="modal-body">
+		        <select id="operatorFilter">
+		        	<option value="all">Todas</option>
+					<option value="personal">Personal</option>
+					<option value="movistar">Movistar</option>
+					<option value="claro">Claro</option>
+		        </select>
+		      </div>
+		      <div class="modal-footer">
+		        <button id="operatorFilterCancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+		        <button id="useOperatorFilterButton" type="button" class="btn btn-primary" data-dismiss="modal">Usar Filtro</button>
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->

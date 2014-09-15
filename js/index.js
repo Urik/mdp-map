@@ -16,6 +16,9 @@ var positionDelimiter = null;
 
 var neighArray = {};
 var callArray = [];
+
+var filters = new Filters();
+
 var callsState = {
 	loadMarkers: function(queryString) {
 		$.get('index.php/api/calls' + queryString, handleReceivedCallsData);
@@ -344,6 +347,12 @@ function getFields() {
 		var pos2 = positionFilter.position2;
 		filterString += first ? "?" : "&";
 		filterString += "lat1=" + pos1.lat() + "&lon1=" + pos1.lng() + "&lat2=" + pos2.lat() + "&lon2=" + pos2.lng();
+		first = false;
+	}
+	if ($('#operatorFilter').val() !== "all") {
+		filterString += first ? "?" : "&";
+		filterString += "operator=" + $('#operatorFilter').val();
+		first = false;
 	}
 
 	return filterString;
@@ -594,6 +603,11 @@ $(function() {
 			loadFailedInternetConnections(JSON.parse(data));
 		});
 	});
+	$('#useNumberFilterButton').click(function() {
+
+	});
+
+
 
 	// Manage Drawer
 	var drawingManager = new google.maps.drawing.DrawingManager({
