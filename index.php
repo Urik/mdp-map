@@ -50,7 +50,7 @@ $app->group('/api', function() use ($app) {
 
 		$app->get('/avgconnectiontime', function() use ($app) {
 			$params = getQueryParameters($app);
-			echo json_encode(getAVGTime('call', $params->dateFrom, $params->dateTo, $params->number));
+			echo json_encode(getAVGTime('call', $params->dateFrom, $params->dateTo, $params->operator, $params->number));
 		});
 
 		$app->get('/avgcalltimepersignals', function() use($app) {
@@ -138,9 +138,41 @@ $app->group('/api', function() use ($app) {
 		});
 	});
 
-	$app->get('/sms', function() use ($app) {
-		$params = getQueryParameters($app);
-		echo json_encode(getSMS($params->dateFrom, $params->dateTo, $params->neighborhoodId, $params->number));
+	$app->group('/sms', function() use ($app) {
+		$app->get('/', function() use ($app) {
+			$params = getQueryParameters($app);
+			echo json_encode(getSMS($params->dateFrom, $params->dateTo, $params->neighborhoodId, $params->operator, $params->number));
+		});
+
+		$app->get('/sendingtimeperoperator', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getSmsSendinTimePerOperator');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/failurerateperoperator', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getFailedSmsProportionPerOperator');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/sendingtimepersignal', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getSmsSendingTimePerSignal');
+			echo json_encode($queryFunc());
+		});
+		
+		$app->get('/sendingtimeperbattery', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getSmsSendingTimePerBatteryLevel');
+			echo json_encode($queryFunc());
+		});
+		
+		$app->get('/sendingtimeperneighborhood', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getSmsSendingTimePerNeighborhood');
+			echo json_encode($queryFunc());
+		});
+		
+		$app->get('/failurerateperneighborhood', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getFailedSmsProportionsPerNeighborhood');
+			echo json_encode($queryFunc());
+		});
 	});
 
 	$app->get('/avgtimeDown', function() use ($app) {

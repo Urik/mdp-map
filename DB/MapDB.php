@@ -539,6 +539,151 @@ function getFailedConnectionsRatePerNeighborhood($lat1, $lon1, $lat2, $lon2, $da
 	return queryDatabase($query);
 }
 
+function getSmsSendinTimePerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
+	$query = "";
+	$query .= "SELECT CASE ";
+	$query .= "         WHEN Upper(operatorname) LIKE '%CLARO%' THEN 'Claro' ";
+	$query .= "         WHEN Upper(operatorname) LIKE '%PERSONAL%' THEN 'Personal' ";
+	$query .= "         WHEN Upper(operatorname) LIKE '%MOVISTAR%' THEN 'Movistar' ";
+	$query .= "         ELSE 'Otros' ";
+	$query .= "       end              AS Operadora, ";
+	$query .= "       Avg(sendingtime) AS SendingTime, ";
+	$query .= "       Count(*)         AS DataCount ";
+	$query .= "FROM   sms s ";
+	$query .= "WHERE  1 = 1 ";
+
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 's', 'geometry');
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo, 's', 'dateCreated');
+	$query .= getNeighborhoodBasedWhereClause($neighborhoodId, 's', 'neighborhood_id');
+
+	$query .= " GROUP  BY CASE ";
+	$query .= "            WHEN Upper(operatorname) LIKE '%CLARO%' THEN 'Claro' ";
+	$query .= "            WHEN Upper(operatorname) LIKE '%PERSONAL%' THEN 'Personal' ";
+	$query .= "            WHEN Upper(operatorname) LIKE '%MOVISTAR%' THEN 'Movistar' ";
+	$query .= "            ELSE 'Otros' ";
+	$query .= "          end " ;
+
+	return queryDatabase($query);
+}
+
+function getFailedSmsProportionPerOperator($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
+	$query = "";
+	$query .= "SELECT CASE ";
+	$query .= "         WHEN Upper(s.operatorname) LIKE '%CLARO%' THEN 'Claro' ";
+	$query .= "         WHEN Upper(s.operatorname) LIKE '%PERSONAL%' THEN 'Personal' ";
+	$query .= "         WHEN Upper(s.operatorname) LIKE '%MOVISTAR%' THEN 'Movistar' ";
+	$query .= "         ELSE 'Otros' ";
+	$query .= "       end      AS Operador, ";
+	$query .= "       Sum(CASE ";
+	$query .= "             WHEN s.sendingtime = 0 THEN 1 ";
+	$query .= "             ELSE 0 ";
+	$query .= "           end) AS FailedSms, ";
+	$query .= "       Count(*) TotalData ";
+	$query .= "FROM   sms s ";
+	$query .= "WHERE  1 = 1 ";
+
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 's', 'geometry');
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo, 's', 'dateCreated');
+	$query .= getNeighborhoodBasedWhereClause($neighborhoodId, 's', 'neighborhood_id');
+
+	$query .= "GROUP  BY CASE ";
+	$query .= "            WHEN Upper(s.operatorname) LIKE '%CLARO%' THEN 'Claro' ";
+	$query .= "            WHEN Upper(s.operatorname) LIKE '%PERSONAL%' THEN 'Personal' ";
+	$query .= "            WHEN Upper(s.operatorname) LIKE '%MOVISTAR%' THEN 'Movistar' ";
+	$query .= "            ELSE 'Otros' ";
+	$query .= "          end " ;
+
+	return queryDatabase($query);
+}
+
+function getSmsSendingTimePerSignal($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
+	$query = "";
+	$query .= "SELECT s.currentsignal    AS SenderSignal, ";
+	$query .= "       Avg(s.sendingtime) AS SendingTime, ";
+	$query .= "       Count(*)           DataCount ";
+	$query .= "FROM   sms s ";
+	$query .= "WHERE  1 = 1 ";
+
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 's', 'geometry');
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo, 's', 'dateCreated');
+	$query .= getNeighborhoodBasedWhereClause($neighborhoodId, 's', 'neighborhood_id');
+
+	$query .= "GROUP  BY s.currentsignal " ;
+
+	return queryDatabase($query);
+}
+
+function getSmsSendingTimePerBatteryLevel($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
+	$query = "";
+	$query .= "SELECT auxS.batteryrange     AS Battery, ";
+	$query .= "       Avg(auxS.sendingtime) AS SendingTime, ";
+	$query .= "       Count(*)              AS DataCount ";
+	$query .= "FROM   (SELECT CASE ";
+	$query .= "                 WHEN s.batterylevel BETWEEN 0 AND 0.09 THEN '0 - 9' ";
+	$query .= "                 WHEN s.batterylevel BETWEEN 0.1 AND 0.19 THEN '10 - 19' ";
+	$query .= "                 WHEN s.batterylevel BETWEEN 0.2 AND 0.29 THEN '20 - 29' ";
+	$query .= "                 WHEN s.batterylevel BETWEEN 0.3 AND 0.39 THEN '30 - 39' ";
+	$query .= "                 WHEN s.batterylevel BETWEEN 0.4 AND 0.49 THEN '40 - 49' ";
+	$query .= "                 WHEN s.batterylevel BETWEEN 0.5 AND 0.59 THEN '50 - 59' ";
+	$query .= "                 WHEN s.batterylevel BETWEEN 0.6 AND 0.69 THEN '60 - 69' ";
+	$query .= "                 WHEN s.batterylevel BETWEEN 0.7 AND 0.79 THEN '70 - 79' ";
+	$query .= "                 WHEN s.batterylevel BETWEEN 0.8 AND 0.89 THEN '80 - 89' ";
+	$query .= "                 WHEN s.batterylevel BETWEEN 0.9 AND 1 THEN '90 - 100' ";
+	$query .= "               end AS BatteryRange, ";
+	$query .= "               s.* ";
+	$query .= "        FROM   sms s) auxS ";
+	$query .= "WHERE  1 = 1 ";
+
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 's', 'geometry');
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo, 's', 'dateCreated');
+	$query .= getNeighborhoodBasedWhereClause($neighborhoodId, 's', 'neighborhood_id');
+
+	$query .= "GROUP  BY auxS.batteryrange " ;
+
+	return queryDatabase($query);
+}
+
+function getSmsSendingTimePerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
+	$query = "";
+	$query .= "SELECT n.name   AS Neighborhood, ";
+	$query .= "       Avg(s.sendingtime), ";
+	$query .= "       Count(*) TotalData ";
+	$query .= "FROM   sms s ";
+	$query .= "       JOIN neighborhood n ";
+	$query .= "         ON n.id = s.neighborhood_id ";
+	$query .= "WHERE  1 = 1 ";
+
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 's', 'geometry');
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo, 's', 'dateCreated');
+	$query .= getNeighborhoodBasedWhereClause($neighborhoodId, 's', 'neighborhood_id');
+
+	$query .= "GROUP  BY s.neighborhood_id " ;
+
+	return queryDatabase($query);
+}
+
+function getFailedSmsProportionsPerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
+	$query = "";
+	$query .= "SELECT n.name   AS Neighborhood, ";
+	$query .= "       Sum(CASE ";
+	$query .= "             WHEN s.sendingtime = 0 THEN 1 ";
+	$query .= "             ELSE 0 ";
+	$query .= "           end) AS FailedCalls, ";
+	$query .= "       Count(*) TotalData ";
+	$query .= "FROM   sms s ";
+	$query .= "       JOIN neighborhood n ";
+	$query .= "         ON n.id = s.neighborhood_id ";
+	$query .= "WHERE  1 = 1 ";
+
+	$query .= getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, 's', 'geometry');
+	$query .= getDateBasedWhereClause($dateFrom, $dateTo, 's', 'dateCreated');
+	$query .= getNeighborhoodBasedWhereClause($neighborhoodId, 's', 'neighborhood_id');
+	
+	$query .= "GROUP  BY s.neighborhood_id " ;
+
+	return queryDatabase($query);
+}
+
 function getMatchedCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, $tableIdentifier = 'm') {
 	return getPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2, $tableIdentifier, 'OutgoingGeom');
 }

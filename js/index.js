@@ -41,6 +41,7 @@ var positionFilter = {
 	position2: null
 };
 
+//Used in order to load the markers of the selected source (markers, sms, or internet)
 var state = callsState;
 
 
@@ -403,7 +404,7 @@ function loadCallsStatistics() {
 	async.parallel([
 		function(callback) {
 			$.get('index.php/api/calls/avgcalltimepersignals' + getFields(), function(data) {
-					createConnectionTimePerSignalChart($('#signalsChart'), JSON.parse(data));
+					createCallConnectionTimePerSignalChart($('#signalsChart'), JSON.parse(data));
 					callback(null, true);
 				});
 		},
@@ -487,6 +488,33 @@ function loadInternetStatistics() {
 		});
 }
 
+function loadSmsStatistics() {
+	async.parallel([
+		function(callback) {
+			$.get('index.php/api/sms/sendingtimepersignal' + getFields(), function(data) {
+				createSmsConnectionTimePerSignalChart($('#smsSendingTimePerSignal'), JSON.parse(data));
+				callback(null, true);
+			});
+		},
+
+		function(callback) {
+			$.get('index.php/api/sms/sendingtimeperoperator' + getFields(), function(data) {
+				createSmsSendTimePerOperatorChart($('#smsSendingTimePerOperatorChart'), JSON.parse(data));
+				callback(null, true);
+			});
+		},
+		function(callback) {
+			$.get('index.php/api/sms/failurerateperoperator' + getFields(), function(data) {
+				createSmsFailureRatePerOperatoyChart($('#smsFailureRatePerOperatorChart'), JSON.parse(data));
+				callback(null, true);
+			});
+		},
+		function(err, data) {
+
+		}
+	]);
+}
+
 function handleReceivedInternetData(data) {
 	var internetData = JSON.parse(data);
 	loadInternetMarkers(internetData);
@@ -507,6 +535,7 @@ function loadStatistics() {
 	loadGeneralStatistics();
 	loadCallsStatistics();
 	loadInternetStatistics();
+	loadSmsStatistics();
 }
 
 $(function() {

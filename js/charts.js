@@ -1,4 +1,4 @@
-function createConnectionTimePerSignalChart(element, chartData) {
+function createCallConnectionTimePerSignalChart(element, chartData) {
     $(element).highcharts({
         chart: {
           type: 'spline',
@@ -32,6 +32,40 @@ function createConnectionTimePerSignalChart(element, chartData) {
                 })
             };
         }).sortBy('name').value()
+    });
+}
+
+function createSmsConnectionTimePerSignalChart(element, chartData) {
+    $(element).highcharts({
+        chart: {
+          type: 'spline',
+          zoomType: 'xy'
+        },
+        title: {text: 'Tiempo de conexion promedio'},
+        xAxis: {
+            title: { text: 'Señal del llamante'},
+            categories: _.range(1, 32),
+            max: 31
+            
+        },
+        yAxis: {
+            title: {text: 'Tiempo de envio [sec]'}
+        },
+        series: [{
+            name: 'Tiempo de <envio></envio>',
+            data: _(chartData).map(function(data) {
+                return {
+                    y: parseFloat(data.SendingTime) / 1000,
+                    x: data.SenderSignal,
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return data.DataCount;
+                        }
+                    }
+                };
+            })
+        }]
     });
 }
 
@@ -208,6 +242,32 @@ function createConnectionTimePerOperatorChart(element, chartData) {
         function(data) { return data.Company; },
         function(data) { return parseFloat(data.ConnectionTime); },
         function(data) { return data.DataCount; }
+    );
+}
+
+function createSmsSendTimePerOperatorChart(element, chartData) {
+    return createPerOperatorChart(
+        element,
+        chartData,
+        'Tiempo de envio promedio por operador',
+        'Operador',
+        'Tiempo de conexion [sec]',
+        function(data) { return data.Operadora; },
+        function(data) { return parseFloat(data.SendingTime) / 1000; },
+        function(data) { return data.DataCount; }
+    );
+}
+
+function createSmsFailureRatePerOperatoyChart(element, chartData) {
+    return createPerOperatorChart(
+        element,
+        chartData,
+        'Proporcion de sms perdidos o fallidos',
+        'Operador',
+        'SMS fallidos [%]',
+        function(data) { return data.Operador; },
+        function(data) { return 100 * parseFloat(data.FailedSms) / parseFloat(data.TotalData); },
+        function(data) {return data.TotalData; }
     );
 }
 

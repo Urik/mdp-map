@@ -236,6 +236,26 @@
 					</div>
 				</div>
 			</div>
+			<div class="sms-statistics">
+				<div class="row">
+					<div class="col-xs-12">
+						<h2 class="text-center">Estadisticas de SMS</h2>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-6">
+						<div id="smsSendingTimePerSignal" class="chart"></div>
+					</div>
+					<div class="col-xs-12 col-sm-6">
+						<div id="smsSendingTimePerOperatorChart" class="chart"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-16 col-sm6">
+						<div id="smsFailureRatePerOperatorChart"></div>
+					</div>
+				</div>
+			</div>
 		<!--Filter Number Modal -->
 		<div class="modal fade" id="numbersFilterModal">
 		  <div class="modal-dialog">
