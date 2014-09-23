@@ -59,6 +59,19 @@ function getCalls($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodI
 	return $response;
 }
 
+function getAverageConnectionTime($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
+	$query = "";
+	$query .= "SELECT AVG(TIME_TO_SEC(m.ConnectionTime)) AS AverageConnectionTime ";
+	$query .= "FROM matched_calls m ";
+	$query .= "WHERE 1=1" ;
+
+	$query .= getMatchedCallsDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getMatchedCallsNeighborhoodBasedWhereClause($neighborhoodId);
+	$query .= getMatchedCallsPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	return queryDatabase($query);
+}
+
 function getCallConnectionTimesBySignals($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
 	$query = "";
 	$query .= "SELECT m.callersignal, ";
@@ -152,6 +165,19 @@ function getInternetTests($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neigh
 	$sql .= $whereClause;
 
 	return queryDatabase($sql);
+}
+
+function getAverageDownloadTime($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
+	$query = "";
+	$query .= "SELECT AVG(i.downloadTime) as averageDownloadTime ";
+	$query .= "FROM internet i ";
+	$query .= "WHERE i.downloadTime <> 0 " ;
+
+	$query .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getInternetNeighborhoodBasedWhereClause($neighborhoodId);
+	$query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+
+	return queryDatabase($query);
 }
 
 function getAVGTime($type, $dateFrom, $dateTo, $operator, $number) {
@@ -382,8 +408,8 @@ function getFailedDownloadsProportionPerOperator($lat1, $lon1, $lat2, $lon2, $da
 	$query .= "         ON n.id = i.neighborhood_id ";
 
 	$query .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
-  	$query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
-  	$query .= getInternetNeighborhoodBasedWhereClause($neighborhoodId);
+	$query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$query .= getInternetNeighborhoodBasedWhereClause($neighborhoodId);
 
 	$query .= "GROUP  BY CASE ";
 	$query .= "            WHEN Lower(i.operatorname) LIKE '%claro%' THEN 'Claro' ";
@@ -393,6 +419,38 @@ function getFailedDownloadsProportionPerOperator($lat1, $lon1, $lat2, $lon2, $da
 	$query .= "          end ";
 	$query .= "HAVING Count(*) > 10 ";
 	$query .= "ORDER  BY n.name " ;
+
+	return queryDatabase($query);
+}
+
+function getAverageDownloadTimePerSignal($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
+	$query = "";
+	$query .= "SELECT i.currentSignal as DeviceSignal, AVG(i.downloadTime) as DownloadTime, COUNT(*) as DataCount ";
+	$query .= "FROM internet i ";
+	$query .= "WHERE i.currentSignal <> 0 AND i.currentSignal <> 99 ";
+
+	$query .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$query .= getInternetNeighborhoodBasedWhereClause($neighborhoodId);
+
+	$query .= "GROUP BY i.currentSignal" ;
+
+	return queryDatabase($query);
+}
+
+function getAverageDownloadTimePerNeighborhood($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
+	$query = "";
+	$query .= "SELECT n.name as Neighborhood, AVG(i.downloadTime) as DownloadTime, COUNT(*) AS DataCount ";
+	$query .= "FROM internet i ";
+	$query .= "JOIN neighborhood n ON n.id = i.neighborhood_id ";
+	$query .= "WHERE 1 = 1 ";
+
+	$query .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$query .= getInternetNeighborhoodBasedWhereClause($neighborhoodId);
+
+	$query .= "GROUP BY n.id ";
+	$query .= "ORDER BY n.name" ;
 
 	return queryDatabase($query);
 }
@@ -450,6 +508,45 @@ function getAverageConnectionTimePerBatteryLevel($lat1, $lon1, $lat2, $lon2, $da
 	$query .= getMatchedCallsNeighborhoodBasedWhereClause($neighborhoodId, 'c');
 
 	$query .= "GROUP  BY c.batteryrange " ;
+	return queryDatabase($query);
+}
+
+function getAverageDownloadTimePerBatteryLevel($lat1, $lon1, $lat2, $lon2, $dateFrom, $dateTo, $neighborhoodId, $operator, $number) {
+	$query = "";
+	$query .= "SELECT ";
+	$query .= "	CASE ";
+	$query .= "		WHEN i.batteryLevel BETWEEN 0 AND 0.09 THEN '0 - 9' ";
+	$query .= "		WHEN i.batteryLevel BETWEEN 0.1 AND 0.19 THEN '10 - 19' ";
+	$query .= "		WHEN i.batteryLevel BETWEEN 0.2 AND 0.29 THEN '20 - 29' ";
+	$query .= "		WHEN i.batteryLevel BETWEEN 0.3 AND 0.39 THEN '30 - 39' ";
+	$query .= "		WHEN i.batteryLevel BETWEEN 0.4 AND 0.49 THEN '40 - 49' ";
+	$query .= "		WHEN i.batteryLevel BETWEEN 0.5 AND 0.59 THEN '50 - 59' ";
+	$query .= "		WHEN i.batteryLevel BETWEEN 0.6 AND 0.69 THEN '60 - 69' ";
+	$query .= "		WHEN i.batteryLevel BETWEEN 0.7 AND 0.79 THEN '70 - 79' ";
+	$query .= "		WHEN i.batteryLevel BETWEEN 0.8 AND 0.89 THEN '80 - 89' ";
+	$query .= "		WHEN i.batteryLevel BETWEEN 0.9 AND 1 THEN '90 - 100' ";
+	$query .= "	END as BatteryLevel, ";
+	$query .= "	AVG(i.downloadTime) as DownloadTime, ";
+	$query .= "	COUNT(i.id) AS DataCount ";
+	$query .= "FROM internet i ";
+	$query .= "WHERE 1=1 ";
+
+	$query .= getInternetDateBasedWhereClause($dateFrom, $dateTo);
+	$query .= getInternetPositionBasedWhereClause($lat1, $lon1, $lat2, $lon2);
+	$query .= getInternetNeighborhoodBasedWhereClause($neighborhoodId);
+
+	$query .= "GROUP BY CASE ";
+	$query .= "	WHEN i.batteryLevel BETWEEN 0 AND 0.09 THEN '0 - 9' ";
+	$query .= "	WHEN i.batteryLevel BETWEEN 0.1 AND 0.19 THEN '10 - 19' ";
+	$query .= "	WHEN i.batteryLevel BETWEEN 0.2 AND 0.29 THEN '20 - 29' ";
+	$query .= "	WHEN i.batteryLevel BETWEEN 0.3 AND 0.39 THEN '30 - 39' ";
+	$query .= "	WHEN i.batteryLevel BETWEEN 0.4 AND 0.49 THEN '40 - 49' ";
+	$query .= "	WHEN i.batteryLevel BETWEEN 0.5 AND 0.59 THEN '50 - 59' ";
+	$query .= "	WHEN i.batteryLevel BETWEEN 0.6 AND 0.69 THEN '60 - 69' ";
+	$query .= "	WHEN i.batteryLevel BETWEEN 0.7 AND 0.79 THEN '70 - 79' ";
+	$query .= "	WHEN i.batteryLevel BETWEEN 0.8 AND 0.89 THEN '80 - 89' ";
+	$query .= "	WHEN i.batteryLevel BETWEEN 0.9 AND 1 THEN '90 - 100' ";
+	$query .= "END" ;
 
 	return queryDatabase($query);
 }

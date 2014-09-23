@@ -1,3 +1,101 @@
+function createPerOperatorChart(element, chartData, chartTitle, xAxisTitle, yAxisTitle, companyNameAccessor, valueAccessor, recordsCountAccessor) {
+
+    var companiesColors = {
+        claro: '#D22D27',
+        movistar: '#B3CC08',
+        personal: '#0095AB'
+    };
+
+    var dataAverage = getOperatorsAverageAndTotalCount(chartData, valueAccessor, recordsCountAccessor);
+
+    chartData = _(chartData).map(function(data) {
+        return {
+            y: roundNumber(valueAccessor(data), 2),
+            name: companyNameAccessor(data),
+            color: companiesColors[companyNameAccessor(data).toLowerCase()],
+            dataLabels: {
+                enabled: true,
+                formatter: function() {
+                    return recordsCountAccessor(data);
+                }
+            }
+        };
+    });
+
+    if (chartData.length > 1) {
+        chartData.push({
+            y: roundNumber(dataAverage.average, 2),
+            name: 'Promedio',
+            dataLabels: isNaN(dataAverage.count) ? "" : {
+                enabled: true,
+                formatter: function() {
+                    return dataAverage.count;
+                }
+            }
+        });
+    }
+
+    return $(element).highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {text: chartTitle},
+        xAxis: {
+            categories: _(chartData).map(function(data) {
+                return companyNameAccessor(data);
+            }),
+            title: {text: xAxisTitle}
+        },
+        yAxis: {
+            min: 0,
+            title: {text: yAxisTitle}
+        },
+        series: [{
+            showInLegend: false,
+            data: chartData
+        }]
+    });
+}
+
+function createPerNeighborhoodColumnChart(element, chartData, chartTitle, yAxisTitle, seriesValueAccessor, neighborhoodNameAccessor, seriesDataCountAccessor) {
+    $(element).highcharts({
+        chart: {
+            type: 'column'
+        },
+        plotOptions: {
+            column: { colorByPoint: true }
+        },
+        title: {text: chartTitle },
+        xAxis: {
+            title: {text: 'Barrios'},
+            type: 'category',
+            labels: {
+                rotation: 90
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {text: yAxisTitle}
+        },
+        series: [{
+            name: 'Valor',
+            showInLegend: false,
+            data: _(chartData).map(function(data) {
+                return {
+                    y: parseFloat(seriesValueAccessor(data)),
+                    name: neighborhoodNameAccessor(data),
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return seriesDataCountAccessor(data);
+                        }
+                    }
+                };
+            })
+        }]
+    });
+}
+
 function createCallConnectionTimePerSignalChart(element, chartData) {
     $(element).highcharts({
         chart: {
@@ -34,6 +132,8 @@ function createCallConnectionTimePerSignalChart(element, chartData) {
         }).sortBy('name').value()
     });
 }
+
+
 
 function createSmsConnectionTimePerSignalChart(element, chartData) {
     $(element).highcharts({
@@ -91,6 +191,40 @@ function createConnectionTimePerBatteryChart(element, chartData) {
             data: _(chartData).map(function(data) { 
                 return {
                     y: parseFloat(data.ConnectionTime),
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return data.DataCount;
+                        }
+                    }
+                };
+            })
+        }]
+    });
+}
+
+function createDownloadTimePerBatteryChart(element, chartData) {
+    $(element).highcharts({
+        chart: {
+          type: 'spline',
+          zoomType: 'xy'
+        },
+        title: {text: 'Tiempo de descarga promedio por carga de bateria'},
+        xAxis: {
+            title: { text: 'Bateria del llamante [%]'},
+            type: 'category',
+            categories: ['0 - 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69', '70 - 79', '80 - 89', '90 - 100'],
+            labels: { rotation: 90 }
+        },
+        yAxis: {
+            title: {text: 'Tiempo de descarga [msec]'}
+        },
+        series: [{
+            name: 'Bateria del receptor',
+            visible: true,
+            data: _(chartData).map(function(data) {
+                return {
+                    y: parseFloat(data.DownloadTime),
                     dataLabels: {
                         enabled: true,
                         formatter: function() {
@@ -284,6 +418,55 @@ function createDownloadTimePerOperatorChart(element, chartData) {
     );
 }
 
+
+function createDownloadTimePerSignalChart(element, chartData) {
+    $(element).highcharts({
+        chart: {
+          type: 'spline',
+          zoomType: 'xy'
+        },
+        title: {text: 'Tiempo de descarga promedio por señal'},
+        xAxis: {
+            title: { text: 'Señal'},
+            categories: _.range(1, 32),
+            max: 31
+            
+        },
+        yAxis: {
+            title: {text: 'Tiempo de descarga [msec]'}
+        },
+        series: [{
+            name: 'Tiempo de envio',
+            data: _(chartData).map(function(data) {
+                return {
+                    y: parseFloat(data.DownloadTime),
+                    x: data.SenderSignal,
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return data.DataCount;
+                        }
+                    }
+                };
+            })
+        }]
+    });
+}
+
+
+function createDownloadTimePerNeighborhoodChart(element, chartData) {
+    var chart = createPerNeighborhoodColumnChart(
+        element,
+        chartData,
+        'Tiempo de descarga por barrio',
+        'Tiempo de descarga [msec]',
+        function(data) { return parseFloat(data.DownloadTime); },
+        function(data) { return data.Neighborhood; },
+        function(data) { return data.DataCount; }
+    );
+    return chart;
+}
+
 function createCallsFailureRatePerOperatorChart(element, chartData) {
     var chart = createPerOperatorChart(
         element,
@@ -313,6 +496,7 @@ function createCallsFailureRatePerNeighborhood(element, chartData) {
     return chart;
 }
 
+
 function createSignalsPerOperatorChart(element, chartData) {
     return createPerOperatorChart(
         element,
@@ -326,44 +510,20 @@ function createSignalsPerOperatorChart(element, chartData) {
     );
 }
 
-function createPerOperatorChart(element, chartData, chartTitle, xAxisTitle, yAxisTitle, companyNameAccessor, valueAccessor, recordsCountAccessor) {
-    var companiesColors = {
-        claro: '#D22D27',
-        movistar: '#B3CC08',
-        personal: '#0095AB'
-    };
-    return $(element).highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {text: chartTitle},
-        xAxis: {
-            categories: _(chartData).map(function(data) {
-                return companyNameAccessor(data);
-            }),
-            title: {text: xAxisTitle}
-        },
-        yAxis: {
-            min: 0,
-            title: {text: yAxisTitle}
-        },
-        series: [{
-            showInLegend: false,
-            data: _(chartData).map(function(data) {
-                return {
-                    y: valueAccessor(data),
-                    name: companyNameAccessor(data),
-                    color: companiesColors[companyNameAccessor(data).toLowerCase()],
-                    dataLabels: {
-                        enabled: true,
-                        formatter: function() {
-                            return recordsCountAccessor(data);
-                        }
-                    }
-                };
-            })
-        }]
-    });
+function getOperatorsAverageAndTotalCount(chartData, valueAccessor, recordsCountAccessor) {
+    var dataSum = _(chartData).reduce(function(previous, current) {
+        previous.sum += parseFloat(valueAccessor(current));
+        previous.count += parseInt(recordsCountAccessor(current));
+        return previous;
+    }, { sum: 0, count: 0});
+
+    return { average: dataSum.sum / chartData.length, count: recordsCountAccessor ? dataSum.count : NaN};
+}
+
+function roundNumber(number, digits) {
+    var multiple = Math.pow(10, digits);
+    var rndedNum = Math.round(number * multiple) / multiple;
+    return rndedNum;
 }
 
 function createSignalsPerNeighborhoodChart(element, chartData) {
@@ -389,54 +549,25 @@ function createConnectionTimePerNeighborhoodChart(element, chartData) {
         function(data) { return data.DataCount; }
     );
 }
-function createPerNeighborhoodColumnChart(element, chartData, chartTitle, yAxisTitle, seriesValueAccessor, neighborhoodNameAccessor, seriesDataCountAccessor) {
-    $(element).highcharts({
-        chart: {
-            type: 'column'
-        },
-        plotOptions: {
-            column: { colorByPoint: true }
-        },
-        title: {text: chartTitle },
-        xAxis: {
-            title: {text: 'Barrios'},
-            type: 'category',
-            labels: {
-                rotation: 90
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {text: yAxisTitle}
-        },
-        series: [{
-            name: 'Valor',
-            showInLegend: false,
-            data: _(chartData).map(function(data) {
-                return {
-                    y: parseFloat(seriesValueAccessor(data)),
-                    name: neighborhoodNameAccessor(data),
-                    dataLabels: {
-                        enabled: true,
-                        formatter: function() {
-                            return seriesDataCountAccessor(data);
-                        }
-                    }
-                };
-            })
-        }]
-    });
-}
 
 function createFailedDownloadsProportionsPerOperatorChart(element, chartData) {
     var categories = [];
     var successfulDownloads = [];
     var failedDownloads = [];
+    var totalSuccessfulDownloads = 0;
+    var totalFailedDownloads = 0;
     for (var i = 0; i < chartData.length; i++) {
         categories.push(chartData[i].Operator);
         successfulDownloads.push(parseFloat(chartData[i].SuccessfulDownloads));
+        totalSuccessfulDownloads += parseFloat(chartData[i].SuccessfulDownloads);
         failedDownloads.push(parseFloat(chartData[i].FailedDownloads));
+        totalFailedDownloads += parseFloat(chartData[i].FailedDownloads);
     }
+
+    categories.push('Promedio');
+    successfulDownloads.push(totalSuccessfulDownloads);
+    failedDownloads.push(totalFailedDownloads);
+
     $(element).highcharts({
         chart: {
             type: 'column'

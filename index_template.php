@@ -178,6 +178,15 @@
 					</div>	
 				</div>
 				<div class="row">
+					<div class="col-xs-4"></div>
+					<div class="col-xs-4">
+						<div class="rounded-edges">
+							<h4 class="text-center">Tiempo promedio de llamada: <span id="connection-time"></span> segundos</h4>
+						</div>
+					</div>
+					<div class="col-xs-4"></div>
+				</div>
+				<div class="row">
 					<div class="col-sm-6 col-xs-12">
 						<div id="signalsChart" class="chart"></div>
 					</div>
@@ -220,11 +229,33 @@
 					</div>
 				</div>
 				<div class="row">
+					<div class="col-xs-4"></div>
+					<div class="col-xs-4">						
+						<div class="rounded-edges">
+							<h4 class="text-center">Tiempo promedio de descarga:</br><span id="download-time"></span> milisegundos</h4>						
+						</div>
+					</div>
+					<div class="col-xs-4"></div>
+				</div>
+				<div class="row">
 					<div class="col-xs-12 col-sm-6">
 						<div id="internetHoursChart" class="chart"></div>
 					</div>
 					<div class="col-xs-12 col-sm-6">
 						<div id="internetHoursPerOperatorChart" class="chart"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-6">
+						<div id="internetHoursPerSignalChart" class="chart"></div>
+					</div>
+					<div class="col-xs-12 col-sm-6">
+						<div id="downloadTimePerBatteryLevelChart" class="chart"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-12">
+						<div id="downloadTimePerNeighborhoodChart" class="chart"></div>
 					</div>
 				</div>
 				<div class="row">
@@ -236,6 +267,7 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="sms-statistics">
 				<div class="row">
 					<div class="col-xs-12">

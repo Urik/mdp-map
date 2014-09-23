@@ -48,6 +48,11 @@ $app->group('/api', function() use ($app) {
 			echo json_encode($queryFunc());
 		});
 
+		$app->get('/avgtotalconnectiontime', function() use ($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getAverageConnectionTime');
+			echo json_encode($queryFunc());
+		});
+
 		$app->get('/avgconnectiontime', function() use ($app) {
 			$params = getQueryParameters($app);
 			echo json_encode(getAVGTime('call', $params->dateFrom, $params->dateTo, $params->operator, $params->number));
@@ -109,11 +114,15 @@ $app->group('/api', function() use ($app) {
 	});
 
 	
-
 	$app->group('/internet', function() use($app) {
 
 		$app->get('/', function() use ($app) {
 			$func = getFunctionWithDateAndPositionParameters($app, 'getInternetTests');
+			echo json_encode($func());
+		});
+
+		$app->get('/downloadtime', function() use($app) {
+			$func = getFunctionWithDateAndPositionParameters($app, 'getAverageDownloadTime');
 			echo json_encode($func());
 		});
 
@@ -124,6 +133,21 @@ $app->group('/api', function() use ($app) {
 
 		$app->get('/downloadtimeperoperator', function() use($app) {
 			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getDownloadTimesPerOperator');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/downloadtimepersignal', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getAverageDownloadTimePerSignal');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/downloadtimeperneighborhood', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getAverageDownloadTimePerNeighborhood');
+			echo json_encode($queryFunc());
+		});
+
+		$app->get('/downloadtimeperbatterylevel', function() use($app) {
+			$queryFunc = getFunctionWithDateAndPositionParameters($app, 'getAverageDownloadTimePerBatteryLevel');
 			echo json_encode($queryFunc());
 		});
 
@@ -180,21 +204,21 @@ $app->group('/api', function() use ($app) {
 		$dateFrom = $app->request()->get('dateFrom');
 		$dateTo = $app->request()->get('dateTo');	
 		$number = $app->request()->get('number');
-		echo json_encode(getAVGTime('internet', $dateFrom, $dateTo, $number));
+		echo json_encode(getAVGTime('internet', $dateFrom, $dateTo, $params->operator, $number));
 	});
 	$app->get('/avgtimeSMS', function() use ($app) {
 		$params = getQueryParameters($app);
 		$dateFrom = $app->request()->get('dateFrom');
 		$dateTo = $app->request()->get('dateTo');	
 		$number = $app->request()->get('number');
-		echo json_encode(getAVGTime('SMS', $dateFrom, $dateTo, $number));
+		echo json_encode(getAVGTime('SMS', $dateFrom, $dateTo, $params->operator, $number));
 	});
 	$app->get('/avgSignal', function() use ($app) {
 		$params = getQueryParameters($app);
 		$dateFrom = $app->request()->get('dateFrom');
 		$dateTo = $app->request()->get('dateTo');	
 		$number = $app->request()->get('number');
-		echo json_encode(getAVGTime('signal', $dateFrom, $dateTo, $number));
+		echo json_encode(getAVGTime('signal', $dateFrom, $dateTo, $params->operator, $number));
 	});
 	$app->get('/internet/failed/average', function() use ($app) {
 		echo json_encode(getPercentagesOfFailedInternet());

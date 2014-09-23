@@ -448,7 +448,15 @@ function loadCallsStatistics() {
 			$.get('index.php/api/calls/avgcalltimeperbattery' + getFields(), function(data) {
 				createConnectionTimePerBatteryChart($('#connectionTimePerBatteryLevelChart'), JSON.parse(data));
 				callback(null, true);
-			})
+			});
+		},
+		function(callback) {
+			$.get('index.php/api/calls/avgtotalconnectiontime' + getFields(), function(data) {
+				var parsedData = JSON.parse(data);
+				var connectionTime = parseFloat(parsedData[0].AverageConnectionTime);
+				$('#connection-time').html(connectionTime.toFixed(2));
+				callback(null, true);
+			});
 		}
 	], function(err, data) {
 		$('.call-statistics').css({display: 'block'});
@@ -479,6 +487,31 @@ function loadInternetStatistics() {
 			function(callback) {
 				$.get('index.php/api/internet/failedproportionperoperator' + getFields(), function(data) {
 					createFailedDownloadsProportionsPerOperatorChart($('#failedDownloadsPerOperatorChart'), JSON.parse(data));
+					callback(null, true);
+				});
+			},
+			function(callback) {
+				$.get('index.php/api/internet/downloadtime' + getFields(), function(data) {
+					var parsedData = JSON.parse(data);
+					$('#download-time').html(parseFloat(parsedData[0].averageDownloadTime).toFixed(2));
+					callback(null, true);
+				});
+			},
+			function(callback) {
+				$.get('index.php/api/internet/downloadtimepersignal' + getFields(), function(data) {
+					createDownloadTimePerSignalChart($('#internetHoursPerSignalChart'), JSON.parse(data));
+					callback(null, true);
+				});
+			},
+			function(callback) {
+				$.get('index.php/api/internet/downloadtimeperneighborhood' + getFields(), function(data) {
+					createDownloadTimePerNeighborhoodChart($('#downloadTimePerNeighborhoodChart'), JSON.parse(data));
+					callback(null, true);
+				});
+			},
+			function(callback) {
+				$.get('index.php/api/internet/downloadtimeperbatterylevel' + getFields(), function(data) {
+					createDownloadTimePerBatteryChart($('#downloadTimePerBatteryLevelChart'), JSON.parse(data));
 					callback(null, true);
 				});
 			}
