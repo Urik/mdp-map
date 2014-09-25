@@ -41,6 +41,9 @@ var positionFilter = {
 	position2: null
 };
 
+var clearNeighborhoodFilterControl = new ClearNeighborhoodControl();
+var neighborhoodIdFilter = null;
+
 //Used in order to load the markers of the selected source (markers, sms, or internet)
 var state = callsState;
 
@@ -298,6 +301,7 @@ function loadAVGWindows(totalData) {
 			for (var key in fields) {
 				contentString += '<p>' + key + ': ' + fields[key] + '</p>';
 			}
+			contentString += '<a onclick="setNeighborhoodFilter(' + data.entity.neighId + ')" href="javascript:void(0);">Setear filtro</a>';
 			
 			if (data.shouldPaintZone()) {
 				coloredNeighborhoods.push(neighArray[data.entity.neighId]);
@@ -353,6 +357,12 @@ function getFields() {
 	if ($('#operatorFilter').val() !== "all") {
 		filterString += first ? "?" : "&";
 		filterString += "operator=" + $('#operatorFilter').val();
+		first = false;
+	}
+
+	if (neighborhoodIdFilter !== null) {
+		filterString += first ? "?" : "&";
+		filterString += "neighborhoodid=" + neighborhoodIdFilter;
 		first = false;
 	}
 
@@ -569,6 +579,20 @@ function loadStatistics() {
 	loadCallsStatistics();
 	loadInternetStatistics();
 	loadSmsStatistics();
+}
+
+function setNeighborhoodFilter(id) {
+	neighborhoodIdFilter = id;
+	clearNeighborhoodFilterControl.addToMap(map, function(context) {
+		clearNeighborhoodFilterControl.removeFromMap(map);
+		clearNeighborhoodFilter();
+		loadStatistics();
+	});
+	loadStatistics();
+}
+
+function clearNeighborhoodFilter() {
+	neighborhoodIdFilter = null;
 }
 
 $(function() {

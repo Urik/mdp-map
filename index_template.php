@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="js/markerclusterer.js"></script>
 		
 		<script type="text/javascript" src="js/Filters.js"></script>
+		<script type="text/javascript" src="js/clearNeighborhoodControl.js"></script>
 		<script type="text/javascript" src="js/index.js"></script>
 		<script type="text/javascript" src="js/averageZonesCreators.js"></script>
 		<script type="text/javascript" src="js/charts.js"></script>

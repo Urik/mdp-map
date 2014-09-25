@@ -236,7 +236,7 @@ function getQueryParameters($app) {
 	$params->lat2 = $app->request->get('lat2');
 	$params->lon2 = $app->request->get('lon2');
 	$params->operator = $app->request->get('operator');
-	$params->neighborhoodId = $app->request->get('neighborhoodId');
+	$params->neighborhoodId = $app->request->get('neighborhoodid');
 	return $params;
 }
 
