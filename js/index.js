@@ -301,7 +301,7 @@ function loadAVGWindows(totalData) {
 			for (var key in fields) {
 				contentString += '<p>' + key + ': ' + fields[key] + '</p>';
 			}
-			contentString += '<a onclick="setNeighborhoodFilter(' + data.entity.neighId + ')" href="javascript:void(0);">Setear filtro</a>';
+			contentString += '<a onclick="setNeighborhoodFilter(' + data.entity.neighId + ')" href="javascript:void(0);">Setear filtro barrial</a>';
 			
 			if (data.shouldPaintZone()) {
 				coloredNeighborhoods.push(neighArray[data.entity.neighId]);
